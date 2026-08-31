@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DIBA_Backend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1acf1b28bf7351fdb6899d55b321a0d09a821dff")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5b3bb7510a7f89a43b2d8c7a54e52a1700f253b8")]
 [assembly: System.Reflection.AssemblyProductAttribute("DIBA_Backend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DIBA_Backend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
