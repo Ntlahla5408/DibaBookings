@@ -1,5 +1,4 @@
 ﻿using DIBA_Backend.Data;
-using DIBA_Backend.Dto;
 using DIBA_Backend.Models.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +7,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-
+using Microsoft.AspNetCore.Authorization;
+using DIBA_Backend.Dto.Authentication;
 
 
 namespace DIBA_Backend.Controllers
@@ -83,12 +83,6 @@ namespace DIBA_Backend.Controllers
         }
 
 
-        private string HashPassword(string password)
-        {
-            return BCrypt.Net.BCrypt.HashPassword(password);
-        }
-
-
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto loginDto)
         {
@@ -122,6 +116,12 @@ namespace DIBA_Backend.Controllers
             });
         }
 
+
+        private string HashPassword(string password)
+        {
+            return BCrypt.Net.BCrypt.HashPassword(password);
+        }
+
         private string GenerateJwtToken(User user)
         {
             var key = new SymmetricSecurityKey(
@@ -153,6 +153,20 @@ namespace DIBA_Backend.Controllers
             );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        [Authorize]
+        [HttpGet("test")]
+        public IActionResult TestAuthorization()
+        {
+            return Ok("You are authenticated.");
+        }
+
+        [Authorize(Roles = "Administrator")]
+        [HttpGet("admin-test")]
+        public IActionResult AdminTest()
+        {
+            return Ok("You are an Administrator.");
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace DIBA_Backend.Dto
+﻿namespace DIBA_Backend.Dto.Authentication
 {
     public class LoginDto
     {
