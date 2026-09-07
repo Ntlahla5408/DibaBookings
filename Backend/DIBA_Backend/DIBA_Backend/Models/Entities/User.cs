@@ -17,5 +17,36 @@
         // Navigation property
         public Role? Role { get; set; }
 
+        public Event Event
+        {
+            get => default;
+            set
+            {
+            }
+        }
+
+        public Booking Booking
+        {
+            get => default;
+            set
+            {
+            }
+        }
+
+        public Notification Notification
+        {
+            get => default;
+            set
+            {
+            }
+        }
+
+        public AuditLog AuditLog
+        {
+            get => default;
+            set
+            {
+            }
+        }
     }
 }

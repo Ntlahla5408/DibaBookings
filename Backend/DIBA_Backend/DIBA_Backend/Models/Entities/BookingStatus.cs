@@ -10,5 +10,13 @@
 
         // Navigation properties
         public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
+
+        public Booking Booking
+        {
+            get => default;
+            set
+            {
+            }
+        }
     }
 }

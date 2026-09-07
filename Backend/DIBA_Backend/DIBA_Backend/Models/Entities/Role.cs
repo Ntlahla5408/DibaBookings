@@ -10,5 +10,12 @@
         // Navigation property
         public ICollection<User> Users { get; set; } = new List<User>();
 
+        public User User
+        {
+            get => default;
+            set
+            {
+            }
+        }
     }
 }

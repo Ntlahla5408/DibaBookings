@@ -26,5 +26,13 @@
         public User? User { get; set; }
 
         public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
+
+        public Booking Booking
+        {
+            get => default;
+            set
+            {
+            }
+        }
     }
 }

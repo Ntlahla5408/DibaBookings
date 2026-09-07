@@ -34,5 +34,21 @@
         public ICollection<Payment> Payments { get; set; } = new List<Payment>();
 
         public ICollection<Notification> Notifications { get; set; } = new List<Notification>();
+
+        public Payment Payment
+        {
+            get => default;
+            set
+            {
+            }
+        }
+
+        public Notification Notification
+        {
+            get => default;
+            set
+            {
+            }
+        }
     }
 }
