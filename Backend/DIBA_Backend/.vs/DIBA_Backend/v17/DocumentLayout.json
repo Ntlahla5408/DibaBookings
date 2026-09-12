@@ -3,16 +3,20 @@
   "WorkspaceRootPath": "C:\\Users\\Ntlahla\\source\\repos\\Ntlahla5408\\DibaBookings\\Backend\\DIBA_Backend\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|c:\\users\\ntlahla\\source\\repos\\ntlahla5408\\dibabookings\\backend\\diba_backend\\diba_backend\\classdiagram1.cd||{59B0B277-7DDF-4E36-A3ED-02DAC5B9E2FA}|",
-      "RelativeMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|solutionrelative:diba_backend\\classdiagram1.cd||{59B0B277-7DDF-4E36-A3ED-02DAC5B9E2FA}|"
+      "AbsoluteMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|c:\\users\\ntlahla\\source\\repos\\ntlahla5408\\dibabookings\\backend\\diba_backend\\diba_backend\\models\\entities\\booking.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|solutionrelative:diba_backend\\models\\entities\\booking.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|c:\\users\\ntlahla\\source\\repos\\ntlahla5408\\dibabookings\\backend\\diba_backend\\diba_backend\\controllers\\bookingscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|solutionrelative:diba_backend\\controllers\\bookingscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|c:\\users\\ntlahla\\source\\repos\\ntlahla5408\\dibabookings\\backend\\diba_backend\\diba_backend\\dto\\payment\\createpaymentdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|solutionrelative:diba_backend\\dto\\payment\\createpaymentdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|c:\\users\\ntlahla\\source\\repos\\ntlahla5408\\dibabookings\\backend\\diba_backend\\diba_backend\\controllers\\paymentscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|solutionrelative:diba_backend\\controllers\\paymentscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|c:\\users\\ntlahla\\source\\repos\\ntlahla5408\\dibabookings\\backend\\diba_backend\\diba_backend\\models\\entities\\booking.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|solutionrelative:diba_backend\\models\\entities\\booking.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|c:\\users\\ntlahla\\source\\repos\\ntlahla5408\\dibabookings\\backend\\diba_backend\\diba_backend\\models\\entities\\auditlog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -27,16 +31,12 @@
       "RelativeMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|solutionrelative:diba_backend\\dto\\auditlog\\auditlogresponsedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|c:\\users\\ntlahla\\source\\repos\\ntlahla5408\\dibabookings\\backend\\diba_backend\\diba_backend\\controllers\\bookingscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|solutionrelative:diba_backend\\controllers\\bookingscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|c:\\users\\ntlahla\\source\\repos\\ntlahla5408\\dibabookings\\backend\\diba_backend\\diba_backend\\classdiagram1.cd||{59B0B277-7DDF-4E36-A3ED-02DAC5B9E2FA}|",
+      "RelativeMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|solutionrelative:diba_backend\\classdiagram1.cd||{59B0B277-7DDF-4E36-A3ED-02DAC5B9E2FA}|"
     },
     {
       "AbsoluteMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|c:\\users\\ntlahla\\source\\repos\\ntlahla5408\\dibabookings\\backend\\diba_backend\\diba_backend\\controllers\\auditlogscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|solutionrelative:diba_backend\\controllers\\auditlogscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|c:\\users\\ntlahla\\source\\repos\\ntlahla5408\\dibabookings\\backend\\diba_backend\\diba_backend\\dto\\payment\\createpaymentdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|solutionrelative:diba_backend\\dto\\payment\\createpaymentdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|c:\\users\\ntlahla\\source\\repos\\ntlahla5408\\dibabookings\\backend\\diba_backend\\diba_backend\\dto\\payment\\paymentresponsedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -182,7 +182,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 8,
           "Children": [
             {
               "$type": "Bookmark",
@@ -190,7 +190,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 7,
               "Title": "ClassDiagram1.cd",
               "DocumentMoniker": "C:\\Users\\Ntlahla\\source\\repos\\Ntlahla5408\\DibaBookings\\Backend\\DIBA_Backend\\DIBA_Backend\\ClassDiagram1.cd",
               "RelativeDocumentMoniker": "DIBA_Backend\\ClassDiagram1.cd",
@@ -202,7 +202,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "CreateAuditLogDto.cs",
               "DocumentMoniker": "C:\\Users\\Ntlahla\\source\\repos\\Ntlahla5408\\DibaBookings\\Backend\\DIBA_Backend\\DIBA_Backend\\Dto\\AuditLog\\CreateAuditLogDto.cs",
               "RelativeDocumentMoniker": "DIBA_Backend\\Dto\\AuditLog\\CreateAuditLogDto.cs",
@@ -215,7 +215,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "AuditLogResponseDto.cs",
               "DocumentMoniker": "C:\\Users\\Ntlahla\\source\\repos\\Ntlahla5408\\DibaBookings\\Backend\\DIBA_Backend\\DIBA_Backend\\Dto\\AuditLog\\AuditLogResponseDto.cs",
               "RelativeDocumentMoniker": "DIBA_Backend\\Dto\\AuditLog\\AuditLogResponseDto.cs",
@@ -228,7 +228,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "AuditLog.cs",
               "DocumentMoniker": "C:\\Users\\Ntlahla\\source\\repos\\Ntlahla5408\\DibaBookings\\Backend\\DIBA_Backend\\DIBA_Backend\\Models\\Entities\\AuditLog.cs",
               "RelativeDocumentMoniker": "DIBA_Backend\\Models\\Entities\\AuditLog.cs",
@@ -241,7 +241,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "PaymentsController.cs",
               "DocumentMoniker": "C:\\Users\\Ntlahla\\source\\repos\\Ntlahla5408\\DibaBookings\\Backend\\DIBA_Backend\\DIBA_Backend\\Controllers\\PaymentsController.cs",
               "RelativeDocumentMoniker": "DIBA_Backend\\Controllers\\PaymentsController.cs",
@@ -254,7 +254,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 2,
               "Title": "CreatePaymentDto.cs",
               "DocumentMoniker": "C:\\Users\\Ntlahla\\source\\repos\\Ntlahla5408\\DibaBookings\\Backend\\DIBA_Backend\\DIBA_Backend\\Dto\\Payment\\CreatePaymentDto.cs",
               "RelativeDocumentMoniker": "DIBA_Backend\\Dto\\Payment\\CreatePaymentDto.cs",
@@ -267,7 +267,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 1,
               "Title": "BookingsController.cs",
               "DocumentMoniker": "C:\\Users\\Ntlahla\\source\\repos\\Ntlahla5408\\DibaBookings\\Backend\\DIBA_Backend\\DIBA_Backend\\Controllers\\BookingsController.cs",
               "RelativeDocumentMoniker": "DIBA_Backend\\Controllers\\BookingsController.cs",
@@ -280,7 +280,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
               "Title": "Booking.cs",
               "DocumentMoniker": "C:\\Users\\Ntlahla\\source\\repos\\Ntlahla5408\\DibaBookings\\Backend\\DIBA_Backend\\DIBA_Backend\\Models\\Entities\\Booking.cs",
               "RelativeDocumentMoniker": "DIBA_Backend\\Models\\Entities\\Booking.cs",
@@ -293,7 +293,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 8,
               "Title": "AuditLogsController.cs",
               "DocumentMoniker": "C:\\Users\\Ntlahla\\source\\repos\\Ntlahla5408\\DibaBookings\\Backend\\DIBA_Backend\\DIBA_Backend\\Controllers\\AuditLogsController.cs",
               "RelativeDocumentMoniker": "DIBA_Backend\\Controllers\\AuditLogsController.cs",
