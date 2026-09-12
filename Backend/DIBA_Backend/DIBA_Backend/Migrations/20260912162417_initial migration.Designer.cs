@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DIBA_Backend.Migrations
 {
     [DbContext(typeof(DIBABookingsDbContext))]
-    [Migration("20260831123018_AddBookingSystem")]
-    partial class AddBookingSystem
+    [Migration("20260912162417_initial migration")]
+    partial class initialmigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

@@ -20,29 +20,5 @@
         public ICollection<VenueFeature> VenueFeatures { get; set; } = new List<VenueFeature>();
 
         public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
-
-        public Booking Booking
-        {
-            get => default;
-            set
-            {
-            }
-        }
-
-        public Event Event
-        {
-            get => default;
-            set
-            {
-            }
-        }
-
-        public VenueFeature VenueFeature
-        {
-            get => default;
-            set
-            {
-            }
-        }
     }
 }

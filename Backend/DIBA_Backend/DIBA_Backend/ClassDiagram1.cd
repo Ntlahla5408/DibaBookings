@@ -10,33 +10,23 @@
   <Class Name="DIBA_Backend.Models.Entities.Booking">
     <Position X="5.5" Y="3.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAJAAAgAIRoEIAAAKAAAAgAAggQQAAAAAAAAAABAAA=</HashCode>
+      <HashCode>AAAJAAAgAIRoEIAAACAAAAgAAggQAAAAAAAAAAABAAA=</HashCode>
       <FileName>Models\Entities\Booking.cs</FileName>
     </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="Payment" />
-      <Property Name="Notification" />
-    </ShowAsAssociation>
   </Class>
   <Class Name="DIBA_Backend.Models.Entities.BookingStatus">
     <Position X="3.25" Y="6.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAgAAAAQgAAAAAAAAAAQAAABAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAgAAAAQgAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Models\Entities\BookingStatus.cs</FileName>
     </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="Booking" />
-    </ShowAsAssociation>
   </Class>
   <Class Name="DIBA_Backend.Models.Entities.Event">
     <Position X="8.25" Y="2.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAJAAAgAIAgEAAABAAAAAgEAIhAAAAAAAAAAIAAAAA=</HashCode>
+      <HashCode>AAAJAAAgAIAgEAAABAAAAAgEAIgAAAAAAAAAAIAAAAA=</HashCode>
       <FileName>Models\Entities\Event.cs</FileName>
     </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="Booking" />
-    </ShowAsAssociation>
   </Class>
   <Class Name="DIBA_Backend.Models.Entities.Notification">
     <Position X="0.5" Y="3.75" Width="1.5" />
@@ -55,25 +45,16 @@
   <Class Name="DIBA_Backend.Models.Entities.Role">
     <Position X="5.75" Y="0.75" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAABACIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAA=</HashCode>
+      <HashCode>AAAAACIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAA=</HashCode>
       <FileName>Models\Entities\Role.cs</FileName>
     </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="User" />
-    </ShowAsAssociation>
   </Class>
   <Class Name="DIBA_Backend.Models.Entities.User">
     <Position X="2.75" Y="2" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AACAAEIAACAAAAAAEAAAAAgAAgBAQAAAAIAAAAAAAAg=</HashCode>
+      <HashCode>AACAAEIAACAAAAAAEAAAAAgAAAAAAAAAAAAAAAAAAAg=</HashCode>
       <FileName>Models\Entities\User.cs</FileName>
     </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="Event" />
-      <Property Name="Booking" />
-      <Property Name="Notification" />
-      <Property Name="AuditLog" />
-    </ShowAsAssociation>
   </Class>
   <Class Name="DIBA_Backend.Models.Entities.VenueFeature">
     <Position X="13.25" Y="4.25" Width="1.5" />
@@ -85,14 +66,9 @@
   <Class Name="DIBA_Backend.Models.Entities.Venue">
     <Position X="10.5" Y="4.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAACggAAAACIABAACAghAAAAAAAAAAAAAABA=</HashCode>
+      <HashCode>AAAAAAAAAACggAAAACIABAACAggAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Models\Entities\Venue.cs</FileName>
     </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="Booking" />
-      <Property Name="Event" />
-      <Property Name="VenueFeature" />
-    </ShowAsAssociation>
   </Class>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>

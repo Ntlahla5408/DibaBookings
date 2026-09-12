@@ -8,11 +8,95 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DIBA_Backend.Migrations
 {
     /// <inheritdoc />
-    public partial class AddBookingSystem : Migration
+    public partial class initialmigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "BookingStatuses",
+                columns: table => new
+                {
+                    BookingStatusId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    StatusName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    StatusDescription = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BookingStatuses", x => x.BookingStatusId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Roles",
+                columns: table => new
+                {
+                    RoleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RoleName = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Roles", x => x.RoleId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Venues",
+                columns: table => new
+                {
+                    VenueId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    VenueName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    VenueDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Capacity = table.Column<int>(type: "int", nullable: false),
+                    Location = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    VenueStatus = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Venues", x => x.VenueId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RoleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.UserId);
+                    table.ForeignKey(
+                        name: "FK_Users_Roles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "Roles",
+                        principalColumn: "RoleId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "VenueFeatures",
+                columns: table => new
+                {
+                    VenueFeatureId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FeatureName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FeatureDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FeatureStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    VenueId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_VenueFeatures", x => x.VenueFeatureId);
+                    table.ForeignKey(
+                        name: "FK_VenueFeatures_Venues_VenueId",
+                        column: x => x.VenueId,
+                        principalTable: "Venues",
+                        principalColumn: "VenueId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateTable(
                 name: "AuditLogs",
                 columns: table => new
@@ -32,35 +116,6 @@ namespace DIBA_Backend.Migrations
                         principalTable: "Users",
                         principalColumn: "UserId",
                         onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "BookingStatuses",
-                columns: table => new
-                {
-                    BookingStatusId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    StatusName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    StatusDescription = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_BookingStatuses", x => x.BookingStatusId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Venues",
-                columns: table => new
-                {
-                    VenueId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    VenueName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    VenueDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Capacity = table.Column<int>(type: "int", nullable: false),
-                    Location = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    VenueStatus = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Venues", x => x.VenueId);
                 });
 
             migrationBuilder.CreateTable(
@@ -92,27 +147,6 @@ namespace DIBA_Backend.Migrations
                         principalTable: "Venues",
                         principalColumn: "VenueId",
                         onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "VenueFeatures",
-                columns: table => new
-                {
-                    VenueFeatureId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    FeatureName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FeatureDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FeatureStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    VenueId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_VenueFeatures", x => x.VenueFeatureId);
-                    table.ForeignKey(
-                        name: "FK_VenueFeatures_Venues_VenueId",
-                        column: x => x.VenueId,
-                        principalTable: "Venues",
-                        principalColumn: "VenueId",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -221,6 +255,16 @@ namespace DIBA_Backend.Migrations
                     { new Guid("eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee"), "Booking has been completed.", "Completed" }
                 });
 
+            migrationBuilder.InsertData(
+                table: "Roles",
+                columns: new[] { "RoleId", "RoleName" },
+                values: new object[,]
+                {
+                    { new Guid("11111111-1111-1111-1111-111111111111"), "Administrator" },
+                    { new Guid("22222222-2222-2222-2222-222222222222"), "Staff" },
+                    { new Guid("33333333-3333-3333-3333-333333333333"), "Event Organiser" }
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AuditLogs_UserId",
                 table: "AuditLogs",
@@ -272,6 +316,11 @@ namespace DIBA_Backend.Migrations
                 column: "BookingId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Users_RoleId",
+                table: "Users",
+                column: "RoleId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_VenueFeatures_VenueId",
                 table: "VenueFeatures",
                 column: "VenueId");
@@ -302,7 +351,13 @@ namespace DIBA_Backend.Migrations
                 name: "Events");
 
             migrationBuilder.DropTable(
+                name: "Users");
+
+            migrationBuilder.DropTable(
                 name: "Venues");
+
+            migrationBuilder.DropTable(
+                name: "Roles");
         }
     }
 }
