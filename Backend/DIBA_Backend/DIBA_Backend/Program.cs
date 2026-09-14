@@ -79,6 +79,13 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
+// Apply migrations and seed initial DIBA test data.
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<DIBABookingsDbContext>();
+    await DbSeeder.SeedAsync(dbContext);
+}
+
 app.UseCors("MyPolicy");
 
 // Configure the HTTP request pipeline.

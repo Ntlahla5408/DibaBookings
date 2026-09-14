@@ -3,32 +3,24 @@
   "WorkspaceRootPath": "C:\\Users\\Ntlahla\\source\\repos\\Ntlahla5408\\DibaBookings\\Backend\\DIBA_Backend\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|c:\\users\\ntlahla\\source\\repos\\ntlahla5408\\dibabookings\\backend\\diba_backend\\diba_backend\\models\\entities\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|solutionrelative:diba_backend\\models\\entities\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|c:\\users\\ntlahla\\source\\repos\\ntlahla5408\\dibabookings\\backend\\diba_backend\\diba_backend\\data\\dbseeder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|solutionrelative:diba_backend\\data\\dbseeder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|c:\\users\\ntlahla\\source\\repos\\ntlahla5408\\dibabookings\\backend\\diba_backend\\diba_backend\\models\\entities\\booking.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|solutionrelative:diba_backend\\models\\entities\\booking.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Ntlahla\\source\\repos\\Ntlahla5408\\DibaBookings\\Backend\\DIBA_Backend\\DIBA_Backend\\Migrations\\20260912162417_initial migration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:DIBA_Backend\\Migrations\\20260912162417_initial migration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|c:\\users\\ntlahla\\source\\repos\\ntlahla5408\\dibabookings\\backend\\diba_backend\\diba_backend\\models\\entities\\venuefeature.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|solutionrelative:diba_backend\\models\\entities\\venuefeature.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|c:\\users\\ntlahla\\source\\repos\\ntlahla5408\\dibabookings\\backend\\diba_backend\\diba_backend\\models\\entities\\venue.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|solutionrelative:diba_backend\\models\\entities\\venue.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|c:\\users\\ntlahla\\source\\repos\\ntlahla5408\\dibabookings\\backend\\diba_backend\\diba_backend\\models\\entities\\notification.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|solutionrelative:diba_backend\\models\\entities\\notification.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|c:\\users\\ntlahla\\source\\repos\\ntlahla5408\\dibabookings\\backend\\diba_backend\\diba_backend\\models\\entities\\payment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|solutionrelative:diba_backend\\models\\entities\\payment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|c:\\users\\ntlahla\\source\\repos\\ntlahla5408\\dibabookings\\backend\\diba_backend\\diba_backend\\models\\entities\\notification.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|solutionrelative:diba_backend\\models\\entities\\notification.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|c:\\users\\ntlahla\\source\\repos\\ntlahla5408\\dibabookings\\backend\\diba_backend\\diba_backend\\models\\entities\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|solutionrelative:diba_backend\\models\\entities\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|c:\\users\\ntlahla\\source\\repos\\ntlahla5408\\dibabookings\\backend\\diba_backend\\diba_backend\\models\\entities\\auditlog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|solutionrelative:diba_backend\\models\\entities\\auditlog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|c:\\users\\ntlahla\\source\\repos\\ntlahla5408\\dibabookings\\backend\\diba_backend\\diba_backend\\models\\entities\\event.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -39,12 +31,20 @@
       "RelativeMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|solutionrelative:diba_backend\\models\\entities\\bookingstatus.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|c:\\users\\ntlahla\\source\\repos\\ntlahla5408\\dibabookings\\backend\\diba_backend\\diba_backend\\models\\entities\\auditlog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|solutionrelative:diba_backend\\models\\entities\\auditlog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|c:\\users\\ntlahla\\source\\repos\\ntlahla5408\\dibabookings\\backend\\diba_backend\\diba_backend\\models\\entities\\booking.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|solutionrelative:diba_backend\\models\\entities\\booking.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|c:\\users\\ntlahla\\source\\repos\\ntlahla5408\\dibabookings\\backend\\diba_backend\\diba_backend\\controllers\\bookingscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|solutionrelative:diba_backend\\controllers\\bookingscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|c:\\users\\ntlahla\\source\\repos\\ntlahla5408\\dibabookings\\backend\\diba_backend\\diba_backend\\models\\entities\\venuefeature.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|solutionrelative:diba_backend\\models\\entities\\venuefeature.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|c:\\users\\ntlahla\\source\\repos\\ntlahla5408\\dibabookings\\backend\\diba_backend\\diba_backend\\models\\entities\\venue.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|solutionrelative:diba_backend\\models\\entities\\venue.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|c:\\users\\ntlahla\\source\\repos\\ntlahla5408\\dibabookings\\backend\\diba_backend\\diba_backend\\dto\\payment\\createpaymentdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -181,6 +181,10 @@
     {
       "AbsoluteMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|c:\\users\\ntlahla\\source\\repos\\ntlahla5408\\dibabookings\\backend\\diba_backend\\diba_backend\\dto\\user\\userresponsedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|solutionrelative:diba_backend\\dto\\user\\userresponsedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|c:\\users\\ntlahla\\source\\repos\\ntlahla5408\\dibabookings\\backend\\diba_backend\\diba_backend\\migrations\\20260912162417_initial migration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{196B7C0E-8FF9-4AA9-9866-37AD5D9C87D4}|DIBA_Backend\\DIBA_Backend.csproj|solutionrelative:diba_backend\\migrations\\20260912162417_initial migration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -190,7 +194,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 9,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Bookmark",
@@ -198,59 +202,44 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "20260912162417_initial migration.cs",
-              "DocumentMoniker": "C:\\Users\\Ntlahla\\source\\repos\\Ntlahla5408\\DibaBookings\\Backend\\DIBA_Backend\\DIBA_Backend\\Migrations\\20260912162417_initial migration.cs",
-              "RelativeDocumentMoniker": "DIBA_Backend\\Migrations\\20260912162417_initial migration.cs",
-              "ToolTip": "C:\\Users\\Ntlahla\\source\\repos\\Ntlahla5408\\DibaBookings\\Backend\\DIBA_Backend\\DIBA_Backend\\Migrations\\20260912162417_initial migration.cs",
-              "RelativeToolTip": "DIBA_Backend\\Migrations\\20260912162417_initial migration.cs",
-              "ViewState": "AgIAAEsAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "DocumentIndex": 0,
+              "Title": "DbSeeder.cs",
+              "DocumentMoniker": "C:\\Users\\Ntlahla\\source\\repos\\Ntlahla5408\\DibaBookings\\Backend\\DIBA_Backend\\DIBA_Backend\\Data\\DbSeeder.cs",
+              "RelativeDocumentMoniker": "DIBA_Backend\\Data\\DbSeeder.cs",
+              "ToolTip": "C:\\Users\\Ntlahla\\source\\repos\\Ntlahla5408\\DibaBookings\\Backend\\DIBA_Backend\\DIBA_Backend\\Data\\DbSeeder.cs",
+              "RelativeToolTip": "DIBA_Backend\\Data\\DbSeeder.cs",
+              "ViewState": "AgIAAGoCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-12T16:24:20.293Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "AuditLog.cs",
-              "DocumentMoniker": "C:\\Users\\Ntlahla\\source\\repos\\Ntlahla5408\\DibaBookings\\Backend\\DIBA_Backend\\DIBA_Backend\\Models\\Entities\\AuditLog.cs",
-              "RelativeDocumentMoniker": "DIBA_Backend\\Models\\Entities\\AuditLog.cs",
-              "ToolTip": "C:\\Users\\Ntlahla\\source\\repos\\Ntlahla5408\\DibaBookings\\Backend\\DIBA_Backend\\DIBA_Backend\\Models\\Entities\\AuditLog.cs",
-              "RelativeToolTip": "DIBA_Backend\\Models\\Entities\\AuditLog.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAARAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-03T08:49:05.84Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "BookingsController.cs",
-              "DocumentMoniker": "C:\\Users\\Ntlahla\\source\\repos\\Ntlahla5408\\DibaBookings\\Backend\\DIBA_Backend\\DIBA_Backend\\Controllers\\BookingsController.cs",
-              "RelativeDocumentMoniker": "DIBA_Backend\\Controllers\\BookingsController.cs",
-              "ToolTip": "C:\\Users\\Ntlahla\\source\\repos\\Ntlahla5408\\DibaBookings\\Backend\\DIBA_Backend\\DIBA_Backend\\Controllers\\BookingsController.cs",
-              "RelativeToolTip": "DIBA_Backend\\Controllers\\BookingsController.cs",
-              "ViewState": "AgIAAGICAAAAAAAAAAAAAHECAAAvAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-03T06:45:41.98Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Booking.cs",
-              "DocumentMoniker": "C:\\Users\\Ntlahla\\source\\repos\\Ntlahla5408\\DibaBookings\\Backend\\DIBA_Backend\\DIBA_Backend\\Models\\Entities\\Booking.cs",
-              "RelativeDocumentMoniker": "DIBA_Backend\\Models\\Entities\\Booking.cs",
-              "ToolTip": "C:\\Users\\Ntlahla\\source\\repos\\Ntlahla5408\\DibaBookings\\Backend\\DIBA_Backend\\DIBA_Backend\\Models\\Entities\\Booking.cs",
-              "RelativeToolTip": "DIBA_Backend\\Models\\Entities\\Booking.cs",
-              "ViewState": "AgIAAB0AAAAAAAAAAAAkwCMAAABgAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-02T01:55:19.571Z",
+              "WhenOpened": "2026-09-14T17:17:57.419Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 8,
+              "Title": "BookingsController.cs",
+              "DocumentMoniker": "C:\\Users\\Ntlahla\\source\\repos\\Ntlahla5408\\DibaBookings\\Backend\\DIBA_Backend\\DIBA_Backend\\Controllers\\BookingsController.cs",
+              "RelativeDocumentMoniker": "DIBA_Backend\\Controllers\\BookingsController.cs",
+              "ToolTip": "C:\\Users\\Ntlahla\\source\\repos\\Ntlahla5408\\DibaBookings\\Backend\\DIBA_Backend\\DIBA_Backend\\Controllers\\BookingsController.cs",
+              "RelativeToolTip": "DIBA_Backend\\Controllers\\BookingsController.cs",
+              "ViewState": "AgIAALkBAAAAAAAAAAAAAHECAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-03T06:45:41.98Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Booking.cs",
+              "DocumentMoniker": "C:\\Users\\Ntlahla\\source\\repos\\Ntlahla5408\\DibaBookings\\Backend\\DIBA_Backend\\DIBA_Backend\\Models\\Entities\\Booking.cs",
+              "RelativeDocumentMoniker": "DIBA_Backend\\Models\\Entities\\Booking.cs",
+              "ToolTip": "C:\\Users\\Ntlahla\\source\\repos\\Ntlahla5408\\DibaBookings\\Backend\\DIBA_Backend\\DIBA_Backend\\Models\\Entities\\Booking.cs",
+              "RelativeToolTip": "DIBA_Backend\\Models\\Entities\\Booking.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACMAAABgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-02T01:55:19.571Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
               "Title": "BookingStatus.cs",
               "DocumentMoniker": "C:\\Users\\Ntlahla\\source\\repos\\Ntlahla5408\\DibaBookings\\Backend\\DIBA_Backend\\DIBA_Backend\\Models\\Entities\\BookingStatus.cs",
               "RelativeDocumentMoniker": "DIBA_Backend\\Models\\Entities\\BookingStatus.cs",
@@ -258,12 +247,11 @@
               "RelativeToolTip": "DIBA_Backend\\Models\\Entities\\BookingStatus.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAABRAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-02T01:55:21.214Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-09-02T01:55:21.214Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 5,
               "Title": "Event.cs",
               "DocumentMoniker": "C:\\Users\\Ntlahla\\source\\repos\\Ntlahla5408\\DibaBookings\\Backend\\DIBA_Backend\\DIBA_Backend\\Models\\Entities\\Event.cs",
               "RelativeDocumentMoniker": "DIBA_Backend\\Models\\Entities\\Event.cs",
@@ -271,25 +259,36 @@
               "RelativeToolTip": "DIBA_Backend\\Models\\Entities\\Event.cs",
               "ViewState": "AgIAABIAAAAAAAAAAAAiwBsAAABRAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-02T01:55:17.416Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-09-02T01:55:17.416Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 4,
+              "Title": "AuditLog.cs",
+              "DocumentMoniker": "C:\\Users\\Ntlahla\\source\\repos\\Ntlahla5408\\DibaBookings\\Backend\\DIBA_Backend\\DIBA_Backend\\Models\\Entities\\AuditLog.cs",
+              "RelativeDocumentMoniker": "DIBA_Backend\\Models\\Entities\\AuditLog.cs",
+              "ToolTip": "C:\\Users\\Ntlahla\\source\\repos\\Ntlahla5408\\DibaBookings\\Backend\\DIBA_Backend\\DIBA_Backend\\Models\\Entities\\AuditLog.cs",
+              "RelativeToolTip": "DIBA_Backend\\Models\\Entities\\AuditLog.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-03T08:49:05.84Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
               "Title": "Notification.cs",
               "DocumentMoniker": "C:\\Users\\Ntlahla\\source\\repos\\Ntlahla5408\\DibaBookings\\Backend\\DIBA_Backend\\DIBA_Backend\\Models\\Entities\\Notification.cs",
               "RelativeDocumentMoniker": "DIBA_Backend\\Models\\Entities\\Notification.cs",
               "ToolTip": "C:\\Users\\Ntlahla\\source\\repos\\Ntlahla5408\\DibaBookings\\Backend\\DIBA_Backend\\DIBA_Backend\\Models\\Entities\\Notification.cs",
               "RelativeToolTip": "DIBA_Backend\\Models\\Entities\\Notification.cs",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAAABEAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-09-03T06:52:33.959Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 2,
               "Title": "Payment.cs",
               "DocumentMoniker": "C:\\Users\\Ntlahla\\source\\repos\\Ntlahla5408\\DibaBookings\\Backend\\DIBA_Backend\\DIBA_Backend\\Models\\Entities\\Payment.cs",
               "RelativeDocumentMoniker": "DIBA_Backend\\Models\\Entities\\Payment.cs",
@@ -297,21 +296,31 @@
               "RelativeToolTip": "DIBA_Backend\\Models\\Entities\\Payment.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-03T08:42:06.947Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-09-03T08:42:06.947Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 3,
               "Title": "User.cs",
               "DocumentMoniker": "C:\\Users\\Ntlahla\\source\\repos\\Ntlahla5408\\DibaBookings\\Backend\\DIBA_Backend\\DIBA_Backend\\Models\\Entities\\User.cs",
               "RelativeDocumentMoniker": "DIBA_Backend\\Models\\Entities\\User.cs",
               "ToolTip": "C:\\Users\\Ntlahla\\source\\repos\\Ntlahla5408\\DibaBookings\\Backend\\DIBA_Backend\\DIBA_Backend\\Models\\Entities\\User.cs",
               "RelativeToolTip": "DIBA_Backend\\Models\\Entities\\User.cs",
-              "ViewState": "AgIAABQAAAAAAAAAAAAAABQAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-02T00:12:15.929Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-09-02T00:12:15.929Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 45,
+              "Title": "20260912162417_initial migration.cs",
+              "DocumentMoniker": "C:\\Users\\Ntlahla\\source\\repos\\Ntlahla5408\\DibaBookings\\Backend\\DIBA_Backend\\DIBA_Backend\\Migrations\\20260912162417_initial migration.cs",
+              "RelativeDocumentMoniker": "DIBA_Backend\\Migrations\\20260912162417_initial migration.cs",
+              "ToolTip": "C:\\Users\\Ntlahla\\source\\repos\\Ntlahla5408\\DibaBookings\\Backend\\DIBA_Backend\\DIBA_Backend\\Migrations\\20260912162417_initial migration.cs",
+              "RelativeToolTip": "DIBA_Backend\\Migrations\\20260912162417_initial migration.cs",
+              "ViewState": "AgIAAEsAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-12T16:24:20.293Z"
             },
             {
               "$type": "Document",
@@ -323,12 +332,11 @@
               "RelativeToolTip": "DIBA_Backend\\Dto\\Payment\\CreatePaymentDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-03T08:44:25.825Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-09-03T08:44:25.825Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 10,
               "Title": "Venue.cs",
               "DocumentMoniker": "C:\\Users\\Ntlahla\\source\\repos\\Ntlahla5408\\DibaBookings\\Backend\\DIBA_Backend\\DIBA_Backend\\Models\\Entities\\Venue.cs",
               "RelativeDocumentMoniker": "DIBA_Backend\\Models\\Entities\\Venue.cs",
@@ -336,12 +344,11 @@
               "RelativeToolTip": "DIBA_Backend\\Models\\Entities\\Venue.cs",
               "ViewState": "AgIAAA8AAAAAAAAAAAAAABUAAABRAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-02T01:55:24.209Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-09-02T01:55:24.209Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 9,
               "Title": "VenueFeature.cs",
               "DocumentMoniker": "C:\\Users\\Ntlahla\\source\\repos\\Ntlahla5408\\DibaBookings\\Backend\\DIBA_Backend\\DIBA_Backend\\Models\\Entities\\VenueFeature.cs",
               "RelativeDocumentMoniker": "DIBA_Backend\\Models\\Entities\\VenueFeature.cs",
@@ -349,8 +356,7 @@
               "RelativeToolTip": "DIBA_Backend\\Models\\Entities\\VenueFeature.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-02T01:55:25.527Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-09-02T01:55:25.527Z"
             },
             {
               "$type": "Document",
@@ -362,8 +368,7 @@
               "RelativeToolTip": "DIBA_Backend\\Dto\\AuditLog\\AuditLogResponseDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-03T08:50:41.886Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-09-03T08:50:41.886Z"
             },
             {
               "$type": "Document",
@@ -375,8 +380,7 @@
               "RelativeToolTip": "DIBA_Backend\\Models\\Entities\\Role.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-12T16:08:30.039Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-09-12T16:08:30.039Z"
             },
             {
               "$type": "Document",
@@ -388,8 +392,7 @@
               "RelativeToolTip": "DIBA_Backend\\Data\\DIBABookingsDbContext.cs",
               "ViewState": "AgIAANcAAAAAAAAAAAAkwOIAAABFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-02T01:55:47.069Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-09-02T01:55:47.069Z"
             },
             {
               "$type": "Document",
@@ -401,8 +404,7 @@
               "RelativeToolTip": "DIBA_Backend\\appsettings.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAEAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-09-03T07:28:10.936Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-09-03T07:28:10.936Z"
             },
             {
               "$type": "Document",
@@ -414,8 +416,7 @@
               "RelativeToolTip": "DIBA_Backend\\Controllers\\PaymentsController.cs",
               "ViewState": "AgIAAA0AAAAAAAAAAAAAACUAAAAfAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-03T08:45:34.079Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-09-03T08:45:34.079Z"
             },
             {
               "$type": "Document",
@@ -427,8 +428,7 @@
               "RelativeToolTip": "DIBA_Backend\\Dto\\AuditLog\\CreateAuditLogDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-03T08:51:34.026Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-09-03T08:51:34.026Z"
             },
             {
               "$type": "Document",
@@ -439,8 +439,7 @@
               "ToolTip": "C:\\Users\\Ntlahla\\source\\repos\\Ntlahla5408\\DibaBookings\\Backend\\DIBA_Backend\\DIBA_Backend\\ClassDiagram1.cd",
               "RelativeToolTip": "DIBA_Backend\\ClassDiagram1.cd",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000463|",
-              "WhenOpened": "2026-09-04T20:32:13.481Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-09-04T20:32:13.481Z"
             },
             {
               "$type": "Document",
@@ -452,8 +451,7 @@
               "RelativeToolTip": "DIBA_Backend\\Controllers\\AuditLogsController.cs",
               "ViewState": "AgIAAAEAAAAAAAAAAAAAABAAAAAvAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-03T08:52:28.804Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-09-03T08:52:28.804Z"
             },
             {
               "$type": "Document",
@@ -465,8 +463,7 @@
               "RelativeToolTip": "DIBA_Backend\\Dto\\Payment\\PaymentResponseDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-03T08:43:13.746Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-09-03T08:43:13.746Z"
             },
             {
               "$type": "Document",
@@ -478,8 +475,7 @@
               "RelativeToolTip": "DIBA_Backend\\Dto\\Booking\\RejectBookingDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAzAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-03T08:39:00.353Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-09-03T08:39:00.353Z"
             },
             {
               "$type": "Document",
@@ -503,8 +499,7 @@
               "RelativeToolTip": "DIBA_Backend\\Program.cs",
               "ViewState": "AgIAAEIAAAAAAAAAAAAAAEsAAAAHAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-03T07:25:34.209Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-09-03T07:25:34.209Z"
             },
             {
               "$type": "Document",
@@ -516,8 +511,7 @@
               "RelativeToolTip": "DIBA_Backend\\Controllers\\NotificationsController.cs",
               "ViewState": "AgIAACIAAAAAAAAAAAAAADAAAAAmAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-03T06:57:20.828Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-09-03T06:57:20.828Z"
             },
             {
               "$type": "Document",
@@ -529,8 +523,7 @@
               "RelativeToolTip": "DIBA_Backend\\Dto\\Notification\\CreateNotificationDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-03T06:55:39.724Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-09-03T06:55:39.724Z"
             },
             {
               "$type": "Document",
@@ -542,8 +535,7 @@
               "RelativeToolTip": "DIBA_Backend\\Dto\\Notification\\NotificationResponseDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-03T06:54:38.781Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-09-03T06:54:38.781Z"
             },
             {
               "$type": "Document",
@@ -555,8 +547,7 @@
               "RelativeToolTip": "DIBA_Backend\\Controllers\\AuthenticationController.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAGsAAAAZAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-02T00:02:41.797Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-09-02T00:02:41.797Z"
             },
             {
               "$type": "Document",
@@ -568,8 +559,7 @@
               "RelativeToolTip": "DIBA_Backend\\Dto\\Booking\\UpdateBookingDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-03T06:39:17.95Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-09-03T06:39:17.95Z"
             },
             {
               "$type": "Document",
@@ -581,8 +571,7 @@
               "RelativeToolTip": "DIBA_Backend\\Dto\\Booking\\CreateBookingDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-03T06:36:58.606Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-09-03T06:36:58.606Z"
             },
             {
               "$type": "Document",
@@ -594,8 +583,7 @@
               "RelativeToolTip": "DIBA_Backend\\Dto\\Booking\\BookingResponseDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-03T06:35:37.622Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-09-03T06:35:37.622Z"
             },
             {
               "$type": "Document",
@@ -607,8 +595,7 @@
               "RelativeToolTip": "DIBA_Backend\\Controllers\\EventsController.cs",
               "ViewState": "AgIAALYAAAAAAAAAAAAAAMAAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-02T03:05:42.566Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-09-02T03:05:42.566Z"
             },
             {
               "$type": "Document",
@@ -620,8 +607,7 @@
               "RelativeToolTip": "DIBA_Backend\\Dto\\Event\\UpdateEventDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAApAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-02T03:02:11.931Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-09-02T03:02:11.931Z"
             },
             {
               "$type": "Document",
@@ -633,8 +619,7 @@
               "RelativeToolTip": "DIBA_Backend\\Dto\\Event\\CreateEventDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAApAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-02T03:01:47.747Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-09-02T03:01:47.747Z"
             },
             {
               "$type": "Document",
@@ -646,8 +631,7 @@
               "RelativeToolTip": "DIBA_Backend\\Dto\\Event\\EventResponseDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAoAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-02T03:01:19.739Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-09-02T03:01:19.739Z"
             },
             {
               "$type": "Document",
@@ -659,8 +643,7 @@
               "RelativeToolTip": "DIBA_Backend\\Dto\\VenueFeature\\CreateVenueFeatureDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAA6AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-02T02:02:28.054Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-09-02T02:02:28.054Z"
             },
             {
               "$type": "Document",
@@ -672,8 +655,7 @@
               "RelativeToolTip": "DIBA_Backend\\Dto\\VenueFeature\\VenueFeatureResponseDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAApAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-02T02:01:52.264Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-09-02T02:01:52.264Z"
             },
             {
               "$type": "Document",
@@ -685,8 +667,7 @@
               "RelativeToolTip": "DIBA_Backend\\Controllers\\VenuesController.cs",
               "ViewState": "AgIAANoAAAAAAAAAAAAiwN8AAAAWAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-02T01:54:19.989Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-09-02T01:54:19.989Z"
             },
             {
               "$type": "Document",
@@ -698,8 +679,7 @@
               "RelativeToolTip": "DIBA_Backend\\Dto\\VenueFeature\\UpdateVenueFeatureDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-02T02:02:44.77Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-09-02T02:02:44.77Z"
             },
             {
               "$type": "Document",
@@ -711,8 +691,7 @@
               "RelativeToolTip": "DIBA_Backend\\Dto\\Venue\\VenueResponseDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-02T02:00:42.513Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-09-02T02:00:42.513Z"
             },
             {
               "$type": "Document",
@@ -724,8 +703,7 @@
               "RelativeToolTip": "DIBA_Backend\\Dto\\Venue\\UpdateVenueDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAA2AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-02T02:01:22.886Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-09-02T02:01:22.886Z"
             },
             {
               "$type": "Document",
@@ -737,8 +715,7 @@
               "RelativeToolTip": "DIBA_Backend\\Dto\\Venue\\CreateVenueDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-02T02:01:03.969Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-09-02T02:01:03.969Z"
             },
             {
               "$type": "Document",
@@ -750,8 +727,7 @@
               "RelativeToolTip": "DIBA_Backend\\Controllers\\UsersController.cs",
               "ViewState": "AgIAAF4AAAAAAAAAAAAYwHMAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-02T01:36:27.029Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-09-02T01:36:27.029Z"
             },
             {
               "$type": "Document",
@@ -763,8 +739,7 @@
               "RelativeToolTip": "DIBA_Backend\\Dto\\User\\UpdateUserDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-02T01:33:48.92Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-09-02T01:33:48.92Z"
             },
             {
               "$type": "Document",
@@ -776,8 +751,7 @@
               "RelativeToolTip": "DIBA_Backend\\Dto\\User\\UserResponseDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-02T01:33:26.436Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-09-02T01:33:26.436Z"
             }
           ]
         }
