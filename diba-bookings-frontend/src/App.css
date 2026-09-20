@@ -1,5 +1,205 @@
-.App {
+.dashboard-shell {
+  min-height: 100vh;
+  background: #f4f7fb;
+  color: #17243a;
+}
+
+.dashboard-topbar {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 1030;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+  padding: 0 32px;
+  background: #ffffff;
+  border-bottom: 1px solid #e5eaf1;
+}
+
+.dashboard-brand-group,
+.dashboard-profile,
+.sidebar-link {
+  display: flex;
+  align-items: center;
+}
+
+.dashboard-brand-group {
+  gap: 18px;
+}
+
+.dashboard-brand {
+  color: #173b6c;
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.menu-toggle {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  width: 38px;
+  height: 38px;
+  padding: 8px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.menu-toggle:hover,
+.menu-toggle:focus-visible {
+  background: #edf3fa;
+}
+
+.menu-toggle span {
+  display: block;
+  width: 21px;
+  height: 2px;
+  background: #173b6c;
+}
+
+.dashboard-profile {
+  gap: 10px;
+}
+
+.profile-avatar {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #dceaf8;
+  color: #173b6c;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.profile-copy {
+  display: flex;
+  flex-direction: column;
+  min-width: 110px;
+  font-size: 0.85rem;
+}
+
+.profile-copy span {
+  color: #7a8797;
+  font-size: 0.72rem;
+}
+
+.logout-button {
+  margin-left: 8px;
+  padding: 4px 0 4px 12px;
+  color: #bd4650;
+  text-decoration: none;
+  font-size: 0.85rem;
+}
+
+.dashboard-sidebar {
+  position: fixed;
+  top: 72px;
+  bottom: 0;
+  left: 0;
+  z-index: 1020;
+  width: 238px;
+  padding: 28px 16px;
+  background: #173b6c;
+  transform: translateX(-100%);
+  transition: transform 180ms ease;
+}
+
+.dashboard-sidebar.is-open {
+  transform: translateX(0);
+}
+
+.sidebar-link {
+  width: 100%;
+  gap: 14px;
+  margin-bottom: 6px;
+  padding: 12px 14px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #d7e4f2;
+  text-align: left;
+  cursor: pointer;
+}
+
+.sidebar-link span {
+  width: 20px;
+  color: #9cc1e5;
+  font-size: 1.1rem;
   text-align: center;
+}
+
+.sidebar-link:hover,
+.sidebar-link.active {
+  background: #28558a;
+  color: #ffffff;
+}
+
+.sidebar-backdrop {
+  position: fixed;
+  inset: 72px 0 0;
+  z-index: 1010;
+  border: 0;
+  background: rgba(16, 31, 52, 0.32);
+}
+
+.dashboard-content {
+  min-height: 100vh;
+  padding: 116px 0 48px;
+}
+
+.dashboard-heading h1 {
+  margin-bottom: 6px;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.eyebrow {
+  margin-bottom: 6px;
+  color: #3974aa;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.dashboard-card,
+.dashboard-content .card {
+  border: 1px solid #e4eaf1;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(23, 59, 108, 0.06);
+}
+
+.section-title {
+  color: #263951;
+  font-size: 1.25rem;
+}
+
+@media (min-width: 992px) {
+  .dashboard-sidebar.is-open ~ .sidebar-backdrop + .dashboard-content,
+  .dashboard-sidebar.is-open + .sidebar-backdrop + .dashboard-content {
+    margin-left: 238px;
+  }
+}
+
+@media (max-width: 575px) {
+  .dashboard-topbar {
+    padding: 0 16px;
+  }
+
+  .dashboard-brand {
+    font-size: 1.1rem;
+  }
+
+  .profile-copy,
+  .logout-button {
+    display: none;
+  }
 }
 
 .App-logo {

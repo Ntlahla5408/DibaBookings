@@ -208,7 +208,7 @@
               "RelativeDocumentMoniker": "DIBA_Backend\\Data\\DbSeeder.cs",
               "ToolTip": "C:\\Users\\Ntlahla\\source\\repos\\Ntlahla5408\\DibaBookings\\Backend\\DIBA_Backend\\DIBA_Backend\\Data\\DbSeeder.cs",
               "RelativeToolTip": "DIBA_Backend\\Data\\DbSeeder.cs",
-              "ViewState": "AgIAAGoCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAGYBAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-09-14T17:17:57.419Z",
               "EditorCaption": ""
@@ -283,8 +283,7 @@
               "RelativeToolTip": "DIBA_Backend\\Models\\Entities\\Notification.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-03T06:52:33.959Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-09-03T06:52:33.959Z"
             },
             {
               "$type": "Document",
