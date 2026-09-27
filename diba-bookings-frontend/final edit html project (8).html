@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NMU | Campus Venue Booking System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --nmu-navy: #141C2B;
+            --nmu-yellow: #FFCC00;
+        }
+
+        body {
+            font-family: 'Nunito Sans', sans-serif;
+            background-color: #f8fafc;
+            color: var(--nmu-navy);
+            margin: 0;
+            padding: 0;
+        }
+
+        .hero-bg {
+            background: linear-gradient(rgba(20, 28, 43, 0.9), rgba(20, 28, 43, 0.9)), url('https://images.unsplash.com/photo-1541339907198-e08756eaa589?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .view-section {
+            display: none;
+            min-height: 100vh;
+            width: 100%;
+        }
+
+        .active-view {
+            display: flex !important;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .sidebar-item {
+            cursor: pointer;
+            padding: 0.7rem 1rem;
+            border-radius: 0.5rem;
+            color: #94a3b8;
+            transition: 0.2s;
+            font-weight: 600;
+            font-size: 0.85rem;
+            border-left: 3px solid transparent;
+        }
+
+            .sidebar-item:hover {
+                background: rgba(255,255,255,0.05);
+                color: white;
+            }
+
+        .sidebar-active {
+            background: rgba(255,204,0,0.1);
+            color: var(--nmu-yellow) !important;
+            border-left: 3px solid var(--nmu-yellow);
+        }
+
+        .role-header {
+            font-size: 0.65rem;
+            font-weight: 900;
+            color: #475569;
+            letter-spacing: 0.1em;
+            padding: 1.5rem 1rem 0.5rem 1rem;
+            text-transform: uppercase;
+        }
+
+        .nmu-btn {
+            background-color: var(--nmu-yellow);
+            color: var(--nmu-navy);
+            padding: 0.6rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 800;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+
+            .nmu-btn:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 4px 12px rgba(255,204,0,0.3);
+            }
+    </style>
+</head>
+<body>
+
+    <!-- 1. LANDING / START PAGE -->
+    <div id="start-page" class="view-section active-view hero-bg flex-col items-center justify-center text-center px-6">
+        <img src="https://upload.wikimedia.org/wikipedia/en/thumb/f/f3/Nelson_Mandela_University_logo.svg/1200px-Nelson_Mandela_University_logo.svg.png" class="h-32 mb-8 drop-shadow-2xl">
+        <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-2 tracking-tight">Campus Venue Booking System</h1>
+        <p class="text-nmu-yellow font-bold tracking-[0.3em] mb-10 text-sm uppercase">Nelson Mandela University Portal</p>
+        <div class="flex gap-4">
+            <button onclick="showView('signin-page')" class="nmu-btn px-10">Sign In</button>
+            <button onclick="showView('register-page')" class="border border-white/40 text-white px-10 py-2.5 rounded-lg font-bold hover:bg-white/10">Register</button>
+        </div>
+    </div>
+
+    <!-- 2. LOGIN PAGE -->
+    <div id="signin-page" class="view-section items-center justify-center bg-gray-50">
+        <div class="bg-white p-12 rounded-3xl shadow-2xl w-full max-w-md border-t-8 border-nmu-navy text-center">
+            <img src="https://upload.wikimedia.org/wikipedia/en/thumb/f/f3/Nelson_Mandela_University_logo.svg/1200px-Nelson_Mandela_University_logo.svg.png" class="h-20 mx-auto mb-8">
+            <h2 class="text-xl font-black mb-8">LOGIN TO SYSTEM</h2>
+            <input type="text" placeholder="ID Number / Username" class="w-full p-4 bg-gray-50 rounded-xl mb-4 border outline-none focus:border-nmu-yellow">
+            <input type="password" placeholder="Password" class="w-full p-4 bg-gray-50 rounded-xl mb-8 border outline-none focus:border-nmu-yellow">
+            <button onclick="showView('dashboard-main')" class="w-full nmu-btn">Login</button>
+        </div>
+    </div>
+
+    <!-- 3. REGISTER PAGE -->
+    <div id="register-page" class="view-section items-center justify-center bg-gray-50">
+        <div class="bg-white p-12 rounded-3xl shadow-2xl w-full max-w-lg border-t-8 border-nmu-navy">
+            <img src="https://upload.wikimedia.org/wikipedia/en/thumb/f/f3/Nelson_Mandela_University_logo.svg/1200px-Nelson_Mandela_University_logo.svg.png" class="h-16 mx-auto mb-6">
+            <h2 class="text-xl font-black text-center mb-8">SYSTEM REGISTRATION</h2>
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <input type="text" placeholder="First Name" class="p-4 bg-gray-50 rounded-xl border">
+                <input type="text" placeholder="Last Name" class="p-4 bg-gray-50 rounded-xl border">
+            </div>
+            <input type="email" placeholder="Email Address" class="w-full p-4 bg-gray-50 rounded-xl mb-4 border">
+            <input type="password" placeholder="Create Password" class="w-full p-4 bg-gray-50 rounded-xl mb-8 border">
+            <button onclick="showView('signin-page')" class="w-full nmu-btn">Register</button>
+        </div>
+    </div>
+
+    <!-- MAIN DASHBOARD -->
+    <div id="dashboard-main" class="view-section flex">
+
+        <!-- SIDEBAR: Role-Based Navigation from Diagrams -->
+        <aside class="w-72 bg-[#141C2B] text-white flex flex-col fixed h-full shadow-2xl overflow-y-auto">
+            <div class="p-8 border-b border-white/5 flex flex-col items-center">
+                <img src="https://upload.wikimedia.org/wikipedia/en/thumb/f/f3/Nelson_Mandela_University_logo.svg/1200px-Nelson_Mandela_University_logo.svg.png" class="h-14 brightness-0 invert mx-auto mb-2">
+                <p class="text-[9px] text-nmu-yellow font-black tracking-widest uppercase">Venue Portal</p>
+            </div>
+
+            <!-- EVENT ORGANIZER SECTION -->
+            <div class="role-header">Event Organizer</div>
+            <div onclick="setTab('tab-organizer-venues')" class="sidebar-item sidebar-active" id="btn-org-venues">Search & View Venues</div>
+            <div onclick="setTab('tab-organizer-booking')" class="sidebar-item" id="btn-org-booking">Submit Booking Request</div>
+            <div onclick="setTab('tab-organizer-history')" class="sidebar-item" id="btn-org-history">View Booking History</div>
+
+            <!-- STAFF SECTION -->
+            <div class="role-header">Staff</div>
+            <div onclick="setTab('tab-staff-manage')" class="sidebar-item" id="btn-staff-manage">Manage Booking Requests</div>
+            <div onclick="setTab('tab-staff-enquiries')" class="sidebar-item" id="btn-staff-enquiries">Respond to Enquiries</div>
+            <div onclick="setTab('tab-staff-venues')" class="sidebar-item" id="btn-staff-venues">Add/Update Venues</div>
+
+            <!-- SYSTEM ADMIN SECTION -->
+            <div class="role-header">System Admin</div>
+            <div onclick="setTab('tab-admin-users')" class="sidebar-item" id="btn-admin-users">Manage User Accounts</div>
+            <div onclick="setTab('tab-admin-settings')" class="sidebar-item" id="btn-admin-settings">Manage System Settings</div>
+
+            <!-- COMMON -->
+            <div class="role-header">Common</div>
+            <div onclick="setTab('tab-profile')" class="sidebar-item" id="btn-profile">Update Profile</div>
+            <div onclick="location.reload()" class="sidebar-item text-red-400 mb-10">Logout</div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="flex-1 ml-72 p-12 relative bg-white">
+            <!-- Mandala Face Logo in Top Right (on every page) -->
+            <div class="absolute top-10 right-10 flex items-center opacity-40">
+                <img src="https://upload.wikimedia.org/wikipedia/en/thumb/f/f3/Nelson_Mandela_University_logo.svg/1200px-Nelson_Mandela_University_logo.svg.png" class="h-10">
+            </div>
+
+            <!-- EVENT ORGANIZER TABS -->
+            <div id="tab-organizer-venues" class="tab-content">
+                <h1 class="text-3xl font-black mb-2">Search & Filter Venues</h1>
+                <p class="text-gray-400 mb-8">View and filter available campus spaces.</p>
+                <div class="flex gap-4 mb-8">
+                    <input type="text" placeholder="Search by name..." class="flex-1 p-3 bg-gray-50 border rounded-lg">
+                    <select class="p-3 bg-gray-50 border rounded-lg"><option>Filter by Capacity</option><option>50+</option><option>200+</option></select>
+                </div>
+                <div class="grid grid-cols-2 gap-6">
+                    <div class="border rounded-2xl p-6 hover:shadow-lg transition cursor-pointer">
+                        <div class="h-32 bg-gray-100 rounded-xl mb-4"></div>
+                        <h4 class="font-bold">Embizweni - Conference Room</h4>
+                        <p class="text-xs text-gray-400">South Campus | Capacity: 150</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-organizer-booking" class="tab-content hidden">
+                <h1 class="text-3xl font-black mb-2">Submit Booking Request</h1>
+                <p class="text-gray-400 mb-8">Submit or update your event booking details.</p>
+                <div class="bg-gray-50 p-8 rounded-3xl max-w-2xl border">
+                    <div class="space-y-4">
+                        <input type="text" placeholder="Event Name" class="w-full p-4 bg-white border rounded-xl">
+                        <input type="date" class="w-full p-4 bg-white border rounded-xl">
+                        <textarea placeholder="Event Description/Requirements" class="w-full p-4 bg-white border rounded-xl h-32"></textarea>
+                        <button class="nmu-btn w-full">Submit Request</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-organizer-history" class="tab-content hidden">
+                <h1 class="text-3xl font-black mb-8">Booking History</h1>
+                <table class="w-full text-left">
+                    <thead class="bg-gray-50 text-xs font-bold uppercase text-gray-400">
+                        <tr><th class="p-4">Reference</th><th class="p-4">Venue</th><th class="p-4">Status</th><th class="p-4">Action</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-b">
+                            <td class="p-4 font-bold">#REQ-992</td>
+                            <td class="p-4">Main Hall</td>
+                            <td class="p-4"><span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-xs">Pending</span></td>
+                            <td class="p-4 text-blue-600 cursor-pointer font-bold">Update</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- STAFF TABS -->
+            <div id="tab-staff-manage" class="tab-content hidden">
+                <h1 class="text-3xl font-black mb-2">Manage Booking Requests</h1>
+                <p class="text-gray-400 mb-8">View, review, and manage incoming event requests.</p>
+                <div class="bg-white border rounded-2xl p-6 flex justify-between items-center mb-4">
+                    <div>
+                        <p class="font-bold">Student Society Meeting</p>
+                        <p class="text-xs text-gray-400">Embizweni 102 | Review Details</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button class="bg-green-600 text-white px-4 py-2 rounded text-xs font-bold">Approve</button>
+                        <button class="bg-red-600 text-white px-4 py-2 rounded text-xs font-bold">Decline</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-staff-enquiries" class="tab-content hidden">
+                <h1 class="text-3xl font-black mb-8">Respond to Enquiries</h1>
+                <div class="p-6 bg-blue-50 border-l-4 border-blue-600 rounded-xl mb-4">
+                    <p class="font-bold text-sm">Query regarding Audio Visual in Auditorium</p>
+                    <p class="text-xs mb-3 italic">"Do you provide HDMI cables?"</p>
+                    <button class="text-xs font-bold text-blue-600 underline">Send Response</button>
+                </div>
+            </div>
+
+            <div id="tab-staff-venues" class="tab-content hidden">
+                <h1 class="text-3xl font-black mb-8">Venue Management</h1>
+                <button class="nmu-btn mb-8">+ Add New Venue</button>
+                <div class="border rounded-xl p-4 flex justify-between">
+                    <p class="font-bold">Boardroom A</p>
+                    <p class="text-xs text-blue-600 cursor-pointer font-bold">Update Information</p>
+                </div>
+            </div>
+
+            <!-- ADMIN TABS -->
+            <div id="tab-admin-users" class="tab-content hidden">
+                <h1 class="text-3xl font-black mb-8">User Account Management</h1>
+                <div class="grid grid-cols-3 gap-4 mb-10">
+                    <div class="bg-nmu-navy text-white p-6 rounded-2xl">
+                        <p class="text-xs uppercase font-bold text-nmu-yellow">Create Account</p>
+                        <button class="mt-4 text-xs bg-white/20 p-2 rounded">New User +</button>
+                    </div>
+                    <div class="bg-gray-100 p-6 rounded-2xl">
+                        <p class="text-xs uppercase font-bold">Edit Accounts</p>
+                        <p class="text-xl font-black mt-2">1,240 Users</p>
+                    </div>
+                    <div class="bg-gray-100 p-6 rounded-2xl">
+                        <p class="text-xs uppercase font-bold">Assign Roles</p>
+                        <button class="mt-4 text-xs border border-nmu-navy p-2 rounded">Roles Panel</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-admin-settings" class="tab-content hidden">
+                <h1 class="text-3xl font-black mb-8">Manage System Settings</h1>
+                <div class="bg-gray-50 p-8 rounded-3xl border space-y-6">
+                    <div class="flex justify-between items-center"><p class="font-bold">Email Notifications</p><input type="checkbox" checked></div>
+                    <div class="flex justify-between items-center"><p class="font-bold">Booking Deadline (Days)</p><input type="number" value="7" class="w-16 p-2 border rounded"></div>
+                    <button class="nmu-btn w-full">Save System Config</button>
+                </div>
+            </div>
+
+            <!-- PROFILE -->
+            <div id="tab-profile" class="tab-content hidden">
+                <h1 class="text-3xl font-black mb-8">Update Profile</h1>
+                <div class="max-w-md bg-gray-50 p-10 rounded-3xl border text-center">
+                    <div class="w-24 h-24 bg-nmu-navy rounded-full mx-auto mb-6 flex items-center justify-center text-white font-bold text-2xl">JS</div>
+                    <input type="text" value="John Smith" class="w-full p-4 mb-4 border rounded-xl">
+                    <button class="nmu-btn w-full">Save Changes</button>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        function showView(viewId) {
+            document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active-view'));
+            document.getElementById(viewId).classList.add('active-view');
+            window.scrollTo(0, 0);
+        }
+
+        function setTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
+            document.getElementById(tabId).classList.remove('hidden');
+
+            document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('sidebar-active'));
+
+            const btnMap = {
+                'tab-organizer-venues': 'btn-org-venues', 'tab-organizer-booking': 'btn-org-booking', 'tab-organizer-history': 'btn-org-history',
+                'tab-staff-manage': 'btn-staff-manage', 'tab-staff-enquiries': 'btn-staff-enquiries', 'tab-staff-venues': 'btn-staff-venues',
+                'tab-admin-users': 'btn-admin-users', 'tab-admin-settings': 'btn-admin-settings', 'tab-profile': 'btn-profile'
+            };
+            document.getElementById(btnMap[tabId]).classList.add('sidebar-active');
+        }
+    </script>
+</body>
+</html>
