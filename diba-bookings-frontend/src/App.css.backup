@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .dashboard-shell {
   min-height: 100vh;
   background: #f4f7fb;
@@ -202,6 +203,10 @@
   }
 }
 
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+=======
 :root {
   --nmu-navy: #141c2b;
   --nmu-yellow: #ffcc00;
@@ -212,6 +217,7 @@ body {
   font-family: "Nunito Sans", Arial, sans-serif;
   background: #f8fafc;
   color: var(--nmu-navy);
+>>>>>>> 3300d3fb8dedeaefaddb9a395c6cd745ed2bc9fb
 }
 
 /* =========================
