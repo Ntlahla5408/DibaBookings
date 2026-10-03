@@ -1,15 +1,15 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Ntlahla\\Source\\Repos\\DibaBookings\\Backend\\DIBA_Backend\\DIBA_Backend\\DIBA_Backend.csproj": {}
+    "C:\\Users\\Ntlahla\\source\\repos\\DibaBookings\\Backend\\DIBA_Backend\\DIBA_Backend\\DIBA_Backend.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Ntlahla\\Source\\Repos\\DibaBookings\\Backend\\DIBA_Backend\\DIBA_Backend\\DIBA_Backend.csproj": {
+    "C:\\Users\\Ntlahla\\source\\repos\\DibaBookings\\Backend\\DIBA_Backend\\DIBA_Backend\\DIBA_Backend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Ntlahla\\Source\\Repos\\DibaBookings\\Backend\\DIBA_Backend\\DIBA_Backend\\DIBA_Backend.csproj",
+        "projectUniqueName": "C:\\Users\\Ntlahla\\source\\repos\\DibaBookings\\Backend\\DIBA_Backend\\DIBA_Backend\\DIBA_Backend.csproj",
         "projectName": "DIBA_Backend",
-        "projectPath": "C:\\Users\\Ntlahla\\Source\\Repos\\DibaBookings\\Backend\\DIBA_Backend\\DIBA_Backend\\DIBA_Backend.csproj",
+        "projectPath": "C:\\Users\\Ntlahla\\source\\repos\\DibaBookings\\Backend\\DIBA_Backend\\DIBA_Backend\\DIBA_Backend.csproj",
         "packagesPath": "C:\\Users\\Ntlahla\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\Ntlahla\\Source\\Repos\\DibaBookings\\Backend\\DIBA_Backend\\DIBA_Backend\\obj\\",
         "projectStyle": "PackageReference",
