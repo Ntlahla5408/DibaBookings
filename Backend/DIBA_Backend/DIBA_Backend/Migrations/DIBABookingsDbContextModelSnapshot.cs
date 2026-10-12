@@ -54,6 +54,12 @@ namespace DIBA_Backend.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<bool>("AcknowledgementAccepted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("AcknowledgementAcceptedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("AdminNotes")
                         .HasColumnType("nvarchar(max)");
 
@@ -221,32 +227,6 @@ namespace DIBA_Backend.Migrations
                     b.ToTable("Notifications");
                 });
 
-            modelBuilder.Entity("DIBA_Backend.Models.Entities.Payment", b =>
-                {
-                    b.Property<Guid>("PaymentId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<decimal>("Amount")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<Guid>("BookingId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("PaymentDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ReferenceNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("PaymentId");
-
-                    b.HasIndex("BookingId");
-
-                    b.ToTable("Payments");
-                });
-
             modelBuilder.Entity("DIBA_Backend.Models.Entities.Role", b =>
                 {
                     b.Property<Guid>("RoleId")
@@ -293,6 +273,9 @@ namespace DIBA_Backend.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -320,9 +303,19 @@ namespace DIBA_Backend.Migrations
                     b.Property<int>("Capacity")
                         .HasColumnType("int");
 
+                    b.Property<double>("Latitude")
+                        .HasColumnType("float");
+
                     b.Property<string>("Location")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Longitude")
+                        .HasColumnType("float");
+
+                    b.Property<decimal>("Price")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("VenueDescription")
                         .IsRequired()
@@ -367,6 +360,39 @@ namespace DIBA_Backend.Migrations
                     b.HasIndex("VenueId");
 
                     b.ToTable("VenueFeatures");
+                });
+
+            modelBuilder.Entity("Payment", b =>
+                {
+                    b.Property<Guid>("PaymentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Amount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid>("BookingId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("PaymentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("PaymentStatus")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReferenceNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("YocoCheckoutId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("PaymentId");
+
+                    b.HasIndex("BookingId");
+
+                    b.ToTable("Payments");
                 });
 
             modelBuilder.Entity("DIBA_Backend.Models.Entities.AuditLog", b =>
@@ -453,17 +479,6 @@ namespace DIBA_Backend.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("DIBA_Backend.Models.Entities.Payment", b =>
-                {
-                    b.HasOne("DIBA_Backend.Models.Entities.Booking", "Booking")
-                        .WithMany("Payments")
-                        .HasForeignKey("BookingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Booking");
-                });
-
             modelBuilder.Entity("DIBA_Backend.Models.Entities.User", b =>
                 {
                     b.HasOne("DIBA_Backend.Models.Entities.Role", "Role")
@@ -484,6 +499,17 @@ namespace DIBA_Backend.Migrations
                         .IsRequired();
 
                     b.Navigation("Venue");
+                });
+
+            modelBuilder.Entity("Payment", b =>
+                {
+                    b.HasOne("DIBA_Backend.Models.Entities.Booking", "Booking")
+                        .WithMany("Payments")
+                        .HasForeignKey("BookingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Booking");
                 });
 
             modelBuilder.Entity("DIBA_Backend.Models.Entities.Booking", b =>

@@ -14,6 +14,10 @@
 
         public string? AdminNotes { get; set; }
 
+        public bool AcknowledgementAccepted { get; set; }
+
+        public DateTime? AcknowledgementAcceptedAt { get; set; }
+
         public Guid UserId { get; set; }
 
         public Guid EventId { get; set; }
@@ -21,5 +25,13 @@
         public Guid VenueId { get; set; }
 
         public Guid BookingStatusId { get; set; }
+
+        public string StatusName { get; set; } = string.Empty;
+
+        public string OrganiserName { get; set; } = string.Empty;
+
+        public string EventName { get; set; } = string.Empty;
+
+        public string VenueName { get; set; } = string.Empty;
     }
 }

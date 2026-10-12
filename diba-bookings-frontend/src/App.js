@@ -2,24 +2,21 @@ import {
     BrowserRouter,
     Routes,
     Route,
-    Navigate,
 } from "react-router-dom";
 
 import { ToastContainer } from "react-toastify";
 
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Dashboard from "./pages/Dashboard";
+import Dashboard from "./pages/dashboards/Dashboard";
+import LandingPage from "./pages/LandingPage";
 
 function App() {
     return (
         <BrowserRouter>
 
             <Routes>
-                <Route
-                    path="/"
-                    element={<Navigate to="/login" />}
-                />
+                <Route path="/" element={<LandingPage />} />
 
                 <Route
                     path="/login"
