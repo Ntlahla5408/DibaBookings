@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import "../App.css";
 
 function DashboardLayout({ children, title, eyebrow, navigationItems }) {
     const navigate = useNavigate();
@@ -69,7 +68,7 @@ function DashboardLayout({ children, title, eyebrow, navigationItems }) {
                     className="sidebar-logout"
                     onClick={handleLogout}
                 >
-                    <span aria-hidden="true">↪</span>
+                    <span aria-hidden="true">â†ª</span>
                     Logout
                 </Button>
             </aside>
