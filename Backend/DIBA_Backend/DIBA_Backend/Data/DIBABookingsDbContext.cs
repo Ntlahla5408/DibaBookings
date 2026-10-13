@@ -48,6 +48,9 @@ namespace DIBA_Backend.Data
         public DbSet<Payment> Payments { get; set; }
         public DbSet<Venue> Venues { get; set; }
         public DbSet<VenueFeature> VenueFeatures { get; set; }
+        public DbSet<FAQ> FAQs { get; set; }
+        public DbSet<PolicyDocument> PolicyDocuments { get; set; }
+        public DbSet<SupportTicket> SupportTickets { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -426,6 +429,30 @@ namespace DIBA_Backend.Data
             modelBuilder.Entity<Payment>()
                 .Property(p => p.Amount)
                 .HasPrecision(18, 2);
+
+            // =========================================================
+            // USER -> SUPPORT TICKET
+            // One user can create many support tickets.
+            // Keep ticket history if a user account is removed.
+            // =========================================================
+            modelBuilder.Entity<SupportTicket>()
+                .HasOne(ticket => ticket.User)
+                .WithMany()
+                .HasForeignKey(ticket => ticket.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Ticket numbers must be unique so users can quote a reference
+            // when contacting the Conference Centre.
+            modelBuilder.Entity<SupportTicket>()
+                .HasIndex(ticket => ticket.TicketNumber)
+                .IsUnique();
+
+            // Only one active policy version should be presented per type.
+            // This index helps lookup current policies; publishing code
+            // deactivates earlier versions before activating the new one.
+            modelBuilder.Entity<PolicyDocument>()
+                .HasIndex(policy => new { policy.PolicyType, policy.Version })
+                .IsUnique();
 
 
             // =========================================================
