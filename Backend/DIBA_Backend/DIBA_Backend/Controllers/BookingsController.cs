@@ -105,6 +105,12 @@ namespace DIBA_Backend.Controllers
                     AcknowledgementAcceptedAt =
         booking.AcknowledgementAcceptedAt,
 
+                    AcknowledgementPolicyType =
+        booking.AcknowledgementPolicyType,
+
+                    AcknowledgementPolicyVersion =
+        booking.AcknowledgementPolicyVersion,
+
                     StatusName =
                         booking.BookingStatus != null
                             ? booking.BookingStatus.StatusName
@@ -209,6 +215,12 @@ namespace DIBA_Backend.Controllers
 
                 AcknowledgementAcceptedAt =
     booking.AcknowledgementAcceptedAt,
+
+                AcknowledgementPolicyType =
+    booking.AcknowledgementPolicyType,
+
+                AcknowledgementPolicyVersion =
+    booking.AcknowledgementPolicyVersion,
 
                 OrganiserName =
                     booking.User == null
