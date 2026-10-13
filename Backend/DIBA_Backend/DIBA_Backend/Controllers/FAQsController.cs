@@ -82,7 +82,7 @@ namespace DIBA_Backend.Controllers
             _dbContext.FAQs.Add(faq);
             await _dbContext.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetPublishedFAQs), new { id = faq.FAQId }, faq);
+            return Ok(faq);
         }
 
         // PUT: api/FAQs/{id}
