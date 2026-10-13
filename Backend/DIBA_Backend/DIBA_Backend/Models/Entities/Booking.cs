@@ -18,6 +18,11 @@
 
         public DateTime? AcknowledgementAcceptedAt { get; set; }
 
+        // Records which published venue-rules version the organiser acknowledged.
+        public string? AcknowledgementPolicyType { get; set; }
+
+        public int? AcknowledgementPolicyVersion { get; set; }
+
         public Guid UserId { get; set; }
 
         public Guid EventId { get; set; }
