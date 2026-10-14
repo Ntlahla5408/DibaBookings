@@ -17,7 +17,7 @@ namespace DIBA_Backend.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.26")
+                .HasAnnotation("ProductVersion", "8.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -59,6 +59,12 @@ namespace DIBA_Backend.Migrations
 
                     b.Property<DateTime?>("AcknowledgementAcceptedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("AcknowledgementPolicyType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("AcknowledgementPolicyVersion")
+                        .HasColumnType("int");
 
                     b.Property<string>("AdminNotes")
                         .HasColumnType("nvarchar(max)");
@@ -192,6 +198,41 @@ namespace DIBA_Backend.Migrations
                     b.ToTable("Events");
                 });
 
+            modelBuilder.Entity("DIBA_Backend.Models.Entities.FAQ", b =>
+                {
+                    b.Property<Guid>("FAQId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Answer")
+                        .IsRequired()
+                        .HasMaxLength(5000)
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("nvarchar(80)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsPublished")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Question")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("FAQId");
+
+                    b.ToTable("FAQs");
+                });
+
             modelBuilder.Entity("DIBA_Backend.Models.Entities.Notification", b =>
                 {
                     b.Property<Guid>("NotificationId")
@@ -227,6 +268,49 @@ namespace DIBA_Backend.Migrations
                     b.ToTable("Notifications");
                 });
 
+            modelBuilder.Entity("DIBA_Backend.Models.Entities.PolicyDocument", b =>
+                {
+                    b.Property<Guid>("PolicyDocumentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsSamplePolicy")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("PolicyType")
+                        .IsRequired()
+                        .HasMaxLength(60)
+                        .HasColumnType("nvarchar(60)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Version")
+                        .HasColumnType("int");
+
+                    b.HasKey("PolicyDocumentId");
+
+                    b.HasIndex("PolicyType", "Version")
+                        .IsUnique();
+
+                    b.ToTable("PolicyDocuments");
+                });
+
             modelBuilder.Entity("DIBA_Backend.Models.Entities.Role", b =>
                 {
                     b.Property<Guid>("RoleId")
@@ -257,6 +341,62 @@ namespace DIBA_Backend.Migrations
                             RoleId = new Guid("33333333-3333-3333-3333-333333333333"),
                             RoleName = "Event Organiser"
                         });
+                });
+
+            modelBuilder.Entity("DIBA_Backend.Models.Entities.SupportTicket", b =>
+                {
+                    b.Property<Guid>("SupportTicketId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("nvarchar(80)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(5000)
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("RespondedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("StaffResponse")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)");
+
+                    b.Property<string>("Subject")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("TicketNumber")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("SupportTicketId");
+
+                    b.HasIndex("TicketNumber")
+                        .IsUnique();
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("SupportTickets");
                 });
 
             modelBuilder.Entity("DIBA_Backend.Models.Entities.User", b =>
@@ -475,6 +615,17 @@ namespace DIBA_Backend.Migrations
                         .IsRequired();
 
                     b.Navigation("Booking");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DIBA_Backend.Models.Entities.SupportTicket", b =>
+                {
+                    b.HasOne("DIBA_Backend.Models.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });
