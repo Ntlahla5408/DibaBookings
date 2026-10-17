@@ -465,3 +465,63 @@ html[data-theme="dark"] .dashboard-theme-toggle {
     }
 }
 
+
+
+/* Admin user management: compact account summary and usable filter controls. */
+.admin-user-summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 22px;
+    margin: 14px 0 18px;
+    color: var(--bs-secondary-color, #64748b);
+    font-size: 0.9rem;
+}
+
+.admin-user-summary strong {
+    color: inherit;
+    font-size: 1rem;
+}
+
+.admin-filter-row {
+    display: flex;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.admin-filter-field {
+    flex: 0 1 190px;
+    min-width: 150px;
+    margin: 0;
+}
+
+.admin-filter-field .form-label {
+    margin-bottom: 5px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.admin-filter-actions {
+    display: flex;
+    flex: 1 1 230px;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 10px;
+    min-height: 38px;
+}
+
+.admin-filter-actions .small {
+    white-space: nowrap;
+}
+
+@media (max-width: 560px) {
+    .admin-filter-field {
+        flex: 1 1 100%;
+    }
+
+    .admin-filter-actions {
+        justify-content: space-between;
+    }
+}
