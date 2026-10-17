@@ -129,3 +129,28 @@
     .auth-heading { margin-bottom: 25px; }
     .auth-card-register .auth-field { margin-bottom: 17px; }
 }
+
+.auth-forgot-row { display: flex; justify-content: flex-end; margin: -7px 0 20px; }
+.auth-forgot-row a { color: var(--auth-blue); font-size: .78rem; font-weight: 700; text-decoration: none; }
+.auth-forgot-row a:hover { color: var(--auth-light-blue); text-decoration: underline; }
+.auth-layout-compact { min-height: 570px; }
+.auth-form-error {
+    background: #fff1f0;
+    border: 1px solid #f1c7c4;
+    border-radius: 8px;
+    color: #8c2f2a;
+    font-size: .82rem;
+    line-height: 1.5;
+    margin: 0 0 18px;
+    padding: 12px 14px;
+}
+.auth-form-error a { color: #6e2521; font-weight: 700; }
+.auth-success-note {
+    background: #edf6f1;
+    border: 1px solid #c8e4d5;
+    border-radius: 8px;
+    color: #245d43;
+    font-size: .83rem;
+    line-height: 1.6;
+    padding: 14px;
+}
