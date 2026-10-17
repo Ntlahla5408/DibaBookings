@@ -39,7 +39,6 @@ function OrganizerDashboard() {
         drawerOpen,
         setDrawerOpen,
         bookings,
-        upcoming,
         firstName,
         fullName,
         unread,
@@ -110,13 +109,9 @@ function OrganizerDashboard() {
     <OrganizerHome
         firstName={firstName}
         venues={venues}
-        upcoming={upcoming}
         query={query}
         setQuery={setQuery}
         onOpenVenue={openVenue}
-        onOpenBooking={openBooking}
-        onFindVenue={() => goTo("venues")}
-        onViewBookings={() => goTo("bookings")}
     />
 )}
 
