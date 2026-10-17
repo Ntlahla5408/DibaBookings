@@ -100,9 +100,7 @@ function OrganizerHome({
                 <div className="home-section-heading">
                     <div>
                         <h2>Explore venues</h2>
-                        <p>Find a space for your next conference, meeting or event.</p>
                     </div>
-                    <span className="home-result-count">{filteredVenues.length} {filteredVenues.length === 1 ? "venue" : "venues"}</span>
                 </div>
 
                 <div className="home-venue-grid">
