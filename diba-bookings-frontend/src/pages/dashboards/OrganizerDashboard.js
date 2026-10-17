@@ -12,6 +12,7 @@ import BookingForm from "../../components/organizer/bookings/BookingForm";
 import BookingsView from "../../components/organizer/bookings/BookingsView";
 import BookingDetails from "../../components/organizer/bookings/BookingDetails";
 import NotificationsView from "../../components/organizer/notifications/NotificationsView";
+import HelpCentre from "../HelpCentre";
 import OrganizerSidebar from "../../components/organizer/navigation/OrganizerSidebar";
 import OrganizerTopNav from "../../components/organizer/navigation/OrganizerTopNav";
 import useOrganizerDashboard from "../../hooks/useOrganizerDashboard";
@@ -240,6 +241,8 @@ function OrganizerDashboard() {
                         onPay={payForBooking}
                     />
                 )}
+
+                {view === "help" && <HelpCentre />}
 
             </main>
         </div>
