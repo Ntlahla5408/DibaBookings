@@ -270,3 +270,71 @@
     }
 }
 
+/* Keep section navigation beside the NMU logo and use the dashboard navy/gold palette. */
+.dashboard-topbar {
+    width: 100%;
+    min-width: 0;
+}
+
+.dashboard-brand {
+    max-width: 100%;
+}
+
+.dashboard-section-nav {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.dashboard-nav-button.btn {
+    background-color: #071b2c;
+    border-color: #071b2c;
+    color: #ffffff;
+    font-weight: 600;
+    border-radius: 6px;
+    padding: 0.45rem 0.7rem;
+    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.dashboard-nav-button.btn:hover,
+.dashboard-nav-button.btn:focus-visible {
+    background-color: #f9b42a;
+    border-color: #f9b42a;
+    color: #071b2c;
+}
+
+.dashboard-profile-actions {
+    flex: 0 0 auto;
+}
+
+@media (max-width: 1100px) {
+    .dashboard-section-nav {
+        order: 3;
+        flex-basis: 100%;
+    }
+
+    .dashboard-profile-actions {
+        margin-left: auto;
+    }
+}
+
+@media (max-width: 760px) {
+    .dashboard-topbar {
+        gap: 10px !important;
+    }
+
+    .dashboard-brand img {
+        width: min(210px, 55vw) !important;
+    }
+
+    .dashboard-section-nav {
+        order: 3;
+        flex-basis: 100%;
+        gap: 6px !important;
+    }
+
+    .dashboard-nav-button.btn {
+        font-size: 0.78rem;
+        padding: 0.35rem 0.55rem;
+    }
+}
+
