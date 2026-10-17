@@ -1,5 +1,4 @@
 import { toast } from "react-toastify";
-import { Link } from "react-router-dom";
 
 import { clearSession } from "../../../utils/sessionUtils";
 
@@ -8,7 +7,8 @@ const navItems = [
     ["⌖", "Find a Venue", "venues"],
     ["▣", "My Bookings", "bookings"],
     ["◫", "My Events", "events"],
-    ["◌", "Notifications", "notifications"]
+    ["◌", "Notifications", "notifications"],
+    ["?", "Help Centre", "help"]
 ];
 
 function OrganizerSidebar({
@@ -95,10 +95,6 @@ function OrganizerSidebar({
                 </nav>
 
                 <div className="sidebar-bottom">
-                    <Link className="nav-item" to="/help" onClick={() => setDrawerOpen(false)}>
-                        <span className="nav-icon">?</span>
-                        <span>Help Centre</span>
-                    </Link>
                     <button
                         type="button"
                         className="nav-item"
