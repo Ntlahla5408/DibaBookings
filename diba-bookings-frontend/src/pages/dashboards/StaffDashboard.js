@@ -218,12 +218,6 @@ function BookingDetails({ booking, venue }) {
                                 ))}
                         </tbody>
                     </Table>
-                    <BookingCalendar
-                        bookings={bookings}
-                        venues={venues}
-                        onSelectBooking={setSelectedBooking}
-                    />
-
                 </>
             )}
 
@@ -974,6 +968,12 @@ return venueList;
                             ))}
                         </div>
                     </section>
+
+                    <BookingCalendar
+                        bookings={bookings}
+                        venues={venues}
+                        onSelectBooking={setSelectedBooking}
+                    />
                 </>
             )}
 
