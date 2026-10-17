@@ -3,6 +3,7 @@ using DIBA_Backend.Dto.Authentication;
 using DIBA_Backend.Models.Entities;
 using DIBA_Backend.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -120,6 +121,7 @@ namespace DIBA_Backend.Controllers
             });
         }
 
+        [EnableRateLimiting("password-reset")]
         [HttpPost("forgot-password")]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordDto request)
         {
@@ -165,6 +167,7 @@ namespace DIBA_Backend.Controllers
             return Ok(new { message = publicMessage });
         }
 
+        [EnableRateLimiting("password-reset")]
         [HttpPost("reset-password")]
         public async Task<IActionResult> ResetPassword(ResetPasswordDto request)
         {
