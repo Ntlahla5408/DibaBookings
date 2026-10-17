@@ -154,3 +154,22 @@
     line-height: 1.6;
     padding: 14px;
 }
+
+/* Login and registration: focused single-panel layout without generic side artwork */
+.auth-layout-centered {
+    align-items: center;
+    justify-content: center;
+    min-height: 0;
+    padding: clamp(28px, 6vw, 72px) 24px;
+}
+.auth-layout-centered .auth-form-panel {
+    flex: 0 1 100%;
+    max-width: 600px;
+    padding: 0;
+    width: 100%;
+}
+.auth-layout-centered .auth-card { max-width: 470px; }
+.auth-layout-centered .auth-card-register { max-width: 490px; }
+@media (max-width: 575.98px) {
+    .auth-layout-centered { padding: 30px 20px; }
+}
