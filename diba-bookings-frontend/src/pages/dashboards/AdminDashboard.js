@@ -27,6 +27,8 @@ function AdminDashboard() {
     const [logs, setLogs] = useState([]);
     const [roles, setRoles] = useState([]);
     const [query, setQuery] = useState("");
+    const [userStatusFilter, setUserStatusFilter] = useState("all");
+    const [userRoleFilter, setUserRoleFilter] = useState("all");
     const [activeSection, setActiveSection] = useState("overview");
     const [loading, setLoading] = useState(true);
     const [showCreate, setShowCreate] = useState(false);
@@ -83,12 +85,22 @@ function AdminDashboard() {
 
     const filteredUsers = useMemo(
         () =>
-            users.filter((user) =>
-                `${user.firstName} ${user.lastName} ${user.email} ${user.role}`
-                    .toLowerCase()
-                    .includes(query.toLowerCase())
-            ),
-        [users, query]
+            users.filter((user) => {
+                const matchesQuery =
+                    `${user.firstName} ${user.lastName} ${user.email} ${user.role}`
+                        .toLowerCase()
+                        .includes(query.trim().toLowerCase());
+                const matchesStatus =
+                    userStatusFilter === "all" ||
+                    (userStatusFilter === "active" && user.isActive) ||
+                    (userStatusFilter === "inactive" && !user.isActive);
+                const matchesRole =
+                    userRoleFilter === "all" ||
+                    String(user.role || "").toLowerCase() === userRoleFilter.toLowerCase();
+
+                return matchesQuery && matchesStatus && matchesRole;
+            }),
+        [users, query, userStatusFilter, userRoleFilter]
     );
 
     const filteredBookings = useMemo(
@@ -192,6 +204,17 @@ function AdminDashboard() {
                     query={query}
                     onQueryChange={setQuery}
                     users={filteredUsers}
+                    allUsers={users}
+                    roles={roles}
+                    userStatusFilter={userStatusFilter}
+                    onUserStatusFilterChange={setUserStatusFilter}
+                    userRoleFilter={userRoleFilter}
+                    onUserRoleFilterChange={setUserRoleFilter}
+                    onClearUserFilters={() => {
+                        setQuery("");
+                        setUserStatusFilter("all");
+                        setUserRoleFilter("all");
+                    }}
                     bookings={filteredBookings}
                     logs={logs}
                     onCreateUser={() => setShowCreate(true)}
