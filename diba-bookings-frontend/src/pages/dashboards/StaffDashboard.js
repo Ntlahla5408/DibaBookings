@@ -382,13 +382,6 @@ return venueList;
         (booking) => String(booking.statusName || "").toLowerCase() === "pending"
     ).length;
 
-    const unavailableVenues = useMemo(
-        () => venues.filter(
-            (venue) => String(venue.venueStatus || "").toLowerCase() === "unavailable"
-        ),
-        [venues]
-    );
-
     const sortedBookings = useMemo(() => {
         const getName = (value, fallback = "") =>
             String(value ?? fallback).trim();
@@ -551,9 +544,7 @@ return venueList;
             profileLabel={firstName}
             navigationItems={[
                 { label: "Overview", href: "#staff-overview" },
-                { label: "Upcoming bookings", href: "#staff-upcoming" },
-                { label: "Pending decisions", href: "#staff-pending" },
-                { label: "Unavailable venues", href: "#staff-unavailable" },
+                { label: "Upcoming & pending", href: "#staff-upcoming" },
                 { label: "All bookings", href: "#all-bookings" },
                 { label: "Venues", href: "#staff-venues" },
                 { label: "Calendar", href: "#booking-calendar" }
@@ -588,133 +579,79 @@ return venueList;
                         />
                     </section>
 
-                    <section id="staff-upcoming" className="d-flex flex-column gap-4 mb-4" aria-label="Daily operations overview">
-                        <div className="w-100">
-                            <div className="panel h-100">
-                                <div className="d-flex justify-content-between align-items-start gap-2 mb-3">
-                                    <div>
-                                        
-                                        <h2>Upcoming bookings</h2>
-                                    </div>
-                                    <Badge bg="primary">{upcomingBookings.length}</Badge>
-                                </div>
-                                {upcomingBookings.length === 0 ? (
-                                    <p className="text-muted mb-0">No upcoming bookings found for the next 7 days.</p>
-                                ) : (
-                                    <div className="d-grid gap-3">
-                                        {upcomingBookings.slice(0, 5).map((booking) => (
-                                            <div key={booking.bookingId} className="border-bottom pb-2">
-                                                <div className="d-flex justify-content-between align-items-start gap-2">
-                                                    <strong>{getDisplayName(booking.eventName, "Untitled event")}</strong>
-                                                    <Badge bg={getStatusVariant(booking.statusName)} text="dark">
-                                                        {booking.statusName || "Unknown"}
-                                                    </Badge>
+                    <section id="staff-upcoming" className="mb-4" aria-label="Upcoming and pending bookings">
+                        <div className="panel">
+                            <div className="d-flex justify-content-between align-items-start gap-2 mb-3">
+                                <h2>Upcoming &amp; pending bookings</h2>
+                                <Badge bg="primary">
+                                    {new Map([...upcomingBookings.slice(0, 5), ...pendingBookings].map((booking) => [String(booking.bookingId), booking])).size}
+                                </Badge>
+                            </div>
+                            {upcomingBookings.length === 0 && pendingBookings.length === 0 ? (
+                                <p className="text-muted mb-0">No upcoming bookings or pending requests.</p>
+                            ) : (
+                                <div className="d-grid gap-3">
+                                    {Array.from(
+                                        new Map(
+                                            [...upcomingBookings.slice(0, 5), ...pendingBookings].map((booking) => [
+                                                String(booking.bookingId),
+                                                booking
+                                            ])
+                                        ).values()
+                                    )
+                                        .sort((first, second) => {
+                                            const firstDate = Date.parse(getEventStartDate(first) || getBookingDate(first));
+                                            const secondDate = Date.parse(getEventStartDate(second) || getBookingDate(second));
+                                            return (Number.isNaN(firstDate) ? 0 : firstDate) -
+                                                (Number.isNaN(secondDate) ? 0 : secondDate);
+                                        })
+                                        .map((booking) => {
+                                            const isPending = String(booking.statusName || "").toLowerCase() === "pending";
+                                            return (
+                                                <div key={booking.bookingId} className="border-bottom pb-3">
+                                                    <div className="d-flex flex-wrap justify-content-between align-items-start gap-2">
+                                                        <strong>{getDisplayName(booking.eventName, "Untitled event")}</strong>
+                                                        <Badge bg={getStatusVariant(booking.statusName)} text="dark">
+                                                            {booking.statusName || "Unknown"}
+                                                        </Badge>
+                                                    </div>
+                                                    <p className="text-muted small mb-1">
+                                                        {dateText(getEventStartDate(booking) || getBookingDate(booking))}
+                                                        {booking.startDateTime ? ` · ${timeText(booking.startDateTime)}` : ""}
+                                                    </p>
+                                                    <p className="small mb-2">
+                                                        {getDisplayName(
+                                                            booking.venueName ||
+                                                                venues.find((item) => String(item.venueId) === String(booking.venueId))?.venueName,
+                                                            "Venue not specified"
+                                                        )}
+                                                        {booking.organiserName ? ` · ${booking.organiserName}` : ""}
+                                                    </p>
+                                                    <div className="d-flex flex-wrap gap-2">
+                                                        <Button type="button" size="sm" variant="outline-primary"
+                                                            onClick={() => setSelectedBooking(booking)}>
+                                                            {isPending ? "Review" : "View booking"}
+                                                        </Button>
+                                                        {isPending && (
+                                                            <>
+                                                                <Button type="button" size="sm" variant="success"
+                                                                    disabled={processingBookingId !== null}
+                                                                    onClick={() => reviewBooking(booking)}>
+                                                                    {processingBookingId === booking.bookingId ? "Processing..." : "Approve"}
+                                                                </Button>
+                                                                <Button type="button" size="sm" variant="outline-danger"
+                                                                    disabled={processingBookingId !== null}
+                                                                    onClick={() => openRejectionDialog(booking)}>
+                                                                    Reject
+                                                                </Button>
+                                                            </>
+                                                        )}
+                                                    </div>
                                                 </div>
-                                                <p className="text-muted small mb-1">
-                                                    {dateText(getEventStartDate(booking))}
-                                                    {booking.startDateTime ? ` · ${timeText(booking.startDateTime)}` : ""}
-                                                </p>
-                                                <p className="small mb-2">
-                                                    {getDisplayName(
-                                                        booking.venueName ||
-                                                            venues.find((item) => String(item.venueId) === String(booking.venueId))?.venueName,
-                                                        "Venue not specified"
-                                                    )}
-                                                </p>
-                                                <Button type="button" size="sm" variant="outline-primary"
-                                                    onClick={() => setSelectedBooking(booking)}>
-                                                    View booking
-                                                </Button>
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
-
-                            </div>
-                        </div>
-
-                        <div className="w-100">
-                            <div className="panel h-100" id="staff-pending">
-                                <div className="d-flex justify-content-between align-items-start gap-2 mb-3">
-                                    <div>
-                                        
-                                        <h2>Pending decisions</h2>
-                                    </div>
-                                    <Badge bg={pendingBookingCount ? "warning" : "success"} text="dark">
-                                        {pendingBookingCount}
-                                    </Badge>
+                                            );
+                                        })}
                                 </div>
-                                {pendingBookings.length === 0 ? (
-                                    <p className="text-muted mb-0">There are no booking requests waiting for review.</p>
-                                ) : (
-                                    <div className="d-grid gap-3">
-                                        {pendingBookings.map((booking) => (
-                                            <div key={booking.bookingId} className="border-bottom pb-2">
-                                                <strong>{getDisplayName(booking.eventName, "Untitled event")}</strong>
-                                                <p className="text-muted small mb-2">
-                                                    {getDisplayName(booking.organiserName, "Organiser not specified")}
-                                                    {" · "}
-                                                    {getDisplayName(
-                                                        booking.venueName ||
-                                                            venues.find((item) => String(item.venueId) === String(booking.venueId))?.venueName,
-                                                        "Venue not specified"
-                                                    )}
-                                                </p>
-                                                <div className="d-flex flex-wrap gap-2">
-                                                    <Button type="button" size="sm" variant="outline-primary"
-                                                        onClick={() => setSelectedBooking(booking)}>
-                                                        Review
-                                                    </Button>
-                                                    <Button type="button" size="sm" variant="success"
-                                                        disabled={processingBookingId !== null}
-                                                        onClick={() => reviewBooking(booking)}>
-                                                        {processingBookingId === booking.bookingId ? "Processing..." : "Approve"}
-                                                    </Button>
-                                                    <Button type="button" size="sm" variant="outline-danger"
-                                                        disabled={processingBookingId !== null}
-                                                        onClick={() => openRejectionDialog(booking)}>
-                                                        Reject
-                                                    </Button>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
-
-                            </div>
-                        </div>
-
-                        <div className="w-100">
-                            <div className="panel h-100" id="staff-unavailable">
-                                <div className="d-flex justify-content-between align-items-start gap-2 mb-3">
-                                    <div>
-                                        
-                                        <h2>Unavailable venues</h2>
-                                    </div>
-                                    <Badge bg={unavailableVenues.length ? "secondary" : "success"}>
-                                        {unavailableVenues.length}
-                                    </Badge>
-                                </div>
-                                {unavailableVenues.length === 0 ? (
-                                    <p className="text-muted mb-0">All venues are currently marked available.</p>
-                                ) : (
-                                    <div className="d-grid gap-3">
-                                        {unavailableVenues.map((venue) => (
-                                            <div key={venue.venueId} className="border-bottom pb-2">
-                                                <strong>{venue.venueName || "Unnamed venue"}</strong>
-                                                <p className="text-muted small mb-2">
-                                                    {venue.location || "Location not provided"}
-                                                    {venue.capacity ? ` · Capacity ${venue.capacity}` : ""}
-                                                </p>
-                                                <Button type="button" size="sm" variant="outline-primary"
-                                                    onClick={() => setManagedVenue(venue)}>
-                                                    Manage venue
-                                                </Button>
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
+                            )}
                         </div>
                     </section>
 
