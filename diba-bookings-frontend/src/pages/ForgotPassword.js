@@ -36,20 +36,8 @@ function ForgotPassword() {
     return (
         <main className="auth-page">
             <Container className="auth-container">
-                <Row className="g-0 auth-layout auth-layout-compact">
-                    <Col lg={5} className="auth-intro">
-                        <Link to="/" className="auth-brand" aria-label="DIBA Bookings home">
-                            <span className="auth-brand-mark">D</span>
-                            <span>DIBA <strong>BOOKINGS</strong></span>
-                        </Link>
-                        <div className="auth-intro-copy">
-                            <span className="auth-eyebrow">ACCOUNT SUPPORT</span>
-                            <h1>Let’s get you back in.</h1>
-                            <p>Request a secure password reset link for your DIBA Bookings account.</p>
-                        </div>
-                        <div className="auth-intro-footer">Your account, protected.</div>
-                    </Col>
-                    <Col lg={7} className="auth-form-panel">
+                <Row className="g-0 auth-layout auth-layout-centered">
+                    <Col xs={12} className="auth-form-panel">
                         <Card className="auth-card border-0">
                             <Card.Body>
                                 <div className="auth-heading">
