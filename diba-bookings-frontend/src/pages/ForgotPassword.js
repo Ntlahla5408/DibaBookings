@@ -61,11 +61,7 @@ function ForgotPassword() {
                                             {loading ? "Sending request…" : "Send reset link"}
                                         </Button>
                                     </Form>
-                                ) : (
-                                    <div className="auth-success-note" role="status">
-                                        For security, this page does not reveal whether an email address is registered.
-                                    </div>
-                                )}
+                                ) : null}
                                 <Link to="/login" className="auth-back-link">← Back to sign in</Link>
                             </Card.Body>
                         </Card>
