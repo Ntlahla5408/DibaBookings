@@ -1,167 +1,86 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
 import conferenceCentre from "../../../assets/images/Conference centre.jpg";
 import theatreImage from "../../../assets/images/Theatre (2).jpg";
 import diningImage from "../../../assets/images/Dining Room.jpg";
 
 import EmptyState from "../../common/EmptyState";
+import BookingCard from "../bookings/BookingCard";
 import VenueCard from "../venues/VenueCard";
 
-const images = [
-    conferenceCentre,
-    theatreImage,
-    diningImage
-];
+const images = [conferenceCentre, theatreImage, diningImage];
 
 function OrganizerHome({
     firstName,
     venues,
+    upcoming,
     query,
     setQuery,
     onOpenVenue,
-    onFindVenue
+    onOpenBooking,
+    onFindVenue,
+    onViewBookings
 }) {
+    const [minimumCapacity, setMinimumCapacity] = useState("");
+    const [availability, setAvailability] = useState("");
+
     const greeting = useMemo(() => {
         const hour = new Date().getHours();
 
-        if (hour < 12) {
-            return "Good morning";
-        }
-
-        if (hour < 18) {
-            return "Good afternoon";
-        }
-
+        if (hour < 12) return "Good morning";
+        if (hour < 18) return "Good afternoon";
         return "Good evening";
     }, []);
 
     const filteredVenues = useMemo(() => {
         const search = query.trim().toLowerCase();
-
-        if (!search) {
-            return venues;
-        }
-
-        const requestedCapacity = /^\d+$/.test(search)
-            ? Number(search)
-            : null;
+        const requestedCapacity = /^\d+$/.test(search) ? Number(search) : null;
 
         return venues.filter((venue) => {
-            const venueName =
-                venue.venueName?.toLowerCase() || "";
+            const venueName = venue.venueName?.toLowerCase() || "";
+            const description = venue.venueDescription?.toLowerCase() || "";
+            const location = venue.location?.toLowerCase() || "";
+            const capacity = Number(venue.capacity) || 0;
+            const status = venue.venueStatus?.toLowerCase() || "";
 
-            const description =
-                venue.venueDescription?.toLowerCase() || "";
-
-            const location =
-                venue.location?.toLowerCase() || "";
-
-            const capacity =
-                Number(venue.capacity) || 0;
-
-            if (requestedCapacity !== null) {
-                return capacity >= requestedCapacity;
-            }
-
-            return (
-                venueName.includes(search) ||
-                description.includes(search) ||
-                location.includes(search)
+            const matchesSearch = !search || (
+                requestedCapacity !== null
+                    ? capacity >= requestedCapacity
+                    : venueName.includes(search) ||
+                      description.includes(search) ||
+                      location.includes(search)
             );
+            const matchesCapacity = !minimumCapacity || capacity >= Number(minimumCapacity);
+            const matchesAvailability = !availability || status === availability.toLowerCase();
+
+            return matchesSearch && matchesCapacity && matchesAvailability;
         });
-    }, [venues, query]);
+    }, [venues, query, minimumCapacity, availability]);
 
     return (
         <main className="organizer-home">
-
-            {/* =====================================================
-                WORKSPACE INTRODUCTION
-               ===================================================== */}
-
             <section className="home-introduction">
-
-                <div className="home-section-label">
-                    YOUR WORKSPACE
+                <div className="home-welcome-copy">
+                    <p className="home-section-label">YOUR WORKSPACE</p>
+                    <h1>{greeting}, <em>{firstName}</em></h1>
                 </div>
-
-                <div className="home-introduction-content">
-                    <div>
-                        <h1>
-                            {greeting},{" "}
-                            <em>{firstName}</em>
-                        </h1>
-
-                        <p>
-                            Find the right space for what
-                            you're planning.
-                        </p>
-                    </div>
-
-                    <div className="home-introduction-note">
-                        <span className="home-note-line" />
-                        <span>
-                            Spaces for ideas, connection
-                            and progress.
-                        </span>
-                    </div>
-                </div>
-
             </section>
 
-
-            {/* =====================================================
-                VENUE DISCOVERY
-               ===================================================== */}
-
-            <section className="home-discovery">
-
-                <div className="home-discovery-heading">
-
-                    <div>
-                        <p className="landing-kicker">
-                            FIND A SPACE
-                        </p>
-
-                        <h2>
-                            Search for a venue that
-                            <br />
-                            <em>fits your event.</em>
-                        </h2>
-                    </div>
-
-                    <p>
-                        Search by venue name, location
-                        or the number of attendees.
-                    </p>
-
+            <section className="home-discovery" aria-label="Venue search">
+                <div className="home-search-heading">
+                    <h2>Find a venue</h2>
+                    <p>Search by venue name, location or attendee capacity.</p>
                 </div>
-
-
                 <div className="home-discovery-form">
-
                     <div className="home-search-field">
-
-                        <span
-                            className="home-search-icon"
-                            aria-hidden="true"
-                        >
-                            ⌕
-                        </span>
-
-                        <div>
-                            <small>Search venues</small>
-
-                            <input
-                                type="search"
-                                value={query}
-                                onChange={(event) =>
-                                    setQuery(event.target.value)
-                                }
-                                placeholder="Venue, location or attendees"
-                                aria-label="Search venues"
-                            />
-                        </div>
-
+                        <span className="home-search-icon" aria-hidden="true">⌕</span>
+                        <input
+                            type="search"
+                            value={query}
+                            onChange={(event) => setQuery(event.target.value)}
+                            placeholder="Search for a venue that fits your event"
+                            aria-label="Search by venue name, location or capacity"
+                        />
                         {query && (
                             <button
                                 type="button"
@@ -169,98 +88,116 @@ function OrganizerHome({
                                 onClick={() => setQuery("")}
                                 aria-label="Clear venue search"
                             >
-
+                                ×
                             </button>
                         )}
-
                     </div>
-
-
-                    <button
-                        type="button"
-                        className="home-advanced-link"
-                        onClick={onFindVenue}
-                    >
-                        Advanced search
-                        <span aria-hidden="true">↗</span>
+                    <button type="button" className="home-advanced-link" onClick={onFindVenue}>
+                        Advanced search <span aria-hidden="true">↗</span>
                     </button>
-
                 </div>
-
             </section>
 
-
-            {/* =====================================================
-                VENUE COLLECTION
-               ===================================================== */}
-
-            <section className="home-venue-section">
-
-                <div className="home-section-heading">
-
+            <section className="home-upcoming-section">
+                <div className="home-upcoming-heading">
                     <div>
-                        <p className="landing-kicker">
-                            THE VENUE COLLECTION
-                        </p>
-
-                        <h2>
-                            Explore our <em>venues.</em>
-                        </h2>
+                        <h2>My upcoming events</h2>
+                        <p>Your next bookings at a glance.</p>
                     </div>
-
-                    <p>
-                        Purposeful spaces for conferences,
-                        meetings, presentations and events.
-                    </p>
-
+                    <button type="button" className="home-view-all" onClick={onViewBookings}>
+                        View all bookings <span aria-hidden="true">→</span>
+                    </button>
                 </div>
 
+                {upcoming.length > 0 ? (
+                    <div className="home-upcoming-grid">
+                        {upcoming.slice(0, 3).map((booking) => (
+                            <BookingCard
+                                key={booking.bookingId}
+                                booking={booking}
+                                onOpen={onOpenBooking}
+                            />
+                        ))}
+                    </div>
+                ) : (
+                    <div className="home-upcoming-empty">
+                        <span className="home-empty-icon" aria-hidden="true">▣</span>
+                        <p>You have no upcoming events.</p>
+                        <button type="button" className="home-inline-action" onClick={onFindVenue}>
+                            Browse venues <span aria-hidden="true">→</span>
+                        </button>
+                    </div>
+                )}
+            </section>
+
+            <section className="home-venue-section">
+                <div className="home-section-heading">
+                    <div>
+                        <h2>Explore venues</h2>
+                        <p>Find a space for your next conference, meeting or event.</p>
+                    </div>
+                    <span className="home-result-count">{filteredVenues.length} {filteredVenues.length === 1 ? "venue" : "venues"}</span>
+                </div>
+
+                <div className="home-venue-filters">
+                    <label>
+                        <span>Minimum capacity</span>
+                        <input
+                            type="number"
+                            min="1"
+                            inputMode="numeric"
+                            placeholder="Any size"
+                            value={minimumCapacity}
+                            onChange={(event) => setMinimumCapacity(event.target.value)}
+                        />
+                    </label>
+                    <label>
+                        <span>Availability</span>
+                        <select value={availability} onChange={(event) => setAvailability(event.target.value)}>
+                            <option value="">All venues</option>
+                            <option value="available">Available</option>
+                            <option value="unavailable">Unavailable</option>
+                        </select>
+                    </label>
+                    {(minimumCapacity || availability) && (
+                        <button
+                            type="button"
+                            className="home-clear-filters"
+                            onClick={() => {
+                                setMinimumCapacity("");
+                                setAvailability("");
+                            }}
+                        >
+                            Clear filters
+                        </button>
+                    )}
+                </div>
 
                 <div className="home-venue-grid">
-
                     {filteredVenues.length > 0 ? (
                         filteredVenues.map((venue) => {
-
-                            const originalIndex =
-                                venues.findIndex(
-                                    (item) =>
-                                        item.venueId ===
-                                        venue.venueId
-                                );
-
-                            const image =
-                                images[
-                                    (
-                                        originalIndex >= 0
-                                            ? originalIndex
-                                            : 0
-                                    ) % images.length
-                                ];
+                            const originalIndex = venues.findIndex((item) => item.venueId === venue.venueId);
+                            const image = images[(originalIndex >= 0 ? originalIndex : 0) % images.length];
 
                             return (
                                 <VenueCard
                                     key={venue.venueId}
                                     venue={venue}
-                                    image={image}
+                                    image={venue.venueImageData || image}
                                     onOpen={onOpenVenue}
                                 />
                             );
                         })
                     ) : (
                         <div className="home-empty">
-
                             <EmptyState
                                 title="No venues found"
-                                text="Try another venue name, location or attendee number."
+                                text="Try another search or adjust your filters."
                             />
-
                         </div>
                     )}
-
                 </div>
-
             </section>
-
         </main>
     );
 }
