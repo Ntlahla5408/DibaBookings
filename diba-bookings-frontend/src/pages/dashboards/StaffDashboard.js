@@ -554,7 +554,7 @@ return venueList;
                 <LoadingIndicator />
             ) : (
                 <>
-                    <section className="d-flex flex-nowrap gap-3 mb-4 overflow-auto pb-2" aria-label="Staff quick overview">
+                    <section className="d-flex flex-wrap gap-3 mb-4" aria-label="Staff quick overview">
                         <StatCard
                             label="Pending review"
                             value={bookings.filter(
@@ -579,8 +579,8 @@ return venueList;
                         />
                     </section>
 
-                    <section id="staff-upcoming" className="d-flex flex-nowrap gap-3 mb-4 overflow-auto pb-2" aria-label="Daily operations overview">
-                        <div className="flex-shrink-0" style={{ width: "min(420px, 88vw)" }}>
+                    <section id="staff-upcoming" className="d-flex flex-column gap-4 mb-4" aria-label="Daily operations overview">
+                        <div className="w-100">
                             <div className="panel h-100">
                                 <div className="d-flex justify-content-between align-items-start gap-2 mb-3">
                                     <div>
@@ -624,7 +624,7 @@ return venueList;
                             </div>
                         </div>
 
-                        <div className="col-12 col-lg-4">
+                        <div className="w-100">
                             <div className="panel h-100" id="staff-pending">
                                 <div className="d-flex justify-content-between align-items-start gap-2 mb-3">
                                     <div>
@@ -675,7 +675,7 @@ return venueList;
                             </div>
                         </div>
 
-                        <div className="col-12 col-lg-4">
+                        <div className="w-100">
                             <div className="panel h-100">
                                 <div className="d-flex justify-content-between align-items-start gap-2 mb-3">
                                     <div>
@@ -709,7 +709,7 @@ return venueList;
                         </div>
                     </section>
 
-                    <section className="content-grid" id="all-bookings">
+                    <section className="d-flex flex-column gap-4 mb-4" id="all-bookings">
                         <div className="panel table-panel">
                             <div className="panel-heading d-flex justify-content-between align-items-start gap-3">
                                 <div>
