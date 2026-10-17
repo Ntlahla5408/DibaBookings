@@ -77,7 +77,7 @@ function BookingCalendar({ bookings = [], venues = [], onSelectBooking }) {
             <div className="d-flex flex-wrap gap-3 small mb-3">
                 {[["Approved", "success"], ["Pending", "warning"], ["Rejected", "danger"], ["Cancelled", "secondary"]].map(([label, color]) => <span key={label}><Badge bg={color} text={color === "warning" ? "dark" : undefined}>{label}</Badge></span>)}
             </div>
-            <div className="table-responsive"><div style={{ minWidth: 650 }}>
+            <div className="table-responsive"><div className="booking-calendar-grid" style={{ width: "100%" }}>
                 <div className="d-grid" style={{ gridTemplateColumns: "repeat(7, minmax(0, 1fr))" }}>
                     {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((d) => <div key={d} className="text-center fw-semibold py-2 border-bottom">{d}</div>)}
                     {cells.map((date) => {
