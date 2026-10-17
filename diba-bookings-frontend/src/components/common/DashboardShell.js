@@ -73,9 +73,6 @@ function DashboardShell({
 
             {children}
 
-            <footer id="staff-help" className="border-top mt-5 pt-3 pb-3">
-                <a href="/help" className="small text-secondary">Help Centre and support</a>
-            </footer>
         </main>
     );
 }
