@@ -7,18 +7,6 @@ import diningImage from "../../../assets/images/Dining Room.jpg";
 import EmptyState from "../../common/EmptyState";
 import VenueCard from "../venues/VenueCard";
 
-function getVenueType(venue) {
-    const explicitType = venue.venueType || venue.type || venue.category;
-    if (explicitType) return String(explicitType).trim();
-
-    const details = `${venue.venueName || ""} ${venue.venueDescription || ""}`.toLowerCase();
-    if (details.includes("theatre") || details.includes("auditorium")) return "Theatre";
-    if (details.includes("dining") || details.includes("restaurant")) return "Dining";
-    if (details.includes("exhibition")) return "Exhibition";
-    if (details.includes("conference") || details.includes("meeting") || details.includes("hall")) return "Conference & meeting";
-    return "Other";
-}
-
 function OrganizerHome({
     firstName,
     venues,
@@ -27,9 +15,7 @@ function OrganizerHome({
     onOpenVenue,
 }) {
     const [minimumCapacity, setMinimumCapacity] = useState("");
-    const [venueType, setVenueType] = useState("");
-
-    const venueTypes = useMemo(() => [...new Set(venues.map(getVenueType))].sort((a, b) => a.localeCompare(b)), [venues]);
+    const [maximumPrice, setMaximumPrice] = useState("");
 
     const greeting = useMemo(() => {
         const hour = new Date().getHours();
@@ -41,14 +27,14 @@ function OrganizerHome({
 
     const filteredVenues = useMemo(() => {
         const search = query.trim().toLowerCase();
-        const requestedCapacity = /^\d+$/.test(search) ? Number(search) : null;
+        const requestedCapacity = /^\\d+$/.test(search) ? Number(search) : null;
 
         return venues.filter((venue) => {
             const venueName = venue.venueName?.toLowerCase() || "";
             const description = venue.venueDescription?.toLowerCase() || "";
             const location = venue.location?.toLowerCase() || "";
             const capacity = Number(venue.capacity) || 0;
-            const type = getVenueType(venue).toLowerCase();
+            const price = venue.price == null ? null : Number(venue.price);
             const matchesSearch = !search || (
                 requestedCapacity !== null
                     ? capacity >= requestedCapacity
@@ -57,10 +43,15 @@ function OrganizerHome({
                       location.includes(search)
             );
             const matchesCapacity = !minimumCapacity || capacity >= Number(minimumCapacity);
-            const matchesType = !venueType || type === venueType.toLowerCase();
-            return matchesSearch && matchesCapacity && matchesType;
+            const matchesPrice = !maximumPrice || (
+                price !== null &&
+                Number.isFinite(price) &&
+                price <= Number(maximumPrice)
+            );
+
+            return matchesSearch && matchesCapacity && matchesPrice;
         });
-    }, [venues, query, minimumCapacity, venueType]);
+    }, [venues, query, minimumCapacity, maximumPrice]);
 
     return (
         <main className="organizer-home">
@@ -78,8 +69,8 @@ function OrganizerHome({
                         {query && <button type="button" className="home-search-clear" onClick={() => setQuery("")} aria-label="Clear venue search">×</button>}
                     </div>
                     <label className="home-filter-control"><span>Capacity</span><select value={minimumCapacity} onChange={(event) => setMinimumCapacity(event.target.value)} aria-label="Minimum capacity"><option value="">Any</option><option value="50">50+</option><option value="100">100+</option><option value="250">250+</option><option value="500">500+</option></select></label>
-                    <label className="home-filter-control"><span>Venue type</span><select value={venueType} onChange={(event) => setVenueType(event.target.value)} aria-label="Venue type"><option value="">All types</option>{venueTypes.map((type) => <option key={type} value={type}>{type}</option>)}</select></label>
-                    {(minimumCapacity || venueType || query) && <button type="button" className="home-clear-filters" onClick={() => {setQuery("");setMinimumCapacity("");setVenueType("");}}>Clear</button>}
+                    <label className="home-filter-control"><span>Price</span><select value={maximumPrice} onChange={(event) => setMaximumPrice(event.target.value)} aria-label="Maximum venue price"><option value="">Any price</option><option value="1000">Up to R1,000</option><option value="2500">Up to R2,500</option><option value="5000">Up to R5,000</option><option value="10000">Up to R10,000</option></select></label>
+                    {(minimumCapacity || maximumPrice || query) && <button type="button" className="home-clear-filters" onClick={() => { setQuery(""); setMinimumCapacity(""); setMaximumPrice(""); }}>Clear</button>}
                 </div>
             </section>
             <section className="home-venue-section">
