@@ -71,7 +71,9 @@ function PolicyDocumentsPanel({ canManage = false }) {
         }
     };
 
-    const activePolicies = policies.filter((policy) => policy.isActive);
+    const activePolicies = canManage
+        ? policies.filter((policy) => policy.isActive)
+        : policies;
     const historyPolicies = policies.filter((policy) => !policy.isActive);
 
     return (
