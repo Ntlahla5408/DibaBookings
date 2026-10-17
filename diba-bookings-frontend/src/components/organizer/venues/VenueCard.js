@@ -1,6 +1,6 @@
 import Status from "../../common/StatusBadge";
 
-function VenueCard({ venue, image, onOpen }) {
+function VenueCard({ venue, image, fallbackImage, onOpen }) {
     return (
         <article className="browse-venue-card">
 
@@ -8,6 +8,12 @@ function VenueCard({ venue, image, onOpen }) {
                 <img
                     src={image}
                     alt={venue.venueName}
+                    onError={(event) => {
+                        if (fallbackImage && event.currentTarget.src !== fallbackImage) {
+                            event.currentTarget.onerror = null;
+                            event.currentTarget.src = fallbackImage;
+                        }
+                    }}
                 />
             </div>
 
