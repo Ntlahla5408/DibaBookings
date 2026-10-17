@@ -9,10 +9,16 @@ function ForgotPassword() {
     const [loading, setLoading] = useState(false);
     const [submitted, setSubmitted] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+    const [emailError, setEmailError] = useState("");
 
     const handleSubmit = async (event) => {
         event.preventDefault();
         setErrorMessage("");
+        if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email.trim())) {
+            setEmailError("Enter a valid email address.");
+            return;
+        }
+        setEmailError("");
         setLoading(true);
         try {
             const response = await requestPasswordReset({ email: email.trim() });
@@ -58,8 +64,9 @@ function ForgotPassword() {
                                         <Form.Group className="auth-field">
                                             <Form.Label htmlFor="forgot-email">Email address</Form.Label>
                                             <Form.Control id="forgot-email" type="email" autoComplete="email"
-                                                value={email} onChange={(event) => setEmail(event.target.value)}
-                                                placeholder="you@example.com" required />
+                                                value={email} onChange={(event) => { setEmail(event.target.value); setEmailError(""); }}
+                                                placeholder="you@example.com" isInvalid={Boolean(emailError)} required />
+                                            <Form.Control.Feedback type="invalid">{emailError}</Form.Control.Feedback>
                                         </Form.Group>
                                         {errorMessage && <div className="auth-form-error" role="alert">{errorMessage}</div>}
                                         <Button type="submit" className="auth-submit w-100" disabled={loading || !email.trim()}>
