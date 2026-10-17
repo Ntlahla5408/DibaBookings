@@ -57,20 +57,8 @@ function ResetPassword() {
     return (
         <main className="auth-page">
             <Container className="auth-container">
-                <Row className="g-0 auth-layout auth-layout-compact">
-                    <Col lg={5} className="auth-intro">
-                        <Link to="/" className="auth-brand" aria-label="DIBA Bookings home">
-                            <span className="auth-brand-mark">D</span>
-                            <span>DIBA <strong>BOOKINGS</strong></span>
-                        </Link>
-                        <div className="auth-intro-copy">
-                            <span className="auth-eyebrow">ACCOUNT SECURITY</span>
-                            <h1>Choose a new password.</h1>
-                            <p>Set a strong password to secure your DIBA Bookings account.</p>
-                        </div>
-                        <div className="auth-intro-footer">Reset links expire after 30 minutes.</div>
-                    </Col>
-                    <Col lg={7} className="auth-form-panel">
+                <Row className="g-0 auth-layout auth-layout-centered">
+                    <Col xs={12} className="auth-form-panel">
                         <Card className="auth-card border-0">
                             <Card.Body>
                                 <div className="auth-heading">
