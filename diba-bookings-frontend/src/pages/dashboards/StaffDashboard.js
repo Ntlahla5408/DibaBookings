@@ -16,6 +16,7 @@ import { shortId } from "../../utils/dashboardUtils";
 import { clearSession } from "../../utils/sessionUtils";
 import { dateText, timeText } from "../../utils/dateUtils";
 import StaffVenueManagement from "../../components/staff/VenueManagement";
+import BookingCalendar from "../../components/staff/BookingCalendar";
 
 function getErrorMessage(error, fallback) {
     const responseData = error.response?.data;
@@ -53,6 +54,28 @@ function getErrorMessage(error, fallback) {
 
 function getBookingDate(booking) {
     return booking.startDateTime || booking.bookingDate || booking.date || "";
+}
+
+function getEventStartDate(booking) {
+    return booking.startDateTime || booking.eventDate || booking.date || "";
+}
+
+function getLocalDayStart(value) {
+    if (!value) return null;
+
+    // Preserve date-only values as the calendar day supplied by the API.
+    const dateOnlyMatch = String(value).match(/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/);
+    const parsedDate = dateOnlyMatch
+        ? new Date(
+            Number(dateOnlyMatch[1]),
+            Number(dateOnlyMatch[2]) - 1,
+            Number(dateOnlyMatch[3])
+        )
+        : new Date(value);
+
+    if (Number.isNaN(parsedDate.getTime())) return null;
+
+    return new Date(parsedDate.getFullYear(), parsedDate.getMonth(), parsedDate.getDate());
 }
 
 function getDisplayName(value, fallback = "Not provided") {
@@ -225,6 +248,9 @@ function StaffDashboard() {
     const [loading, setLoading] = useState(true);
     const [processingBookingId, setProcessingBookingId] = useState(null);
     const [managedVenue, setManagedVenue] = useState(null);
+    const [showAllUpcomingPending, setShowAllUpcomingPending] = useState(false);
+    const [showAllBookings, setShowAllBookings] = useState(false);
+    const [showAllVenues, setShowAllVenues] = useState(false);
 
     const [searchTerm, setSearchTerm] = useState("");
     const [statusFilter, setStatusFilter] = useState("all");
@@ -316,6 +342,43 @@ return venueList;
             return matchesSearch && matchesStatus && matchesVenue;
         });
     }, [bookings, searchTerm, statusFilter, venueFilter]);
+
+    const today = useMemo(() => {
+        const now = new Date();
+        return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    }, []);
+
+    const upcomingBookings = useMemo(() => {
+        const lastDay = new Date(today);
+        lastDay.setDate(lastDay.getDate() + 7);
+
+        return bookings
+            .filter((booking) => {
+                const status = String(booking.statusName || "").toLowerCase();
+                if (status === "rejected" || status === "cancelled") return false;
+
+                const eventDay = getLocalDayStart(getEventStartDate(booking));
+                return eventDay && eventDay >= today && eventDay <= lastDay;
+            })
+            .sort((first, second) => {
+                const firstDate = Date.parse(getEventStartDate(first));
+                const secondDate = Date.parse(getEventStartDate(second));
+                return (Number.isNaN(firstDate) ? 0 : firstDate) -
+                    (Number.isNaN(secondDate) ? 0 : secondDate);
+            });
+    }, [bookings, today]);
+
+    const pendingBookings = useMemo(
+        () => bookings
+            .filter((booking) => String(booking.statusName || "").toLowerCase() === "pending")
+            .sort((first, second) => {
+                const firstDate = Date.parse(getBookingDate(first));
+                const secondDate = Date.parse(getBookingDate(second));
+                return (Number.isNaN(firstDate) ? 0 : firstDate) -
+                    (Number.isNaN(secondDate) ? 0 : secondDate);
+            }),
+        [bookings]
+    );
 
     const sortedBookings = useMemo(() => {
         const getName = (value, fallback = "") =>
@@ -474,16 +537,22 @@ return venueList;
 
     return (
         <DashboardShell
-            title={`Welcome, ${firstName}`}
-            eyebrow="DIBA BOOKINGS / STAFF DESK"
-            subtitle="Review venue requests, maintain venue information, and keep bookings moving."
+            title="Dashboard"
             onLogout={clearSession}
+            profileLabel={firstName}
+            navigationItems={[
+                { label: "Overview", href: "#staff-overview" },
+                { label: "Upcoming & pending", href: "#staff-upcoming" },
+                { label: "All bookings", href: "#all-bookings" },
+                { label: "Venues", href: "#staff-venues" },
+                { label: "Calendar", href: "#booking-calendar" }
+            ]}
         >
             {loading ? (
                 <LoadingIndicator />
             ) : (
                 <>
-                    <section className="stat-grid">
+                    <section id="staff-overview" className="d-flex flex-wrap gap-3 mb-4" aria-label="Staff quick overview">
                         <StatCard
                             label="Pending review"
                             value={bookings.filter(
@@ -508,15 +577,104 @@ return venueList;
                         />
                     </section>
 
-                    <section className="content-grid">
+                    <section id="staff-upcoming" className="mb-4" aria-label="Upcoming and pending bookings">
+                        <div className="panel">
+                            <div className="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                                <h2>Upcoming &amp; pending bookings</h2>
+                                <div className="d-flex align-items-center gap-2">
+                                    <Badge bg="primary">
+                                        {new Map([...upcomingBookings, ...pendingBookings].map((booking) => [String(booking.bookingId), booking])).size}
+                                    </Badge>
+                                    {(upcomingBookings.length > 3 || pendingBookings.length > 3) && (
+                                        <Button type="button" size="sm" variant="link" className="p-0 text-decoration-none"
+                                            onClick={() => setShowAllUpcomingPending((current) => !current)}>
+                                            {showAllUpcomingPending ? "Show less" : "See all"}
+                                        </Button>
+                                    )}
+                                </div>
+                            </div>
+                            {upcomingBookings.length === 0 && pendingBookings.length === 0 ? (
+                                <p className="text-muted mb-0">No upcoming bookings or pending requests.</p>
+                            ) : (
+                                <div className="d-grid gap-3">
+                                    {Array.from(
+                                        new Map(
+                                            [...(showAllUpcomingPending ? upcomingBookings : upcomingBookings.slice(0, 3)), ...(showAllUpcomingPending ? pendingBookings : pendingBookings.slice(0, 3))].map((booking) => [
+                                                String(booking.bookingId),
+                                                booking
+                                            ])
+                                        ).values()
+                                    )
+                                        .sort((first, second) => {
+                                            const firstDate = Date.parse(getEventStartDate(first) || getBookingDate(first));
+                                            const secondDate = Date.parse(getEventStartDate(second) || getBookingDate(second));
+                                            return (Number.isNaN(firstDate) ? 0 : firstDate) -
+                                                (Number.isNaN(secondDate) ? 0 : secondDate);
+                                        })
+                                        .map((booking) => {
+                                            const isPending = String(booking.statusName || "").toLowerCase() === "pending";
+                                            return (
+                                                <div key={booking.bookingId} className="border-bottom pb-3">
+                                                    <div className="d-flex flex-wrap justify-content-between align-items-start gap-2">
+                                                        <strong>{getDisplayName(booking.eventName, "Untitled event")}</strong>
+                                                        <Badge bg={getStatusVariant(booking.statusName)} text="dark">
+                                                            {booking.statusName || "Unknown"}
+                                                        </Badge>
+                                                    </div>
+                                                    <p className="text-muted small mb-1">
+                                                        {dateText(getEventStartDate(booking) || getBookingDate(booking))}
+                                                        {booking.startDateTime ? ` · ${timeText(booking.startDateTime)}` : ""}
+                                                    </p>
+                                                    <p className="small mb-2">
+                                                        {getDisplayName(
+                                                            booking.venueName ||
+                                                                venues.find((item) => String(item.venueId) === String(booking.venueId))?.venueName,
+                                                            "Venue not specified"
+                                                        )}
+                                                        {booking.organiserName ? ` · ${booking.organiserName}` : ""}
+                                                    </p>
+                                                    <div className="d-flex flex-wrap gap-2">
+                                                        <Button type="button" size="sm" variant="outline-primary"
+                                                            onClick={() => setSelectedBooking(booking)}>
+                                                            {isPending ? "Review" : "View booking"}
+                                                        </Button>
+                                                        {isPending && (
+                                                            <>
+                                                                <Button type="button" size="sm" variant="success"
+                                                                    disabled={processingBookingId !== null}
+                                                                    onClick={() => reviewBooking(booking)}>
+                                                                    {processingBookingId === booking.bookingId ? "Processing..." : "Approve"}
+                                                                </Button>
+                                                                <Button type="button" size="sm" variant="outline-danger"
+                                                                    disabled={processingBookingId !== null}
+                                                                    onClick={() => openRejectionDialog(booking)}>
+                                                                    Reject
+                                                                </Button>
+                                                            </>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                </div>
+                            )}
+                        </div>
+                    </section>
+
+                    <section className="d-flex flex-column gap-4 mb-4" id="all-bookings">
                         <div className="panel table-panel">
-                            <div className="panel-heading">
-                                <div>
-                                    <p className="eyebrow">BOOKING MANAGEMENT</p>
-                                    <h2>All bookings</h2>
-                                    <p className="text-muted mb-0">
-                                        Showing {sortedBookings.length} of {bookings.length} bookings
-                                    </p>
+                            <div className="panel-heading d-flex flex-wrap justify-content-between align-items-center gap-3">
+                                <h2>All bookings</h2>
+                                <div className="d-flex align-items-center gap-3">
+                                    {sortedBookings.length > 3 && (
+                                        <Button type="button" variant="link" size="sm" className="p-0 text-decoration-none"
+                                            onClick={() => setShowAllBookings((current) => !current)}>
+                                            {showAllBookings ? "Show less" : "See all"}
+                                        </Button>
+                                    )}
+                                    <Button type="button" variant="outline-secondary" size="sm" onClick={() => loadData()}>
+                                        Refresh
+                                    </Button>
                                 </div>
                             </div>
 
@@ -624,7 +782,7 @@ return venueList;
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {sortedBookings.map((booking) => {
+                                    {(showAllBookings ? sortedBookings : sortedBookings.slice(0, 3)).map((booking) => {
                                         const isProcessing =
                                             processingBookingId === booking.bookingId;
 
@@ -720,9 +878,16 @@ return venueList;
                             </Table>
                         </div>
 
-                        <div className="panel">
-                            <p className="eyebrow">VENUE DIRECTORY</p>
-                            <h2>Venues</h2>
+                        <div className="panel" id="staff-venues">
+                            <div className="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                                <h2>Venues</h2>
+                                {venues.length > 3 && (
+                                    <Button type="button" variant="link" size="sm" className="p-0 text-decoration-none"
+                                        onClick={() => setShowAllVenues((current) => !current)}>
+                                        {showAllVenues ? "Show less" : "See all"}
+                                    </Button>
+                                )}
+                            </div>
 
                             {venues.length === 0 && (
                                 <p className="text-muted">
@@ -730,7 +895,7 @@ return venueList;
                                 </p>
                             )}
 
-                            {venues.map((venue) => (
+                            {(showAllVenues ? venues : venues.slice(0, 3)).map((venue) => (
                                 <div className="compact-row" key={venue.venueId}>
                                     <div>
                                         <strong>{venue.venueName}</strong>
@@ -761,6 +926,12 @@ return venueList;
                             ))}
                         </div>
                     </section>
+
+                    <BookingCalendar
+                        bookings={bookings}
+                        venues={venues}
+                        onSelectBooking={setSelectedBooking}
+                    />
                 </>
             )}
 
