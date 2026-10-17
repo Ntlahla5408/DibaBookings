@@ -547,20 +547,8 @@ return venueList;
     return (
         <DashboardShell
             title="Dashboard"
-            eyebrow="STAFF WORKSPACE"
-            subtitle={`Welcome back, ${firstName}. Review requests and keep venue bookings on track.`}
             onLogout={clearSession}
             profileLabel={firstName}
-            activeNavigation="Dashboard"
-            navigation={[
-                { label: "Home", href: "#staff-dashboard-top" },
-                { label: "Dashboard", href: "#staff-dashboard-top" },
-                { label: "Bookings", href: "#all-bookings" },
-                { label: "Calendar", href: "#booking-calendar" },
-                { label: "Venues", href: "#staff-venues" },
-                { label: "Help", href: "#staff-help" }
-            ]}
-            notice="Use the calendar to scan bookings by date. Select a day to view a booking, or use Pending decisions below to approve or reject requests."
         >
             {loading ? (
                 <LoadingIndicator />
@@ -602,7 +590,7 @@ return venueList;
                             <div className="panel h-100">
                                 <div className="d-flex justify-content-between align-items-start gap-2 mb-3">
                                     <div>
-                                        <p className="eyebrow">NEXT 7 DAYS</p>
+                                        
                                         <h2>Upcoming bookings</h2>
                                     </div>
                                     <Badge bg="primary">{upcomingBookings.length}</Badge>
@@ -638,11 +626,7 @@ return venueList;
                                         ))}
                                     </div>
                                 )}
-                                {upcomingBookings.length > 5 && (
-                                    <p className="text-muted small mt-3 mb-0">
-                                        Showing the first 5 upcoming bookings.
-                                    </p>
-                                )}
+
                             </div>
                         </div>
 
@@ -650,7 +634,7 @@ return venueList;
                             <div className="panel h-100" id="staff-pending">
                                 <div className="d-flex justify-content-between align-items-start gap-2 mb-3">
                                     <div>
-                                        <p className="eyebrow">ACTION REQUIRED</p>
+                                        
                                         <h2>Pending decisions</h2>
                                     </div>
                                     <Badge bg={pendingBookingCount ? "warning" : "success"} text="dark">
@@ -693,11 +677,7 @@ return venueList;
                                         ))}
                                     </div>
                                 )}
-                                {pendingBookingCount > pendingBookings.length && (
-                                    <p className="text-muted small mt-3 mb-0">
-                                        Showing the first {pendingBookings.length} requests. Use All bookings to review the rest.
-                                    </p>
-                                )}
+
                             </div>
                         </div>
 
@@ -705,7 +685,7 @@ return venueList;
                             <div className="panel h-100">
                                 <div className="d-flex justify-content-between align-items-start gap-2 mb-3">
                                     <div>
-                                        <p className="eyebrow">VENUE STATUS</p>
+                                        
                                         <h2>Unavailable venues</h2>
                                     </div>
                                     <Badge bg={unavailableVenues.length ? "secondary" : "success"}>
@@ -739,11 +719,9 @@ return venueList;
                         <div className="panel table-panel">
                             <div className="panel-heading d-flex justify-content-between align-items-start gap-3">
                                 <div>
-                                    <p className="eyebrow">BOOKING MANAGEMENT</p>
+                                    
                                     <h2>All bookings</h2>
-                                    <p className="text-muted mb-0">
-                                        Showing {sortedBookings.length} of {bookings.length} bookings
-                                    </p>
+
                                 </div>
                                 <Button
                                     type="button"
@@ -956,7 +934,7 @@ return venueList;
                         </div>
 
                         <div className="panel" id="staff-venues">
-                            <p className="eyebrow">VENUE DIRECTORY</p>
+                            
                             <h2>Venues</h2>
 
                             {venues.length === 0 && (
