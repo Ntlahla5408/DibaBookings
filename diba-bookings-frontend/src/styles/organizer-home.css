@@ -865,3 +865,18 @@
         padding: 13px;
     }
 }
+
+/* Organiser home: unified search, compact heading and readable cards */
+.home-introduction{border-bottom:0;padding:12px 0 8px}.home-section-label{display:none}
+.home-introduction h1{font-size:clamp(1.75rem,2.5vw,2rem);font-weight:700;letter-spacing:-.035em;line-height:1.2}
+.home-introduction h1 em{font-family:inherit;font-style:normal;font-weight:700}.home-introduction p{color:var(--home-muted);font-size:.88rem;margin:5px 0 0}
+.home-discovery{border-bottom:0;padding:12px 0 18px}.home-discovery-form{align-items:stretch;border:1px solid var(--home-line);border-radius:9px;display:flex;gap:0;min-height:62px;overflow:hidden;box-shadow:0 3px 12px rgba(7,27,44,.05)}
+.home-search-field{flex:1 1 360px;min-width:180px;padding:10px 16px}.home-search-field input{font-size:.92rem}
+.home-filter-control{align-items:flex-start;background:#fff;border-left:1px solid var(--home-line);display:flex;flex:0 0 140px;flex-direction:column;justify-content:center;gap:3px;min-width:0;padding:7px 12px}
+.home-filter-control>span{color:var(--home-muted);font-size:.68rem;font-weight:700}.home-filter-control select,.home-filter-control input{background:transparent;border:0;color:var(--home-navy);font:inherit;font-size:.82rem;max-width:100%;outline-offset:2px;padding:0;width:100%}
+.home-filter-control input[type=date]{min-width:0}.home-discovery-form>.home-clear-filters{align-self:center;margin:0 12px;white-space:nowrap}
+.home-venue-section{padding:10px 0 24px}.home-section-heading{margin-bottom:14px}.home-search-heading{display:none}.home-venue-grid{gap:20px;grid-template-columns:repeat(3,minmax(0,1fr))}
+.home-venue-grid .browse-venue-card>img,.home-venue-grid .venue-card-image,.home-venue-grid .venue-card-image img{aspect-ratio:16/9;height:auto;width:100%}.home-venue-grid .venue-card-image{overflow:hidden}.home-venue-grid .browse-venue-card>img,.home-venue-grid .venue-card-image img{display:block;object-fit:cover}
+.home-venue-grid .browse-venue-body{gap:11px;padding:16px}.home-venue-grid .venue-card-title h3{font-size:1.08rem;line-height:1.35}.home-venue-grid .venue-card-description{font-size:.86rem;line-height:1.5;min-height:calc(1.5em * 2)}.home-venue-grid .venue-facts{font-size:.78rem}.home-venue-grid .outline-action{font-size:.82rem}
+@media(max-width:1100px){.home-discovery-form{flex-wrap:wrap}.home-search-field{flex-basis:100%;border-bottom:1px solid var(--home-line)}.home-filter-control{flex:1 1 0}.home-filter-control:first-of-type{border-left:0}.home-venue-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.home-discovery-form{flex-direction:column}.home-search-field{flex-basis:auto;min-height:48px}.home-filter-control{border-left:0;border-top:1px solid var(--home-line);min-height:50px}.home-venue-grid{grid-template-columns:1fr}.home-venue-grid .browse-venue-body{padding:14px}}
