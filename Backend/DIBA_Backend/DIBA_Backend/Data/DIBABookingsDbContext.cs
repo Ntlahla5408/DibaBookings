@@ -45,6 +45,7 @@ namespace DIBA_Backend.Data
         public DbSet<BookingStatus> BookingStatuses { get; set; }
         public DbSet<Event> Events { get; set; }
         public DbSet<Notification> Notifications { get; set; }
+        public DbSet<EmailDeliveryLog> EmailDeliveryLogs { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<Venue> Venues { get; set; }
         public DbSet<VenueFeature> VenueFeatures { get; set; }
@@ -56,6 +57,29 @@ namespace DIBA_Backend.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            // Email delivery history mapping
+                      modelBuilder.Entity<EmailDeliveryLog>()
+                            .Property(log => log.RecipientEmail)
+                            .HasMaxLength(320)
+                            .IsRequired();
+            
+                        modelBuilder.Entity<EmailDeliveryLog>()
+                            .Property(log => log.Subject)
+                            .HasMaxLength(200)
+                            .IsRequired();
+            
+                        modelBuilder.Entity<EmailDeliveryLog>()
+                            .Property(log => log.Status)
+                            .HasMaxLength(20)
+                            .IsRequired();
+            
+                        modelBuilder.Entity<EmailDeliveryLog>()
+                            .Property(log => log.ErrorMessage)
+                            .HasMaxLength(1000);
+            
+                        modelBuilder.Entity<EmailDeliveryLog>()
+                            .HasIndex(log => log.AttemptedAtUtc);
 
 
             // =========================================================

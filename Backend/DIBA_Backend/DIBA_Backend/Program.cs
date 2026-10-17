@@ -1,4 +1,4 @@
-using DIBA_Backend.Data;
+﻿using DIBA_Backend.Data;
 using DIBA_Backend.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -6,9 +6,14 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddHttpClient<YocoPaymentService>();
+builder.Services.AddHttpClient("Brevo");
+builder.Services.AddScoped<NotificationEmailService>();
+
+builder.Services.AddHttpClient<DibaAssistantService>();
 
 builder.Services.AddCors(options =>
 {
