@@ -31,6 +31,7 @@ function Login() {
         event.preventDefault();
         const errors = {};
         if (!formData.email.trim()) errors.email = "Enter your email address.";
+        else if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(formData.email.trim())) errors.email = "Enter a valid email address.";
         if (!formData.password) errors.password = "Enter your password.";
         if (Object.keys(errors).length) {
             setFieldErrors(errors);
