@@ -647,7 +647,7 @@ return venueList;
                         </div>
 
                         <div className="col-12 col-lg-4">
-                            <div className="panel h-100">
+                            <div className="panel h-100" id="staff-pending">
                                 <div className="d-flex justify-content-between align-items-start gap-2 mb-3">
                                     <div>
                                         <p className="eyebrow">ACTION REQUIRED</p>
