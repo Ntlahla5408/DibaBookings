@@ -378,10 +378,6 @@ return venueList;
         [bookings]
     );
 
-    const pendingBookingCount = bookings.filter(
-        (booking) => String(booking.statusName || "").toLowerCase() === "pending"
-    ).length;
-
     const sortedBookings = useMemo(() => {
         const getName = (value, fallback = "") =>
             String(value ?? fallback).trim();
