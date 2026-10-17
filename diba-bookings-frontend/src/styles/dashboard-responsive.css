@@ -209,3 +209,64 @@
         padding: 0.15rem 0.2rem;
     }
 }
+
+/* Staff overview cards: use the available width and give each metric room to breathe. */
+#staff-overview {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px !important;
+    width: 100%;
+}
+
+#staff-overview > .stat-card {
+    width: 100%;
+    min-width: 0;
+    min-height: 142px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+#staff-overview > .stat-card span {
+    font-size: 1rem;
+    line-height: 1.35;
+}
+
+#staff-overview > .stat-card strong {
+    font-size: clamp(2rem, 2.8vw, 2.65rem);
+    line-height: 1.1;
+}
+
+@media (max-width: 900px) {
+    #staff-overview {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    #staff-overview > .stat-card {
+        min-height: 130px;
+        padding: 20px;
+    }
+}
+
+@media (max-width: 420px) {
+    #staff-overview {
+        gap: 10px !important;
+    }
+
+    #staff-overview > .stat-card {
+        min-height: 116px;
+        padding: 14px;
+        gap: 12px;
+    }
+
+    #staff-overview > .stat-card span {
+        font-size: 0.88rem;
+    }
+
+    #staff-overview > .stat-card strong {
+        font-size: 1.9rem;
+    }
+}
+
