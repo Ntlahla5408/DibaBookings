@@ -18,11 +18,27 @@ function DashboardShell({
     return (
         <main className="app-shell" id="staff-dashboard-top">
             <header className="bg-white border-bottom mb-4" style={{ margin: "-1rem -1rem 1.5rem", padding: "0 1rem" }}>
-                <div className="d-flex flex-wrap justify-content-between align-items-center gap-3 py-3">
-                    <a href="#staff-dashboard-top" className="d-inline-flex align-items-center" aria-label="Nelson Mandela University home">
-                        <img src={nmuLogo} alt="Nelson Mandela University" style={{ display: "block", width: "min(250px, 48vw)", maxHeight: 64, objectFit: "contain", objectPosition: "left center" }} />
+                <div className="dashboard-topbar d-flex flex-wrap align-items-center gap-3 py-3">
+                    <a href="#staff-dashboard-top" className="dashboard-brand d-inline-flex align-items-center flex-shrink-0" aria-label="Nelson Mandela University home">
+                        <img src={nmuLogo} alt="Nelson Mandela University" style={{ display: "block", width: "min(210px, 34vw)", maxHeight: 64, objectFit: "contain", objectPosition: "left center" }} />
                     </a>
-                    <div className="d-flex flex-wrap align-items-center gap-3">
+                    {navigationItems.length > 0 && (
+                        <nav className="dashboard-section-nav d-flex flex-wrap align-items-center gap-2" aria-label="Dashboard sections">
+                            {navigationItems.map((item) => (
+                                <Button
+                                    key={item.href}
+                                    as="a"
+                                    href={item.href}
+                                    variant="outline-primary"
+                                    size="sm"
+                                    className="dashboard-nav-button text-nowrap"
+                                >
+                                    {item.label}
+                                </Button>
+                            ))}
+                        </nav>
+                    )}
+                    <div className="dashboard-profile-actions d-flex flex-wrap align-items-center gap-3 ms-auto">
                         <div className="d-flex align-items-center gap-2">
                             <span className="rounded-circle d-inline-flex align-items-center justify-content-center fw-semibold" style={{ width: 36, height: 36, background: "#eaf0f5", color: "#071B2C" }} aria-label={`Profile: ${profileLabel}`}>{initials}</span>
                             <span className="small fw-semibold d-none d-sm-inline">{profileLabel}</span>
@@ -30,22 +46,6 @@ function DashboardShell({
                         <Button variant="outline-dark" size="sm" onClick={onLogout}>Sign out</Button>
                     </div>
                 </div>
-                {navigationItems.length > 0 && (
-                    <nav className="d-flex flex-wrap gap-2 pb-3" aria-label="Dashboard sections">
-                        {navigationItems.map((item) => (
-                            <Button
-                                key={item.href}
-                                as="a"
-                                href={item.href}
-                                variant="outline-primary"
-                                size="sm"
-                                className="text-nowrap"
-                            >
-                                {item.label}
-                            </Button>
-                        ))}
-                    </nav>
-                )}
             </header>
 
             <section className="mb-4">
