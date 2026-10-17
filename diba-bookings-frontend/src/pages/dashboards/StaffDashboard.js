@@ -63,7 +63,7 @@ function getLocalDayStart(value) {
     if (!value) return null;
 
     // Preserve date-only values as the calendar day supplied by the API.
-    const dateOnlyMatch = String(value).match(/^(\\d{4})-(\\d{2})-(\\d{2})$/);
+    const dateOnlyMatch = String(value).match(/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/);
     const parsedDate = dateOnlyMatch
         ? new Date(
             Number(dateOnlyMatch[1]),
@@ -715,7 +715,7 @@ return venueList;
 
                     <section className="content-grid">
                         <div className="panel table-panel">
-                            <div className="panel-heading">
+                            <div className="panel-heading d-flex justify-content-between align-items-start gap-3">
                                 <div>
                                     <p className="eyebrow">BOOKING MANAGEMENT</p>
                                     <h2>All bookings</h2>
@@ -723,6 +723,14 @@ return venueList;
                                         Showing {sortedBookings.length} of {bookings.length} bookings
                                     </p>
                                 </div>
+                                <Button
+                                    type="button"
+                                    variant="outline-secondary"
+                                    size="sm"
+                                    onClick={() => loadData()}
+                                >
+                                    Refresh
+                                </Button>
                             </div>
 
                             <Form className="mb-3">
