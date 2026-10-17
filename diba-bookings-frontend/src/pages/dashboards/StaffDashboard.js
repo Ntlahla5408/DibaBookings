@@ -218,6 +218,12 @@ function BookingDetails({ booking, venue }) {
                                 ))}
                         </tbody>
                     </Table>
+                    <BookingCalendar
+                        bookings={bookings}
+                        venues={venues}
+                        onSelectBooking={setSelectedBooking}
+                    />
+
                 </>
             )}
 
@@ -554,7 +560,7 @@ return venueList;
                 <LoadingIndicator />
             ) : (
                 <>
-                    <section className="stat-grid" aria-label="Staff quick overview">
+                    <section className="d-flex flex-nowrap gap-3 mb-4 overflow-auto pb-2" aria-label="Staff quick overview">
                         <StatCard
                             label="Pending review"
                             value={bookings.filter(
@@ -579,14 +585,8 @@ return venueList;
                         />
                     </section>
 
-                    <BookingCalendar
-                        bookings={bookings}
-                        venues={venues}
-                        onSelectBooking={setSelectedBooking}
-                    />
-
-                    <section id="staff-upcoming" className="row g-3 mb-4" aria-label="Daily operations overview">
-                        <div className="col-12 col-lg-4">
+                    <section id="staff-upcoming" className="d-flex flex-nowrap gap-3 mb-4 overflow-auto pb-2" aria-label="Daily operations overview">
+                        <div className="flex-shrink-0" style={{ width: "min(420px, 88vw)" }}>
                             <div className="panel h-100">
                                 <div className="d-flex justify-content-between align-items-start gap-2 mb-3">
                                     <div>
