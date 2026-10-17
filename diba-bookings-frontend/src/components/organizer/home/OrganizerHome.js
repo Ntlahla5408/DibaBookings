@@ -7,6 +7,18 @@ import diningImage from "../../../assets/images/Dining Room.jpg";
 import EmptyState from "../../common/EmptyState";
 import VenueCard from "../venues/VenueCard";
 
+function getVenueType(venue) {
+    const explicitType = venue.venueType || venue.type || venue.category;
+    if (explicitType) return String(explicitType).trim();
+
+    const details = `${venue.venueName || ""} ${venue.venueDescription || ""}`.toLowerCase();
+    if (details.includes("theatre") || details.includes("auditorium")) return "Theatre";
+    if (details.includes("dining") || details.includes("restaurant")) return "Dining";
+    if (details.includes("exhibition")) return "Exhibition";
+    if (details.includes("conference") || details.includes("meeting") || details.includes("hall")) return "Conference & meeting";
+    return "Other";
+}
+
 function OrganizerHome({
     firstName,
     venues,
@@ -19,7 +31,7 @@ function OrganizerHome({
     const [date, setDate] = useState("");
     const [venueType, setVenueType] = useState("");
 
-    const venueTypes = useMemo(() => [...new Set(venues.map((venue) => venue.venueType || venue.type || venue.category).filter(Boolean).map((type) => String(type).trim()))].sort((a, b) => a.localeCompare(b)), [venues]);
+    const venueTypes = useMemo(() => [...new Set(venues.map(getVenueType))].sort((a, b) => a.localeCompare(b)), [venues]);
 
     const greeting = useMemo(() => {
         const hour = new Date().getHours();
@@ -38,7 +50,7 @@ function OrganizerHome({
             const description = venue.venueDescription?.toLowerCase() || "";
             const location = venue.location?.toLowerCase() || "";
             const capacity = Number(venue.capacity) || 0;
-            const type = String(venue.venueType || venue.type || venue.category || "").toLowerCase();
+            const type = getVenueType(venue).toLowerCase();
             const selectedDate = date ? new Date(`${date}T00:00:00`) : null;
             const nextDate = selectedDate ? new Date(selectedDate.getTime() + 24 * 60 * 60 * 1000) : null;
             const hasBookingOnDate = selectedDate && bookings.some((booking) => {
