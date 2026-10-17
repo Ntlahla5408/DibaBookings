@@ -104,7 +104,8 @@ namespace DIBA_Backend.Controllers
                 Location = createVenueDto.Location,
                 Latitude = createVenueDto.Latitude,
                 Longitude = createVenueDto.Longitude,
-                VenueStatus = createVenueDto.VenueStatus
+                VenueStatus = createVenueDto.VenueStatus,
+                VenueImageData = createVenueDto.VenueImageData
             };
 
             _dbContext.Venues.Add(venue);
