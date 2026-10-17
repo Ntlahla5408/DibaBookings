@@ -546,16 +546,27 @@ return venueList;
 
     return (
         <DashboardShell
-            title={`Welcome, ${firstName}`}
-            eyebrow="DIBA BOOKINGS / STAFF DESK"
-            subtitle="Review venue requests, maintain venue information, and keep bookings moving."
+            title="Dashboard"
+            eyebrow="STAFF WORKSPACE"
+            subtitle={`Welcome back, ${firstName}. Review requests and keep venue bookings on track.`}
             onLogout={clearSession}
+            profileLabel={firstName}
+            activeNavigation="Dashboard"
+            navigation={[
+                { label: "Home", href: "#staff-dashboard-top" },
+                { label: "Dashboard", href: "#staff-dashboard-top" },
+                { label: "Bookings", href: "#all-bookings" },
+                { label: "Calendar", href: "#booking-calendar" },
+                { label: "Venues", href: "#staff-venues" },
+                { label: "Help", href: "#staff-help" }
+            ]}
+            notice="Use the calendar to scan bookings by date. Select a day to view a booking, or use Pending decisions below to approve or reject requests."
         >
             {loading ? (
                 <LoadingIndicator />
             ) : (
                 <>
-                    <section className="stat-grid">
+                    <section className="stat-grid" aria-label="Staff quick overview">
                         <StatCard
                             label="Pending review"
                             value={bookings.filter(
@@ -586,7 +597,7 @@ return venueList;
                         onSelectBooking={setSelectedBooking}
                     />
 
-                    <section className="row g-3 mb-4" aria-label="Daily operations overview">
+                    <section id="staff-upcoming" className="row g-3 mb-4" aria-label="Daily operations overview">
                         <div className="col-12 col-lg-4">
                             <div className="panel h-100">
                                 <div className="d-flex justify-content-between align-items-start gap-2 mb-3">
@@ -724,7 +735,7 @@ return venueList;
                         </div>
                     </section>
 
-                    <section className="content-grid">
+                    <section className="content-grid" id="all-bookings">
                         <div className="panel table-panel">
                             <div className="panel-heading d-flex justify-content-between align-items-start gap-3">
                                 <div>
@@ -944,7 +955,7 @@ return venueList;
                             </Table>
                         </div>
 
-                        <div className="panel">
+                        <div className="panel" id="staff-venues">
                             <p className="eyebrow">VENUE DIRECTORY</p>
                             <h2>Venues</h2>
 
