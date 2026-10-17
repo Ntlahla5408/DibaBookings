@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import "./styles/global.css";
-import "./styles/auth.css";
 import "./styles/landing.css";
 import "./styles/organizer.css";
 import "./styles/dashboards.css";
@@ -12,6 +11,7 @@ import "leaflet/dist/leaflet.css";
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 
 import "bootstrap/dist/css/bootstrap.min.css";
+import "./styles/auth.css";
 import "react-toastify/dist/ReactToastify.css";
 import App from './App';
 import reportWebVitals from './reportWebVitals';
