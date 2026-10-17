@@ -55,6 +55,28 @@ function getBookingDate(booking) {
     return booking.startDateTime || booking.bookingDate || booking.date || "";
 }
 
+function getEventStartDate(booking) {
+    return booking.startDateTime || booking.eventDate || booking.date || "";
+}
+
+function getLocalDayStart(value) {
+    if (!value) return null;
+
+    // Preserve date-only values as the calendar day supplied by the API.
+    const dateOnlyMatch = String(value).match(/^(\\d{4})-(\\d{2})-(\\d{2})$/);
+    const parsedDate = dateOnlyMatch
+        ? new Date(
+            Number(dateOnlyMatch[1]),
+            Number(dateOnlyMatch[2]) - 1,
+            Number(dateOnlyMatch[3])
+        )
+        : new Date(value);
+
+    if (Number.isNaN(parsedDate.getTime())) return null;
+
+    return new Date(parsedDate.getFullYear(), parsedDate.getMonth(), parsedDate.getDate());
+}
+
 function getDisplayName(value, fallback = "Not provided") {
     if (value === null || value === undefined || value === "") {
         return fallback;
@@ -317,6 +339,56 @@ return venueList;
         });
     }, [bookings, searchTerm, statusFilter, venueFilter]);
 
+    const today = useMemo(() => {
+        const now = new Date();
+        return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    }, []);
+
+    const upcomingBookings = useMemo(() => {
+        const lastDay = new Date(today);
+        lastDay.setDate(lastDay.getDate() + 7);
+
+        return bookings
+            .filter((booking) => {
+                const status = String(booking.statusName || "").toLowerCase();
+                if (status === "rejected" || status === "cancelled") return false;
+
+                const eventDay = getLocalDayStart(getEventStartDate(booking));
+                return eventDay && eventDay >= today && eventDay <= lastDay;
+            })
+            .sort((first, second) => {
+                const firstDate = Date.parse(getEventStartDate(first));
+                const secondDate = Date.parse(getEventStartDate(second));
+                return (Number.isNaN(firstDate) ? 0 : firstDate) -
+                    (Number.isNaN(secondDate) ? 0 : secondDate);
+            })
+            .slice(0, 5);
+    }, [bookings, today]);
+
+    const pendingBookings = useMemo(
+        () => bookings
+            .filter((booking) => String(booking.statusName || "").toLowerCase() === "pending")
+            .sort((first, second) => {
+                const firstDate = Date.parse(getBookingDate(first));
+                const secondDate = Date.parse(getBookingDate(second));
+                return (Number.isNaN(firstDate) ? 0 : firstDate) -
+                    (Number.isNaN(secondDate) ? 0 : secondDate);
+            })
+            .slice(0, 5),
+        [bookings]
+    );
+
+    const pendingBookingCount = bookings.filter(
+        (booking) => String(booking.statusName || "").toLowerCase() === "pending"
+    ).length;
+
+    const unavailableVenues = useMemo(
+        () => venues.filter(
+            (venue) => String(venue.venueStatus || "").toLowerCase() === "unavailable"
+        ),
+        [venues]
+    );
+
     const sortedBookings = useMemo(() => {
         const getName = (value, fallback = "") =>
             String(value ?? fallback).trim();
@@ -506,6 +578,139 @@ return venueList;
                             ).length}
                             tone="ink"
                         />
+                    </section>
+
+                    <section className="row g-3 mb-4" aria-label="Daily operations overview">
+                        <div className="col-12 col-lg-4">
+                            <div className="panel h-100">
+                                <div className="d-flex justify-content-between align-items-start gap-2 mb-3">
+                                    <div>
+                                        <p className="eyebrow">NEXT 7 DAYS</p>
+                                        <h2>Upcoming bookings</h2>
+                                    </div>
+                                    <Badge bg="primary">{upcomingBookings.length}</Badge>
+                                </div>
+                                {upcomingBookings.length === 0 ? (
+                                    <p className="text-muted mb-0">No upcoming bookings found for the next 7 days.</p>
+                                ) : (
+                                    <div className="d-grid gap-3">
+                                        {upcomingBookings.map((booking) => (
+                                            <div key={booking.bookingId} className="border-bottom pb-2">
+                                                <div className="d-flex justify-content-between align-items-start gap-2">
+                                                    <strong>{getDisplayName(booking.eventName, "Untitled event")}</strong>
+                                                    <Badge bg={getStatusVariant(booking.statusName)} text="dark">
+                                                        {booking.statusName || "Unknown"}
+                                                    </Badge>
+                                                </div>
+                                                <p className="text-muted small mb-1">
+                                                    {dateText(getEventStartDate(booking))}
+                                                    {booking.startDateTime ? ` · ${timeText(booking.startDateTime)}` : ""}
+                                                </p>
+                                                <p className="small mb-2">
+                                                    {getDisplayName(
+                                                        booking.venueName ||
+                                                            venues.find((item) => String(item.venueId) === String(booking.venueId))?.venueName,
+                                                        "Venue not specified"
+                                                    )}
+                                                </p>
+                                                <Button type="button" size="sm" variant="outline-primary"
+                                                    onClick={() => setSelectedBooking(booking)}>
+                                                    View booking
+                                                </Button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                        <div className="col-12 col-lg-4">
+                            <div className="panel h-100">
+                                <div className="d-flex justify-content-between align-items-start gap-2 mb-3">
+                                    <div>
+                                        <p className="eyebrow">ACTION REQUIRED</p>
+                                        <h2>Pending decisions</h2>
+                                    </div>
+                                    <Badge bg={pendingBookingCount ? "warning" : "success"} text="dark">
+                                        {pendingBookingCount}
+                                    </Badge>
+                                </div>
+                                {pendingBookings.length === 0 ? (
+                                    <p className="text-muted mb-0">There are no booking requests waiting for review.</p>
+                                ) : (
+                                    <div className="d-grid gap-3">
+                                        {pendingBookings.map((booking) => (
+                                            <div key={booking.bookingId} className="border-bottom pb-2">
+                                                <strong>{getDisplayName(booking.eventName, "Untitled event")}</strong>
+                                                <p className="text-muted small mb-2">
+                                                    {getDisplayName(booking.organiserName, "Organiser not specified")}
+                                                    {" · "}
+                                                    {getDisplayName(
+                                                        booking.venueName ||
+                                                            venues.find((item) => String(item.venueId) === String(booking.venueId))?.venueName,
+                                                        "Venue not specified"
+                                                    )}
+                                                </p>
+                                                <div className="d-flex flex-wrap gap-2">
+                                                    <Button type="button" size="sm" variant="outline-primary"
+                                                        onClick={() => setSelectedBooking(booking)}>
+                                                        Review
+                                                    </Button>
+                                                    <Button type="button" size="sm" variant="success"
+                                                        disabled={processingBookingId !== null}
+                                                        onClick={() => reviewBooking(booking)}>
+                                                        {processingBookingId === booking.bookingId ? "Processing..." : "Approve"}
+                                                    </Button>
+                                                    <Button type="button" size="sm" variant="outline-danger"
+                                                        disabled={processingBookingId !== null}
+                                                        onClick={() => openRejectionDialog(booking)}>
+                                                        Reject
+                                                    </Button>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                                {pendingBookingCount > pendingBookings.length && (
+                                    <p className="text-muted small mt-3 mb-0">
+                                        Showing the first {pendingBookings.length} requests. Use All bookings to review the rest.
+                                    </p>
+                                )}
+                            </div>
+                        </div>
+
+                        <div className="col-12 col-lg-4">
+                            <div className="panel h-100">
+                                <div className="d-flex justify-content-between align-items-start gap-2 mb-3">
+                                    <div>
+                                        <p className="eyebrow">VENUE STATUS</p>
+                                        <h2>Unavailable venues</h2>
+                                    </div>
+                                    <Badge bg={unavailableVenues.length ? "secondary" : "success"}>
+                                        {unavailableVenues.length}
+                                    </Badge>
+                                </div>
+                                {unavailableVenues.length === 0 ? (
+                                    <p className="text-muted mb-0">All venues are currently marked available.</p>
+                                ) : (
+                                    <div className="d-grid gap-3">
+                                        {unavailableVenues.map((venue) => (
+                                            <div key={venue.venueId} className="border-bottom pb-2">
+                                                <strong>{venue.venueName || "Unnamed venue"}</strong>
+                                                <p className="text-muted small mb-2">
+                                                    {venue.location || "Location not provided"}
+                                                    {venue.capacity ? ` · Capacity ${venue.capacity}` : ""}
+                                                </p>
+                                                <Button type="button" size="sm" variant="outline-primary"
+                                                    onClick={() => setManagedVenue(venue)}>
+                                                    Manage venue
+                                                </Button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
                     </section>
 
                     <section className="content-grid">
