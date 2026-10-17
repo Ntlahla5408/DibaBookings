@@ -5,7 +5,8 @@ function DashboardShell({
     title,
     onLogout,
     children,
-    profileLabel = "Staff"
+    profileLabel = "Staff",
+    navigationItems = []
 }) {
     const initials = String(profileLabel || "Staff")
         .trim()
@@ -29,7 +30,22 @@ function DashboardShell({
                         <Button variant="outline-dark" size="sm" onClick={onLogout}>Sign out</Button>
                     </div>
                 </div>
-
+                {navigationItems.length > 0 && (
+                    <nav className="d-flex flex-wrap gap-2 pb-3" aria-label="Dashboard sections">
+                        {navigationItems.map((item) => (
+                            <Button
+                                key={item.href}
+                                as="a"
+                                href={item.href}
+                                variant="outline-primary"
+                                size="sm"
+                                className="text-nowrap"
+                            >
+                                {item.label}
+                            </Button>
+                        ))}
+                    </nav>
+                )}
             </header>
 
             <section className="mb-4">
