@@ -60,20 +60,8 @@ function Login() {
     return (
         <main className="auth-page">
             <Container className="auth-container">
-                <Row className="g-0 auth-layout">
-                    <Col lg={5} className="auth-intro">
-                        <Link to="/" className="auth-brand" aria-label="DIBA Bookings home">
-                            <span className="auth-brand-mark">D</span>
-                            <span>DIBA <strong>BOOKINGS</strong></span>
-                        </Link>
-                        <div className="auth-intro-copy">
-                            <span className="auth-eyebrow">NELSON MANDELA UNIVERSITY</span>
-                            <h1>Make room for what matters.</h1>
-                            <p>Manage your conference venue bookings in one place.</p>
-                        </div>
-                        <div className="auth-intro-footer">Conference Centre · Venue Bookings</div>
-                    </Col>
-                    <Col lg={7} className="auth-form-panel">
+                <Row className="g-0 auth-layout auth-layout-centered">
+                    <Col xs={12} className="auth-form-panel">
                         <Card className="auth-card border-0">
                             <Card.Body>
                                 <div className="auth-heading">
