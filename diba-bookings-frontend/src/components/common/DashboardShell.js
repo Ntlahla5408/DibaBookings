@@ -30,8 +30,8 @@ function DashboardShell({
                         </span>
                     </a>
                     <div className="d-flex flex-wrap align-items-center gap-3">
-                        <span className="small text-muted" aria-label="Notifications">♧ <span className="visually-hidden">Notifications</span></span>
-                        <span className="small text-muted" aria-label="Help">?</span>
+                        <a href="#staff-pending" className="text-decoration-none text-secondary" aria-label="Go to pending booking notifications">🔔</a>
+                        <a href="#staff-help" className="text-decoration-none text-secondary" aria-label="Help and support">?</a>
                         <div className="d-flex align-items-center gap-2">
                             <span className="rounded-circle d-inline-flex align-items-center justify-content-center fw-semibold" style={{ width: 36, height: 36, background: "#eaf0f5", color: "#071B2C" }} aria-label={`Profile: ${profileLabel}`}>{initials}</span>
                             <span className="small fw-semibold d-none d-sm-inline">{profileLabel}</span>
