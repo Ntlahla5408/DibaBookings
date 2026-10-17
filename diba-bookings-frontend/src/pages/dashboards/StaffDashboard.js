@@ -585,7 +585,7 @@ return venueList;
                                     <Badge bg="primary">
                                         {new Map([...upcomingBookings, ...pendingBookings].map((booking) => [String(booking.bookingId), booking])).size}
                                     </Badge>
-                                    {(upcomingBookings.length > 5 || pendingBookings.length > 5) && (
+                                    {(upcomingBookings.length > 3 || pendingBookings.length > 3) && (
                                         <Button type="button" size="sm" variant="link" className="p-0 text-decoration-none"
                                             onClick={() => setShowAllUpcomingPending((current) => !current)}>
                                             {showAllUpcomingPending ? "Show less" : "See all"}
@@ -599,7 +599,7 @@ return venueList;
                                 <div className="d-grid gap-3">
                                     {Array.from(
                                         new Map(
-                                            [...(showAllUpcomingPending ? upcomingBookings : upcomingBookings.slice(0, 5)), ...(showAllUpcomingPending ? pendingBookings : pendingBookings.slice(0, 5))].map((booking) => [
+                                            [...(showAllUpcomingPending ? upcomingBookings : upcomingBookings.slice(0, 3)), ...(showAllUpcomingPending ? pendingBookings : pendingBookings.slice(0, 3))].map((booking) => [
                                                 String(booking.bookingId),
                                                 booking
                                             ])
@@ -666,7 +666,7 @@ return venueList;
                             <div className="panel-heading d-flex flex-wrap justify-content-between align-items-center gap-3">
                                 <h2>All bookings</h2>
                                 <div className="d-flex align-items-center gap-3">
-                                    {sortedBookings.length > 5 && (
+                                    {sortedBookings.length > 3 && (
                                         <Button type="button" variant="link" size="sm" className="p-0 text-decoration-none"
                                             onClick={() => setShowAllBookings((current) => !current)}>
                                             {showAllBookings ? "Show less" : "See all"}
@@ -782,7 +782,7 @@ return venueList;
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {(showAllBookings ? sortedBookings : sortedBookings.slice(0, 5)).map((booking) => {
+                                    {(showAllBookings ? sortedBookings : sortedBookings.slice(0, 3)).map((booking) => {
                                         const isProcessing =
                                             processingBookingId === booking.bookingId;
 
@@ -881,7 +881,7 @@ return venueList;
                         <div className="panel" id="staff-venues">
                             <div className="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
                                 <h2>Venues</h2>
-                                {venues.length > 5 && (
+                                {venues.length > 3 && (
                                     <Button type="button" variant="link" size="sm" className="p-0 text-decoration-none"
                                         onClick={() => setShowAllVenues((current) => !current)}>
                                         {showAllVenues ? "Show less" : "See all"}
@@ -895,7 +895,7 @@ return venueList;
                                 </p>
                             )}
 
-                            {(showAllVenues ? venues : venues.slice(0, 5)).map((venue) => (
+                            {(showAllVenues ? venues : venues.slice(0, 3)).map((venue) => (
                                 <div className="compact-row" key={venue.venueId}>
                                     <div>
                                         <strong>{venue.venueName}</strong>
