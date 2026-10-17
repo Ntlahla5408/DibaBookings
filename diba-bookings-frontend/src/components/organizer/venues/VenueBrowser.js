@@ -182,20 +182,33 @@ function VenueBrowser({
 
                 <div className="venue-browser-grid">
 
-                    {filteredVenues.map((venue, index) => (
+{filteredVenues.map((venue) => {
+    const fallbackImage = (() => {
+        const name = venue.venueName?.toLowerCase() || "";
 
-                        <VenueCard
-                            key={venue.venueId}
-                            venue={venue}
-                            image={
-                                images[
-                                    index % images.length
-                                ]
-                            }
-                            onOpen={onOpen}
-                        />
+        if (name.includes("theatre")) {
+            return theatreImage;
+        }
 
-                    ))}
+        if (
+            name.includes("restaurant") ||
+            name.includes("dining")
+        ) {
+            return diningImage;
+        }
+
+        return conferenceCentre;
+    })();
+
+    return (
+        <VenueCard
+            key={venue.venueId}
+            venue={venue}
+            image={venue.venueImageData || fallbackImage}
+            onOpen={onOpen}
+        />
+    );
+})}
 
                 </div>
 

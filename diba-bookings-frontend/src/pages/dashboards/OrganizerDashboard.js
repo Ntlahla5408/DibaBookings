@@ -16,7 +16,22 @@ import OrganizerSidebar from "../../components/organizer/navigation/OrganizerSid
 import OrganizerTopNav from "../../components/organizer/navigation/OrganizerTopNav";
 import useOrganizerDashboard from "../../hooks/useOrganizerDashboard";
 
-const images = [conferenceCentre, theatreImage, diningImage];
+function getVenueFallbackImage(venue) {
+    const name = venue?.venueName?.toLowerCase() || "";
+
+    if (name.includes("theatre")) {
+        return theatreImage;
+    }
+
+    if (
+        name.includes("restaurant") ||
+        name.includes("dining")
+    ) {
+        return diningImage;
+    }
+
+    return conferenceCentre;
+}
 
 function OrganizerDashboard() {
     const {
@@ -115,22 +130,10 @@ function OrganizerDashboard() {
                     activeVenue && (
                         <VenueDetails
                             venue={activeVenue}
-                            image={
-                                images[
-                                    venues.findIndex(
-                                        (venue) =>
-                                            venue.venueId ===
-                                            activeVenue.venueId
-                                    ) %
-                                        images.length
-                                ]
-                            }
-                            onBack={() =>
-                                goTo("venues")
-                            }
-                            onBook={() =>
-                                startEvent(activeVenue)
-                            }
+  image={
+    activeVenue.venueImageData ||
+    getVenueFallbackImage(activeVenue)
+}
                         />
                     )}
 

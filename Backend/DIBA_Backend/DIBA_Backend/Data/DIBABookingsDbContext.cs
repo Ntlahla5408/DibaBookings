@@ -45,14 +45,41 @@ namespace DIBA_Backend.Data
         public DbSet<BookingStatus> BookingStatuses { get; set; }
         public DbSet<Event> Events { get; set; }
         public DbSet<Notification> Notifications { get; set; }
+        public DbSet<EmailDeliveryLog> EmailDeliveryLogs { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<Venue> Venues { get; set; }
         public DbSet<VenueFeature> VenueFeatures { get; set; }
+        public DbSet<FAQ> FAQs { get; set; }
+        public DbSet<PolicyDocument> PolicyDocuments { get; set; }
+        public DbSet<SupportTicket> SupportTickets { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            // Email delivery history mapping
+                      modelBuilder.Entity<EmailDeliveryLog>()
+                            .Property(log => log.RecipientEmail)
+                            .HasMaxLength(320)
+                            .IsRequired();
+            
+                        modelBuilder.Entity<EmailDeliveryLog>()
+                            .Property(log => log.Subject)
+                            .HasMaxLength(200)
+                            .IsRequired();
+            
+                        modelBuilder.Entity<EmailDeliveryLog>()
+                            .Property(log => log.Status)
+                            .HasMaxLength(20)
+                            .IsRequired();
+            
+                        modelBuilder.Entity<EmailDeliveryLog>()
+                            .Property(log => log.ErrorMessage)
+                            .HasMaxLength(1000);
+            
+                        modelBuilder.Entity<EmailDeliveryLog>()
+                            .HasIndex(log => log.AttemptedAtUtc);
 
 
             // =========================================================
@@ -426,6 +453,30 @@ namespace DIBA_Backend.Data
             modelBuilder.Entity<Payment>()
                 .Property(p => p.Amount)
                 .HasPrecision(18, 2);
+
+            // =========================================================
+            // USER -> SUPPORT TICKET
+            // One user can create many support tickets.
+            // Keep ticket history if a user account is removed.
+            // =========================================================
+            modelBuilder.Entity<SupportTicket>()
+                .HasOne(ticket => ticket.User)
+                .WithMany()
+                .HasForeignKey(ticket => ticket.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Ticket numbers must be unique so users can quote a reference
+            // when contacting the Conference Centre.
+            modelBuilder.Entity<SupportTicket>()
+                .HasIndex(ticket => ticket.TicketNumber)
+                .IsUnique();
+
+            // Only one active policy version should be presented per type.
+            // This index helps lookup current policies; publishing code
+            // deactivates earlier versions before activating the new one.
+            modelBuilder.Entity<PolicyDocument>()
+                .HasIndex(policy => new { policy.PolicyType, policy.Version })
+                .IsUnique();
 
 
             // =========================================================

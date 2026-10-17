@@ -1,6 +1,7 @@
-﻿using DIBA_Backend.Data;
+using DIBA_Backend.Data;
 using DIBA_Backend.Dto.Booking;
 using DIBA_Backend.Models.Entities;
+using DIBA_Backend.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -20,10 +21,14 @@ namespace DIBA_Backend.Controllers
     public class BookingsController : ControllerBase
     {
         private readonly DIBABookingsDbContext _dbContext;
+        private readonly NotificationEmailService _notificationEmailService;
 
-        public BookingsController(DIBABookingsDbContext dbContext)
+        public BookingsController(
+            DIBABookingsDbContext dbContext,
+            NotificationEmailService notificationEmailService)
         {
             _dbContext = dbContext;
+            _notificationEmailService = notificationEmailService;
         }
 
 
@@ -104,6 +109,12 @@ namespace DIBA_Backend.Controllers
 
                     AcknowledgementAcceptedAt =
         booking.AcknowledgementAcceptedAt,
+
+                    AcknowledgementPolicyType =
+        booking.AcknowledgementPolicyType,
+
+                    AcknowledgementPolicyVersion =
+        booking.AcknowledgementPolicyVersion,
 
                     StatusName =
                         booking.BookingStatus != null
@@ -209,6 +220,12 @@ namespace DIBA_Backend.Controllers
 
                 AcknowledgementAcceptedAt =
     booking.AcknowledgementAcceptedAt,
+
+                AcknowledgementPolicyType =
+    booking.AcknowledgementPolicyType,
+
+                AcknowledgementPolicyVersion =
+    booking.AcknowledgementPolicyVersion,
 
                 OrganiserName =
                     booking.User == null
@@ -472,6 +489,14 @@ namespace DIBA_Backend.Controllers
                     "Pending booking status could not be found.");
             }
 
+            // Capture the currently active venue-rules version at the time
+            // the organiser submits the booking. The old version remains
+            // available if staff later publish updated rules.
+            var activeVenueRules = await _dbContext.PolicyDocuments
+                .Where(policy => policy.PolicyType == "VenueRules" && policy.IsActive)
+                .OrderByDescending(policy => policy.Version)
+                .FirstOrDefaultAsync();
+
             var booking = new Booking
             {
                 BookingId = Guid.NewGuid(),
@@ -489,7 +514,9 @@ namespace DIBA_Backend.Controllers
                 BookingStatusId =
                     pendingStatus.BookingStatusId,
                         AcknowledgementAccepted = true,
-                AcknowledgementAcceptedAt = DateTime.UtcNow
+                AcknowledgementAcceptedAt = DateTime.UtcNow,
+                AcknowledgementPolicyType = activeVenueRules?.PolicyType,
+                AcknowledgementPolicyVersion = activeVenueRules?.Version
             };
 
             _dbContext.Bookings.Add(booking);
@@ -518,7 +545,11 @@ namespace DIBA_Backend.Controllers
                     booking.AcknowledgementAccepted,
 
                 AcknowledgementAcceptedAt =
-                    booking.AcknowledgementAcceptedAt
+                    booking.AcknowledgementAcceptedAt,
+                AcknowledgementPolicyType =
+                    booking.AcknowledgementPolicyType,
+                AcknowledgementPolicyVersion =
+                    booking.AcknowledgementPolicyVersion
             };
 
             return Ok(response);
@@ -845,6 +876,7 @@ namespace DIBA_Backend.Controllers
             _dbContext.Notifications.Add(notification);
 
             await _dbContext.SaveChangesAsync();
+            await _notificationEmailService.TrySendAsync(notification.UserId, notification.NotificationId, notification.NotificationType, notification.Message);
 
             return Ok(new
             {
@@ -993,6 +1025,7 @@ namespace DIBA_Backend.Controllers
             _dbContext.Notifications.Add(notification);
 
             await _dbContext.SaveChangesAsync();
+            await _notificationEmailService.TrySendAsync(notification.UserId, notification.NotificationId, notification.NotificationType, notification.Message);
 
             return Ok(new
             {
@@ -1153,6 +1186,7 @@ namespace DIBA_Backend.Controllers
             _dbContext.Notifications.Add(notification);
 
             await _dbContext.SaveChangesAsync();
+            await _notificationEmailService.TrySendAsync(notification.UserId, notification.NotificationId, notification.NotificationType, notification.Message);
 
             return Ok(new
             {

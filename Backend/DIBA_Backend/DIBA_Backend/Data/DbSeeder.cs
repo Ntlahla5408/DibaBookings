@@ -38,6 +38,104 @@ namespace DIBA_Backend.Data
             await SeedUsersAsync(db);
             await SeedVenuesAsync(db);
             await SeedEventsAndBookingsAsync(db);
+            await SeedHelpContentAsync(db);
+        }
+
+        // Seed sample FAQ and policy content for the first demonstration.
+        // The policy content is clearly marked as sample text and must be
+        // reviewed before the application is treated as a production system.
+        private static async Task SeedHelpContentAsync(DIBABookingsDbContext db)
+        {
+            if (!await db.FAQs.AnyAsync())
+            {
+                db.FAQs.AddRange(
+                    new FAQ
+                    {
+                        FAQId = Guid.NewGuid(),
+                        Question = "How do I submit a venue booking?",
+                        Answer = "Sign in as an Event Organiser, create your event, select a venue and time, review the details, and submit the booking request. The request remains pending until it is reviewed.",
+                        Category = "Bookings",
+                        IsPublished = true
+                    },
+                    new FAQ
+                    {
+                        FAQId = Guid.NewGuid(),
+                        Question = "Why is my booking still pending?",
+                        Answer = "A pending booking means it has been submitted but has not yet been approved or rejected by authorised staff. Check your notifications for updates.",
+                        Category = "Bookings",
+                        IsPublished = true
+                    },
+                    new FAQ
+                    {
+                        FAQId = Guid.NewGuid(),
+                        Question = "Can I cancel or change my booking?",
+                        Answer = "Use the booking options available in the application or contact staff for assistance. Any cancellation or change is subject to the current policy shown by the application.",
+                        Category = "Changes and cancellations",
+                        IsPublished = true
+                    },
+                    new FAQ
+                    {
+                        FAQId = Guid.NewGuid(),
+                        Question = "How long does a refund take?",
+                        Answer = "Refund requests must be reviewed by authorised staff. This demonstration system does not define an official refund timeframe. Please contact staff for confirmation before relying on a timeframe.",
+                        Category = "Payments and refunds",
+                        IsPublished = true
+                    },
+                    new FAQ
+                    {
+                        FAQId = Guid.NewGuid(),
+                        Question = "What if venue equipment or property is damaged?",
+                        Answer = "Report any damage or incident to Conference Centre staff as soon as possible. Responsibility should be assessed under the applicable booking terms and university rules.",
+                        Category = "Venue rules",
+                        IsPublished = true
+                    });
+            }
+
+            var samplePolicies = new[]
+            {
+                new
+                {
+                    Type = "TermsOfUse",
+                    Title = "Terms of Use (Sample)",
+                    Content = "SAMPLE DEMONSTRATION TEXT — NOT AN OFFICIAL NMU POLICY. Users should provide accurate booking information, use the system respectfully, and follow the current instructions displayed for their booking. Replace this text with approved terms before production."
+                },
+                new
+                {
+                    Type = "VenueRules",
+                    Title = "Venue Use and Damage Rules (Sample)",
+                    Content = "SAMPLE DEMONSTRATION TEXT — NOT AN OFFICIAL NMU POLICY. Organisers should use the venue and equipment responsibly, follow venue instructions, and report damage or incidents promptly. Any responsibility for damage must be assessed under the applicable approved policies and booking terms; this sample does not determine liability or charges."
+                },
+                new
+                {
+                    Type = "CancellationAndRefund",
+                    Title = "Cancellation and Refund Guidance (Sample)",
+                    Content = "SAMPLE DEMONSTRATION TEXT — NOT AN OFFICIAL NMU POLICY. Cancellation and refund requests should be submitted through the available booking or support process. The request may require staff review. No specific refund period, fee, or guaranteed outcome is defined by this sample text."
+                }
+            };
+
+            foreach (var sample in samplePolicies)
+            {
+                if (await db.PolicyDocuments.AnyAsync(policy =>
+                    policy.PolicyType == sample.Type))
+                {
+                    continue;
+                }
+
+                db.PolicyDocuments.Add(new PolicyDocument
+                {
+                    PolicyDocumentId = Guid.NewGuid(),
+                    PolicyType = sample.Type,
+                    Title = sample.Title,
+                    Content = sample.Content,
+                    Version = 1,
+                    IsActive = true,
+                    IsSamplePolicy = true,
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
+                });
+            }
+
+            await db.SaveChangesAsync();
         }
 
         private static async Task SeedUsersAsync(DIBABookingsDbContext db)

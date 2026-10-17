@@ -47,7 +47,8 @@ namespace DIBA_Backend.Controllers
                     Location = venue.Location,
                     Latitude = venue.Latitude,
                     Longitude = venue.Longitude,
-                    VenueStatus = venue.VenueStatus
+                    VenueStatus = venue.VenueStatus,
+                    VenueImageData = venue.VenueImageData
                 })
                 .ToListAsync();
 
@@ -76,7 +77,8 @@ namespace DIBA_Backend.Controllers
                 Location = venue.Location,
                 Latitude = venue.Latitude,
                 Longitude = venue.Longitude,
-                VenueStatus = venue.VenueStatus
+                VenueStatus = venue.VenueStatus,
+                VenueImageData = venue.VenueImageData
             };
 
             return Ok(response);
@@ -119,7 +121,8 @@ namespace DIBA_Backend.Controllers
                 Location = venue.Location,
                 Latitude = venue.Latitude,
                 Longitude = venue.Longitude,
-                VenueStatus = venue.VenueStatus
+                VenueStatus = venue.VenueStatus,
+                VenueImageData = venue.VenueImageData
             };
 
             // Similar ASP.NET Core API pattern: returning a 201 Created response
@@ -160,7 +163,12 @@ namespace DIBA_Backend.Controllers
     venue.Longitude = updateVenueDto.Longitude;
     venue.VenueStatus = updateVenueDto.VenueStatus;
 
-    await _dbContext.SaveChangesAsync();
+            // Preserve the existing image if no new image was supplied.
+            if (updateVenueDto.VenueImageData is not null)
+            {
+                venue.VenueImageData = updateVenueDto.VenueImageData;
+            }
+            await _dbContext.SaveChangesAsync();
 
             return Ok(new
             {
