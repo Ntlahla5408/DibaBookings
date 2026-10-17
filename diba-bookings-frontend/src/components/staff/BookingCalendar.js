@@ -54,7 +54,7 @@ function BookingCalendar({ bookings = [], venues = [], onSelectBooking }) {
     return (
         <section id="booking-calendar" className="panel mb-4" aria-label="Booking calendar">
             <div className="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
-                <div><p className="eyebrow mb-1">SCHEDULE</p><h2 className="mb-0">Booking calendar</h2><p className="text-muted mb-0">Select a day to review its bookings.</p></div>
+                <h2 className="mb-0">Calendar</h2>
                 <div className="d-flex flex-wrap align-items-center gap-2">
                     <Button variant="outline-secondary" onClick={() => moveMonth(-1)} aria-label="Previous month">‹</Button>
                     <strong className="text-center" style={{ minWidth: 150 }}>{month.toLocaleDateString(undefined, { month: "long", year: "numeric" })}</strong>
