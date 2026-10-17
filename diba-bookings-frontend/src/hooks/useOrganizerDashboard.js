@@ -776,6 +776,8 @@ const submitEventAndBooking = async (event) => {
         events: "My Events",
         notifications: "Notifications",
         help: "Help Centre",
+        policies: "Policy Documents",
+        support: "Support Tickets",
         "venue-detail": "Venue Details",
         "booking-detail": "Booking Details",
         "event-form": editingEvent ? "Edit Event" : "Create Booking",
