@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { getPublishedFAQs } from "../services/faqService";
 import { askDibaAssistant } from "../services/assistantService";
@@ -29,7 +29,7 @@ function HelpCentre() {
     const [assistantError, setAssistantError] = useState("");
     const messagesEndRef = useRef(null);
 
-    async function loadFAQs() {
+    const loadFAQs = useCallback(async () => {
         setFaqLoading(true);
         setFaqError("");
 
@@ -41,11 +41,11 @@ function HelpCentre() {
         } finally {
             setFaqLoading(false);
         }
-    }
+    }, []);
 
     useEffect(() => {
         loadFAQs();
-    }, []);
+    }, [loadFAQs]);
 
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
