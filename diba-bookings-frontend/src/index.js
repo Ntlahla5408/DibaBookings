@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import "./styles/global.css";
+import "./styles/auth.css";
 import "./styles/landing.css";
 import "./styles/organizer.css";
 import "./styles/dashboards.css";
