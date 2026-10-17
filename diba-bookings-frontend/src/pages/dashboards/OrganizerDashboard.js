@@ -109,6 +109,7 @@ function OrganizerDashboard() {
     <OrganizerHome
         firstName={firstName}
         venues={venues}
+        bookings={bookings}
         query={query}
         setQuery={setQuery}
         onOpenVenue={openVenue}
