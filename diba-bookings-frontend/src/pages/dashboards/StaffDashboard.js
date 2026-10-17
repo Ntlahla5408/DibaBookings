@@ -248,6 +248,9 @@ function StaffDashboard() {
     const [loading, setLoading] = useState(true);
     const [processingBookingId, setProcessingBookingId] = useState(null);
     const [managedVenue, setManagedVenue] = useState(null);
+    const [showAllUpcomingPending, setShowAllUpcomingPending] = useState(false);
+    const [showAllBookings, setShowAllBookings] = useState(false);
+    const [showAllVenues, setShowAllVenues] = useState(false);
 
     const [searchTerm, setSearchTerm] = useState("");
     const [statusFilter, setStatusFilter] = useState("all");
@@ -373,8 +376,7 @@ return venueList;
                 const secondDate = Date.parse(getBookingDate(second));
                 return (Number.isNaN(firstDate) ? 0 : firstDate) -
                     (Number.isNaN(secondDate) ? 0 : secondDate);
-            })
-            .slice(0, 5),
+            }),
         [bookings]
     );
 
@@ -577,11 +579,19 @@ return venueList;
 
                     <section id="staff-upcoming" className="mb-4" aria-label="Upcoming and pending bookings">
                         <div className="panel">
-                            <div className="d-flex justify-content-between align-items-start gap-2 mb-3">
+                            <div className="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
                                 <h2>Upcoming &amp; pending bookings</h2>
-                                <Badge bg="primary">
-                                    {new Map([...upcomingBookings.slice(0, 5), ...pendingBookings].map((booking) => [String(booking.bookingId), booking])).size}
-                                </Badge>
+                                <div className="d-flex align-items-center gap-2">
+                                    <Badge bg="primary">
+                                        {new Map([...upcomingBookings, ...pendingBookings].map((booking) => [String(booking.bookingId), booking])).size}
+                                    </Badge>
+                                    {(upcomingBookings.length > 5 || pendingBookings.length > 5) && (
+                                        <Button type="button" size="sm" variant="link" className="p-0 text-decoration-none"
+                                            onClick={() => setShowAllUpcomingPending((current) => !current)}>
+                                            {showAllUpcomingPending ? "Show less" : "See all"}
+                                        </Button>
+                                    )}
+                                </div>
                             </div>
                             {upcomingBookings.length === 0 && pendingBookings.length === 0 ? (
                                 <p className="text-muted mb-0">No upcoming bookings or pending requests.</p>
@@ -589,7 +599,7 @@ return venueList;
                                 <div className="d-grid gap-3">
                                     {Array.from(
                                         new Map(
-                                            [...upcomingBookings.slice(0, 5), ...pendingBookings].map((booking) => [
+                                            [...(showAllUpcomingPending ? upcomingBookings : upcomingBookings.slice(0, 5)), ...(showAllUpcomingPending ? pendingBookings : pendingBookings.slice(0, 5))].map((booking) => [
                                                 String(booking.bookingId),
                                                 booking
                                             ])
@@ -653,20 +663,19 @@ return venueList;
 
                     <section className="d-flex flex-column gap-4 mb-4" id="all-bookings">
                         <div className="panel table-panel">
-                            <div className="panel-heading d-flex justify-content-between align-items-start gap-3">
-                                <div>
-                                    
-                                    <h2>All bookings</h2>
-
+                            <div className="panel-heading d-flex flex-wrap justify-content-between align-items-center gap-3">
+                                <h2>All bookings</h2>
+                                <div className="d-flex align-items-center gap-3">
+                                    {sortedBookings.length > 5 && (
+                                        <Button type="button" variant="link" size="sm" className="p-0 text-decoration-none"
+                                            onClick={() => setShowAllBookings((current) => !current)}>
+                                            {showAllBookings ? "Show less" : "See all"}
+                                        </Button>
+                                    )}
+                                    <Button type="button" variant="outline-secondary" size="sm" onClick={() => loadData()}>
+                                        Refresh
+                                    </Button>
                                 </div>
-                                <Button
-                                    type="button"
-                                    variant="outline-secondary"
-                                    size="sm"
-                                    onClick={() => loadData()}
-                                >
-                                    Refresh
-                                </Button>
                             </div>
 
                             <Form className="mb-3">
@@ -773,7 +782,7 @@ return venueList;
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {sortedBookings.map((booking) => {
+                                    {(showAllBookings ? sortedBookings : sortedBookings.slice(0, 5)).map((booking) => {
                                         const isProcessing =
                                             processingBookingId === booking.bookingId;
 
@@ -870,8 +879,15 @@ return venueList;
                         </div>
 
                         <div className="panel" id="staff-venues">
-                            
-                            <h2>Venues</h2>
+                            <div className="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                                <h2>Venues</h2>
+                                {venues.length > 5 && (
+                                    <Button type="button" variant="link" size="sm" className="p-0 text-decoration-none"
+                                        onClick={() => setShowAllVenues((current) => !current)}>
+                                        {showAllVenues ? "Show less" : "See all"}
+                                    </Button>
+                                )}
+                            </div>
 
                             {venues.length === 0 && (
                                 <p className="text-muted">
@@ -879,7 +895,7 @@ return venueList;
                                 </p>
                             )}
 
-                            {venues.map((venue) => (
+                            {(showAllVenues ? venues : venues.slice(0, 5)).map((venue) => (
                                 <div className="compact-row" key={venue.venueId}>
                                     <div>
                                         <strong>{venue.venueName}</strong>
