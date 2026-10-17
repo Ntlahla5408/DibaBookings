@@ -338,3 +338,130 @@
     }
 }
 
+/* Optional dark theme for dashboard pages. The choice is saved in this browser. */
+html[data-theme="dark"] {
+    color-scheme: dark;
+    background: #0b1520;
+}
+
+html[data-theme="dark"] body {
+    background: #0b1520;
+    color: #e8eef4;
+}
+
+html[data-theme="dark"] .app-shell {
+    color: #e8eef4;
+}
+
+html[data-theme="dark"] .app-shell header,
+html[data-theme="dark"] .app-shell .bg-white,
+html[data-theme="dark"] .app-shell .panel,
+html[data-theme="dark"] .app-shell .table-panel,
+html[data-theme="dark"] .app-shell .stat-card,
+html[data-theme="dark"] .app-shell .card,
+html[data-theme="dark"] .app-shell .list-group-item,
+html[data-theme="dark"] .app-shell .modal-content {
+    background-color: #142333 !important;
+    color: #e8eef4 !important;
+    border-color: #304457 !important;
+}
+
+html[data-theme="dark"] .app-shell h1,
+html[data-theme="dark"] .app-shell h2,
+html[data-theme="dark"] .app-shell h3,
+html[data-theme="dark"] .app-shell h4,
+html[data-theme="dark"] .app-shell h5,
+html[data-theme="dark"] .app-shell h6,
+html[data-theme="dark"] .app-shell label,
+html[data-theme="dark"] .app-shell p,
+html[data-theme="dark"] .app-shell .form-label,
+html[data-theme="dark"] .app-shell .small,
+html[data-theme="dark"] .app-shell th,
+html[data-theme="dark"] .app-shell td,
+html[data-theme="dark"] .app-shell a:not(.btn) {
+    color: #e8eef4;
+}
+
+html[data-theme="dark"] .app-shell .text-secondary,
+html[data-theme="dark"] .app-shell .text-muted {
+    color: #b4c2cf !important;
+}
+
+html[data-theme="dark"] .app-shell .border,
+html[data-theme="dark"] .app-shell .border-top,
+html[data-theme="dark"] .app-shell .border-bottom {
+    border-color: #304457 !important;
+}
+
+html[data-theme="dark"] .app-shell .table {
+    --bs-table-color: #e8eef4;
+    --bs-table-bg: #142333;
+    --bs-table-border-color: #304457;
+    --bs-table-striped-bg: #192c3e;
+    --bs-table-hover-bg: #20384d;
+    --bs-table-striped-color: #e8eef4;
+    --bs-table-hover-color: #ffffff;
+}
+
+html[data-theme="dark"] .app-shell .form-control,
+html[data-theme="dark"] .app-shell .form-select,
+html[data-theme="dark"] .app-shell .input-group-text {
+    background-color: #0e1b29;
+    color: #e8eef4;
+    border-color: #40576b;
+}
+
+html[data-theme="dark"] .app-shell .form-control::placeholder {
+    color: #9aabba;
+}
+
+html[data-theme="dark"] .app-shell .form-control:focus,
+html[data-theme="dark"] .app-shell .form-select:focus {
+    border-color: #f9b42a;
+    box-shadow: 0 0 0 0.2rem rgb(249 180 42 / 18%);
+}
+
+html[data-theme="dark"] .app-shell .btn-outline-dark {
+    color: #e8eef4;
+    border-color: #91a4b5;
+}
+
+html[data-theme="dark"] .app-shell .btn-outline-dark:hover {
+    color: #071b2c;
+    background-color: #f9b42a;
+    border-color: #f9b42a;
+}
+
+html[data-theme="dark"] .app-shell .dashboard-nav-button.btn {
+    background-color: #20384d;
+    border-color: #40576b;
+    color: #f4f7fa;
+}
+
+html[data-theme="dark"] .app-shell .dashboard-nav-button.btn:hover,
+html[data-theme="dark"] .app-shell .dashboard-nav-button.btn:focus-visible {
+    background-color: #f9b42a;
+    border-color: #f9b42a;
+    color: #071b2c;
+}
+
+html[data-theme="dark"] .app-shell .booking-calendar-grid button {
+    background-color: #142333 !important;
+    color: #e8eef4 !important;
+    border-color: #40576b !important;
+}
+
+html[data-theme="dark"] .app-shell .booking-calendar-grid button:hover {
+    background-color: #20384d !important;
+}
+
+html[data-theme="dark"] .dashboard-theme-toggle {
+    white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .dashboard-nav-button.btn {
+        transition: none;
+    }
+}
+
