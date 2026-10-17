@@ -73,20 +73,8 @@ function Register() {
     return (
         <main className="auth-page auth-page-register">
             <Container className="auth-container">
-                <Row className="g-0 auth-layout">
-                    <Col lg={5} className="auth-intro">
-                        <Link to="/" className="auth-brand" aria-label="DIBA Bookings home">
-                            <span className="auth-brand-mark">D</span>
-                            <span>DIBA <strong>BOOKINGS</strong></span>
-                        </Link>
-                        <div className="auth-intro-copy">
-                            <span className="auth-eyebrow">NELSON MANDELA UNIVERSITY</span>
-                            <h1>Your next event starts here.</h1>
-                            <p>Create an account to discover venues and manage your booking requests.</p>
-                        </div>
-                        <div className="auth-intro-footer">Simple planning. Clear booking updates.</div>
-                    </Col>
-                    <Col lg={7} className="auth-form-panel">
+                <Row className="g-0 auth-layout auth-layout-centered">
+                    <Col xs={12} className="auth-form-panel">
                         <Card className="auth-card auth-card-register border-0">
                             <Card.Body>
                                 <div className="auth-heading">
