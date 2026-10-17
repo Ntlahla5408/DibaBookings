@@ -549,12 +549,21 @@ return venueList;
             title="Dashboard"
             onLogout={clearSession}
             profileLabel={firstName}
+            navigationItems={[
+                { label: "Overview", href: "#staff-overview" },
+                { label: "Upcoming bookings", href: "#staff-upcoming" },
+                { label: "Pending decisions", href: "#staff-pending" },
+                { label: "Unavailable venues", href: "#staff-unavailable" },
+                { label: "All bookings", href: "#all-bookings" },
+                { label: "Venues", href: "#staff-venues" },
+                { label: "Calendar", href: "#booking-calendar" }
+            ]}
         >
             {loading ? (
                 <LoadingIndicator />
             ) : (
                 <>
-                    <section className="d-flex flex-wrap gap-3 mb-4" aria-label="Staff quick overview">
+                    <section id="staff-overview" className="d-flex flex-wrap gap-3 mb-4" aria-label="Staff quick overview">
                         <StatCard
                             label="Pending review"
                             value={bookings.filter(
@@ -676,7 +685,7 @@ return venueList;
                         </div>
 
                         <div className="w-100">
-                            <div className="panel h-100">
+                            <div className="panel h-100" id="staff-unavailable">
                                 <div className="d-flex justify-content-between align-items-start gap-2 mb-3">
                                     <div>
                                         
