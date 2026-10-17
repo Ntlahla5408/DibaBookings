@@ -361,8 +361,7 @@ return venueList;
                 const secondDate = Date.parse(getEventStartDate(second));
                 return (Number.isNaN(firstDate) ? 0 : firstDate) -
                     (Number.isNaN(secondDate) ? 0 : secondDate);
-            })
-            .slice(0, 5);
+            });
     }, [bookings, today]);
 
     const pendingBookings = useMemo(
@@ -594,7 +593,7 @@ return venueList;
                                     <p className="text-muted mb-0">No upcoming bookings found for the next 7 days.</p>
                                 ) : (
                                     <div className="d-grid gap-3">
-                                        {upcomingBookings.map((booking) => (
+                                        {upcomingBookings.slice(0, 5).map((booking) => (
                                             <div key={booking.bookingId} className="border-bottom pb-2">
                                                 <div className="d-flex justify-content-between align-items-start gap-2">
                                                     <strong>{getDisplayName(booking.eventName, "Untitled event")}</strong>
@@ -620,6 +619,11 @@ return venueList;
                                             </div>
                                         ))}
                                     </div>
+                                )}
+                                {upcomingBookings.length > 5 && (
+                                    <p className="text-muted small mt-3 mb-0">
+                                        Showing the first 5 upcoming bookings.
+                                    </p>
                                 )}
                             </div>
                         </div>
