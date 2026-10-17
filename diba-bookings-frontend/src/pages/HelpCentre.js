@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { getPublishedFAQs } from "../services/faqService";
 import "./help-centre.css";
 
@@ -8,7 +8,7 @@ function HelpCentre() {
     const [error, setError] = useState("");
     const [openFaqId, setOpenFaqId] = useState(null);
 
-    async function loadFAQs() {
+    const loadFAQs = useCallback(async () => {
         setLoading(true);
         setError("");
 
@@ -20,11 +20,11 @@ function HelpCentre() {
         } finally {
             setLoading(false);
         }
-    }
+    }, []);
 
     useEffect(() => {
         loadFAQs();
-    }, []);
+    }, [loadFAQs]);
 
     return (
         <section className="organizer-help-centre" aria-labelledby="organizer-help-title">
