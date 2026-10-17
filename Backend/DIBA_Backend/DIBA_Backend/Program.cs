@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using System.Threading.RateLimiting;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +15,23 @@ builder.Services.AddHttpClient("Brevo");
 builder.Services.AddScoped<NotificationEmailService>();
 
 builder.Services.AddHttpClient<DibaAssistantService>();
+
+// Limit public password recovery endpoints to reduce reset-email abuse.
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    options.AddPolicy("password-reset", httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 5,
+                Window = TimeSpan.FromMinutes(15),
+                QueueLimit = 0,
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                AutoReplenishment = true
+            }));
+});
 
 builder.Services.AddCors(options =>
 {
@@ -145,7 +163,9 @@ using (var scope = app.Services.CreateScope())
     await DbSeeder.SeedAsync(dbContext);
 }
 
+app.UseRouting();
 app.UseCors("MyPolicy");
+app.UseRateLimiter();
 
 if (app.Environment.IsDevelopment())
 {
