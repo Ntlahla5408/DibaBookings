@@ -187,7 +187,6 @@ function AdminDashboard() {
                 { label: "Users", onClick: () => setActiveSection("users") },
                 { label: "Bookings", onClick: () => setActiveSection("bookings") },
                 { label: "Audit logs", onClick: () => setActiveSection("audit") },
-                { label: "Help Centre", href: "/help" }
             ]}
         >
 
