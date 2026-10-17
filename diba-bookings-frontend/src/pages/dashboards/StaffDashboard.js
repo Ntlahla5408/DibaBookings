@@ -545,7 +545,8 @@ return venueList;
                 { label: "Upcoming & pending", href: "#staff-upcoming" },
                 { label: "All bookings", href: "#all-bookings" },
                 { label: "Venues", href: "#staff-venues" },
-                { label: "Calendar", href: "#booking-calendar" }
+                { label: "Calendar", href: "#booking-calendar" },
+                { label: "Help Centre", href: "/help" }
             ]}
         >
             {loading ? (
