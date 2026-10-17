@@ -3,7 +3,6 @@ import { toast } from "react-toastify";
 
 import AdminOverviewPanel from "../../components/admin/AdminOverviewPanel";
 import AdminRecordsPanel from "../../components/admin/AdminRecordsPanel";
-import AdminSectionNavigation from "../../components/admin/AdminSectionNavigation";
 import CreateUserModal from "../../components/admin/CreateUserModal";
 import DashboardShell from "../../components/common/DashboardShell";
 import LoadingIndicator from "../../components/common/LoadingIndicator";
@@ -158,14 +157,15 @@ function AdminDashboard() {
     return (
         <DashboardShell
             title={`Good morning, ${firstName}`}
-            eyebrow="DIBA BOOKINGS / CONTROL ROOM"
-            subtitle="A clear view of users, bookings, payments, and system activity."
             onLogout={clearSession}
+            profileLabel={firstName}
+            navigationItems={[
+                { label: "Overview", onClick: () => setActiveSection("overview") },
+                { label: "Users", onClick: () => setActiveSection("users") },
+                { label: "Bookings", onClick: () => setActiveSection("bookings") },
+                { label: "Audit logs", onClick: () => setActiveSection("audit") }
+            ]}
         >
-            <AdminSectionNavigation
-                activeSection={activeSection}
-                onSelect={setActiveSection}
-            />
 
             {loading ? (
                 <LoadingIndicator label="Loading control room" />
