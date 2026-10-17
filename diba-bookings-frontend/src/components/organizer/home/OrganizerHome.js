@@ -5,24 +5,21 @@ import theatreImage from "../../../assets/images/Theatre (2).jpg";
 import diningImage from "../../../assets/images/Dining Room.jpg";
 
 import EmptyState from "../../common/EmptyState";
-import BookingCard from "../bookings/BookingCard";
 import VenueCard from "../venues/VenueCard";
-
-const images = [conferenceCentre, theatreImage, diningImage];
 
 function OrganizerHome({
     firstName,
     venues,
-    upcoming,
+    bookings,
     query,
     setQuery,
     onOpenVenue,
-    onOpenBooking,
-    onFindVenue,
-    onViewBookings
 }) {
     const [minimumCapacity, setMinimumCapacity] = useState("");
-    const [availability, setAvailability] = useState("");
+    const [date, setDate] = useState("");
+    const [venueType, setVenueType] = useState("");
+
+    const venueTypes = useMemo(() => [...new Set(venues.map((venue) => venue.venueType || venue.type || venue.category).filter(Boolean).map((type) => String(type).trim()))].sort((a, b) => a.localeCompare(b)), [venues]);
 
     const greeting = useMemo(() => {
         const hour = new Date().getHours();
@@ -41,7 +38,16 @@ function OrganizerHome({
             const description = venue.venueDescription?.toLowerCase() || "";
             const location = venue.location?.toLowerCase() || "";
             const capacity = Number(venue.capacity) || 0;
-            const status = venue.venueStatus?.toLowerCase() || "";
+            const type = String(venue.venueType || venue.type || venue.category || "").toLowerCase();
+            const selectedDate = date ? new Date(`${date}T00:00:00`) : null;
+            const nextDate = selectedDate ? new Date(selectedDate.getTime() + 24 * 60 * 60 * 1000) : null;
+            const hasBookingOnDate = selectedDate && bookings.some((booking) => {
+                if (String(booking.venueId) !== String(venue.venueId)) return false;
+                const status = String(booking.statusName || "").toLowerCase();
+                if (["cancelled", "rejected", "completed"].includes(status)) return false;
+                const start = new Date(booking.startDateTime), end = new Date(booking.endDateTime);
+                return !Number.isNaN(start.getTime()) && !Number.isNaN(end.getTime()) && start < nextDate && end > selectedDate;
+            });
 
             const matchesSearch = !search || (
                 requestedCapacity !== null
@@ -51,85 +57,33 @@ function OrganizerHome({
                       location.includes(search)
             );
             const matchesCapacity = !minimumCapacity || capacity >= Number(minimumCapacity);
-            const matchesAvailability = !availability || status === availability.toLowerCase();
-
-            return matchesSearch && matchesCapacity && matchesAvailability;
+            const matchesDate = !date || !hasBookingOnDate;
+            const matchesType = !venueType || type === venueType.toLowerCase();
+            return matchesSearch && matchesCapacity && matchesDate && matchesType;
         });
-    }, [venues, query, minimumCapacity, availability]);
+    }, [venues, bookings, query, minimumCapacity, date, venueType]);
 
     return (
         <main className="organizer-home">
             <section className="home-introduction">
                 <div className="home-welcome-copy">
-                    <p className="home-section-label">YOUR WORKSPACE</p>
                     <h1>{greeting}, <em>{firstName}</em></h1>
+                    <p>Browse our venue collection and find the perfect space for your next event.</p>
                 </div>
             </section>
-
-            <section className="home-discovery" aria-label="Venue search">
-                <div className="home-search-heading">
-                    <h2>Find a venue</h2>
-                    <p>Search by venue name, location or attendee capacity.</p>
-                </div>
+            <section className="home-discovery" aria-label="Venue search and filters">
                 <div className="home-discovery-form">
                     <div className="home-search-field">
                         <span className="home-search-icon" aria-hidden="true">⌕</span>
-                        <input
-                            type="search"
-                            value={query}
-                            onChange={(event) => setQuery(event.target.value)}
-                            placeholder="Search for a venue that fits your event"
-                            aria-label="Search by venue name, location or capacity"
-                        />
-                        {query && (
-                            <button
-                                type="button"
-                                className="home-search-clear"
-                                onClick={() => setQuery("")}
-                                aria-label="Clear venue search"
-                            >
-                                ×
-                            </button>
-                        )}
+                        <input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search by venue name or location..." aria-label="Search by venue name or location" />
+                        {query && <button type="button" className="home-search-clear" onClick={() => setQuery("")} aria-label="Clear venue search">×</button>}
                     </div>
-                    <button type="button" className="home-advanced-link" onClick={onFindVenue}>
-                        Advanced search <span aria-hidden="true">↗</span>
-                    </button>
+                    <label className="home-filter-control"><span>Capacity</span><select value={minimumCapacity} onChange={(event) => setMinimumCapacity(event.target.value)} aria-label="Minimum capacity"><option value="">Any</option><option value="50">50+</option><option value="100">100+</option><option value="250">250+</option><option value="500">500+</option></select></label>
+                    <label className="home-filter-control"><span>Date</span><input type="date" value={date} onChange={(event) => setDate(event.target.value)} aria-label="Check venue availability on date" /></label>
+                    <label className="home-filter-control"><span>Venue type</span><select value={venueType} onChange={(event) => setVenueType(event.target.value)} aria-label="Venue type"><option value="">All types</option>{venueTypes.map((type) => <option key={type} value={type}>{type}</option>)}</select></label>
+                    {(minimumCapacity || date || venueType || query) && <button type="button" className="home-clear-filters" onClick={() => {setQuery("");setMinimumCapacity("");setDate("");setVenueType("");}}>Clear</button>}
                 </div>
             </section>
-
-            <section className="home-upcoming-section">
-                <div className="home-upcoming-heading">
-                    <div>
-                        <h2>My upcoming events</h2>
-                        <p>Your next bookings at a glance.</p>
-                    </div>
-                    <button type="button" className="home-view-all" onClick={onViewBookings}>
-                        View all bookings <span aria-hidden="true">→</span>
-                    </button>
-                </div>
-
-                {upcoming.length > 0 ? (
-                    <div className="home-upcoming-grid">
-                        {upcoming.slice(0, 3).map((booking) => (
-                            <BookingCard
-                                key={booking.bookingId}
-                                booking={booking}
-                                onOpen={onOpenBooking}
-                            />
-                        ))}
-                    </div>
-                ) : (
-                    <div className="home-upcoming-empty">
-                        <span className="home-empty-icon" aria-hidden="true">▣</span>
-                        <p>You have no upcoming events.</p>
-                        <button type="button" className="home-inline-action" onClick={onFindVenue}>
-                            Browse venues <span aria-hidden="true">→</span>
-                        </button>
-                    </div>
-                )}
-            </section>
-
             <section className="home-venue-section">
                 <div className="home-section-heading">
                     <div>
@@ -139,51 +93,18 @@ function OrganizerHome({
                     <span className="home-result-count">{filteredVenues.length} {filteredVenues.length === 1 ? "venue" : "venues"}</span>
                 </div>
 
-                <div className="home-venue-filters">
-                    <label>
-                        <span>Minimum capacity</span>
-                        <input
-                            type="number"
-                            min="1"
-                            inputMode="numeric"
-                            placeholder="Any size"
-                            value={minimumCapacity}
-                            onChange={(event) => setMinimumCapacity(event.target.value)}
-                        />
-                    </label>
-                    <label>
-                        <span>Availability</span>
-                        <select value={availability} onChange={(event) => setAvailability(event.target.value)}>
-                            <option value="">All venues</option>
-                            <option value="available">Available</option>
-                            <option value="unavailable">Unavailable</option>
-                        </select>
-                    </label>
-                    {(minimumCapacity || availability) && (
-                        <button
-                            type="button"
-                            className="home-clear-filters"
-                            onClick={() => {
-                                setMinimumCapacity("");
-                                setAvailability("");
-                            }}
-                        >
-                            Clear filters
-                        </button>
-                    )}
-                </div>
-
                 <div className="home-venue-grid">
                     {filteredVenues.length > 0 ? (
                         filteredVenues.map((venue) => {
-                            const originalIndex = venues.findIndex((item) => item.venueId === venue.venueId);
-                            const image = images[(originalIndex >= 0 ? originalIndex : 0) % images.length];
+                            const name = venue.venueName?.toLowerCase() || "";
+                            const image = name.includes("theatre") ? theatreImage : name.includes("dining") || name.includes("restaurant") ? diningImage : conferenceCentre;
 
                             return (
                                 <VenueCard
                                     key={venue.venueId}
                                     venue={venue}
                                     image={venue.venueImageData || image}
+                                    fallbackImage={image}
                                     onOpen={onOpenVenue}
                                 />
                             );
