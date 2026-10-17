@@ -3,7 +3,6 @@ import nmuLogo from "../../assets/images/Nelson mandela uniLogo.png";
 
 function DashboardShell({
     title,
-    title,
     onLogout,
     children,
     profileLabel = "Staff"
