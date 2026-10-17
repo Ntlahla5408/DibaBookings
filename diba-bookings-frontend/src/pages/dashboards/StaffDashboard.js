@@ -16,6 +16,7 @@ import { shortId } from "../../utils/dashboardUtils";
 import { clearSession } from "../../utils/sessionUtils";
 import { dateText, timeText } from "../../utils/dateUtils";
 import StaffVenueManagement from "../../components/staff/VenueManagement";
+import BookingCalendar from "../../components/staff/BookingCalendar";
 
 function getErrorMessage(error, fallback) {
     const responseData = error.response?.data;
@@ -578,6 +579,12 @@ return venueList;
                             tone="ink"
                         />
                     </section>
+
+                    <BookingCalendar
+                        bookings={bookings}
+                        venues={venues}
+                        onSelectBooking={setSelectedBooking}
+                    />
 
                     <section className="row g-3 mb-4" aria-label="Daily operations overview">
                         <div className="col-12 col-lg-4">
