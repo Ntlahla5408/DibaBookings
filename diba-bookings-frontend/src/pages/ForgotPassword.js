@@ -14,7 +14,7 @@ function ForgotPassword() {
     const handleSubmit = async (event) => {
         event.preventDefault();
         setErrorMessage("");
-        if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email.trim())) {
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
             setEmailError("Enter a valid email address.");
             return;
         }
