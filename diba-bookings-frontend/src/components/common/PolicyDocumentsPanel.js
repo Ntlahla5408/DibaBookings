@@ -100,7 +100,7 @@ function PolicyDocumentsPanel({ canManage = false }) {
                                     {canManage && <Button size="sm" variant="outline-primary" onClick={() => startRevision(policy)}>Publish revision</Button>}
                                 </div>
                             </div>
-                            <div className="policy-document-content">{policy.content}</div>
+                            <div className="policy-document-content" style={{ whiteSpace: "pre-wrap", lineHeight: 1.65 }}>{policy.content}</div>
                             <p className="small text-muted mt-3 mb-0">Updated {policy.updatedAt ? new Date(policy.updatedAt).toLocaleString() : "date unavailable"}</p>
                         </article>
                     ))}
