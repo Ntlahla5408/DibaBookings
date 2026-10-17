@@ -17,6 +17,8 @@ import { clearSession } from "../../utils/sessionUtils";
 import { dateText, timeText } from "../../utils/dateUtils";
 import StaffVenueManagement from "../../components/staff/VenueManagement";
 import BookingCalendar from "../../components/staff/BookingCalendar";
+import PolicyDocumentsPanel from "../../components/common/PolicyDocumentsPanel";
+import SupportTicketsPanel from "../../components/common/SupportTicketsPanel";
 
 function getErrorMessage(error, fallback) {
     const responseData = error.response?.data;
@@ -546,6 +548,8 @@ return venueList;
                 { label: "All bookings", href: "#all-bookings" },
                 { label: "Venues", href: "#staff-venues" },
                 { label: "Calendar", href: "#booking-calendar" },
+                { label: "Policies", href: "#staff-policies" },
+                { label: "Support tickets", href: "#staff-support" },
             ]}
         >
             {loading ? (
@@ -934,6 +938,13 @@ return venueList;
                     />
                 </>
             )}
+
+            <section id="staff-policies" className="mb-4 panel">
+                <PolicyDocumentsPanel canManage />
+            </section>
+            <section id="staff-support" className="mb-4 panel">
+                <SupportTicketsPanel staffMode />
+            </section>
 
             <Modal
                 show={Boolean(selectedBooking)}
