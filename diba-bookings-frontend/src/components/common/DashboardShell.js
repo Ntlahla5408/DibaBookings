@@ -34,9 +34,10 @@ function DashboardShell({
                         <nav className="dashboard-section-nav d-flex flex-wrap align-items-center gap-2" aria-label="Dashboard sections">
                             {navigationItems.map((item) => (
                                 <Button
-                                    key={item.href}
-                                    as="a"
-                                    href={item.href}
+                                    key={item.href || item.label}
+                                    {...(item.onClick
+                                        ? { onClick: item.onClick }
+                                        : { as: "a", href: item.href })}
                                     variant="outline-primary"
                                     size="sm"
                                     className="dashboard-nav-button text-nowrap"
