@@ -52,7 +52,7 @@ function BookingCalendar({ bookings = [], venues = [], onSelectBooking }) {
     const moveMonth = (n) => setMonth((current) => new Date(current.getFullYear(), current.getMonth() + n, 1));
 
     return (
-        <section className="panel mb-4" aria-label="Booking calendar">
+        <section id="booking-calendar" className="panel mb-4" aria-label="Booking calendar">
             <div className="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
                 <div><p className="eyebrow mb-1">SCHEDULE</p><h2 className="mb-0">Booking calendar</h2><p className="text-muted mb-0">Select a day to review its bookings.</p></div>
                 <div className="d-flex flex-wrap align-items-center gap-2">
