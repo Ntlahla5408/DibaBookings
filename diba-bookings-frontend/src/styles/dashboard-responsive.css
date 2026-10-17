@@ -166,3 +166,46 @@
         min-width: 600px;
     }
 }
+
+
+.booking-calendar-grid {
+    min-width: 0;
+}
+
+.booking-calendar-grid > .d-grid {
+    width: 100%;
+}
+
+.booking-calendar-grid button {
+    overflow: hidden;
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 760px) {
+    .booking-calendar-grid button {
+        min-height: 76px !important;
+        padding: 4px !important;
+        font-size: 0.72rem;
+    }
+
+    .booking-calendar-grid .badge {
+        font-size: 0.58rem;
+        padding: 0.2rem 0.25rem;
+    }
+
+    .booking-calendar-grid .small {
+        font-size: 0.65rem !important;
+    }
+}
+
+@media (max-width: 420px) {
+    .booking-calendar-grid button {
+        min-height: 60px !important;
+        padding: 2px !important;
+    }
+
+    .booking-calendar-grid .badge {
+        font-size: 0.52rem;
+        padding: 0.15rem 0.2rem;
+    }
+}
