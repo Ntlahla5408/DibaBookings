@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import nmuLogo from "../../assets/images/Nelson mandela uniLogo.png";
 
@@ -8,6 +9,13 @@ function DashboardShell({
     profileLabel = "Staff",
     navigationItems = []
 }) {
+    const [isDarkMode, setIsDarkMode] = useState(() => localStorage.getItem("diba-bookings-theme") === "dark");
+
+    useEffect(() => {
+        document.documentElement.dataset.theme = isDarkMode ? "dark" : "light";
+        localStorage.setItem("diba-bookings-theme", isDarkMode ? "dark" : "light");
+    }, [isDarkMode]);
+
     const initials = String(profileLabel || "Staff")
         .trim()
         .split(/\s+/)
@@ -16,7 +24,7 @@ function DashboardShell({
         .join("") || "ST";
 
     return (
-        <main className="app-shell" id="staff-dashboard-top">
+        <main className="app-shell" id="staff-dashboard-top" data-theme={isDarkMode ? "dark" : "light"}>
             <header className="bg-white border-bottom mb-4" style={{ margin: "-1rem -1rem 1.5rem", padding: "0 1rem" }}>
                 <div className="dashboard-topbar d-flex flex-wrap align-items-center gap-3 py-3">
                     <a href="#staff-dashboard-top" className="dashboard-brand d-inline-flex align-items-center flex-shrink-0" aria-label="Nelson Mandela University home">
@@ -39,6 +47,16 @@ function DashboardShell({
                         </nav>
                     )}
                     <div className="dashboard-profile-actions d-flex flex-wrap align-items-center gap-3 ms-auto">
+                        <Button
+                            variant="outline-dark"
+                            size="sm"
+                            className="dashboard-theme-toggle"
+                            onClick={() => setIsDarkMode((currentMode) => !currentMode)}
+                            aria-label={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
+                            aria-pressed={isDarkMode}
+                        >
+                            {isDarkMode ? "☀ Light mode" : "☾ Dark mode"}
+                        </Button>
                         <div className="d-flex align-items-center gap-2">
                             <span className="rounded-circle d-inline-flex align-items-center justify-content-center fw-semibold" style={{ width: 36, height: 36, background: "#eaf0f5", color: "#071B2C" }} aria-label={`Profile: ${profileLabel}`}>{initials}</span>
                             <span className="small fw-semibold d-none d-sm-inline">{profileLabel}</span>
