@@ -43,7 +43,7 @@ function Register() {
         if (!formData.firstName.trim()) errors.firstName = "Enter your first name.";
         if (!formData.lastName.trim()) errors.lastName = "Enter your last name.";
         if (!formData.email.trim()) errors.email = "Enter your email address.";
-        else if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(formData.email.trim())) errors.email = "Enter a valid email address.";
+        else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) errors.email = "Enter a valid email address.";
         if (!passwordIsValid) errors.password = "Meet all password requirements before continuing.";
         if (!confirmPassword) errors.confirmPassword = "Confirm your password.";
         else if (confirmPassword !== formData.password) errors.confirmPassword = "Passwords do not match.";
