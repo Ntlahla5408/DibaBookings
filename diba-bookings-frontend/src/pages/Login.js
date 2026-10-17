@@ -102,6 +102,7 @@ function Login() {
                                             <Form.Control.Feedback type="invalid">{fieldErrors.password}</Form.Control.Feedback>
                                         </InputGroup>
                                     </Form.Group>
+                                    <div className="auth-forgot-row"><Link to="/forgot-password">Forgot password?</Link></div>
                                     <Button type="submit" className="auth-submit w-100" disabled={loading}>
                                         {loading ? "Signing in…" : "Sign in"}
                                     </Button>
