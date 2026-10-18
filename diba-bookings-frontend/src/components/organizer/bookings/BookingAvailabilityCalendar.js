@@ -15,6 +15,8 @@ function BookingCalendar({
     const [loading, setLoading] = useState(false);
     const [availabilityError, setAvailabilityError] = useState("");
     const [selectedSlot, setSelectedSlot] = useState(null);
+    const [selectionStart, setSelectionStart] = useState(null);
+    const [selectionMessage, setSelectionMessage] = useState("");
 
     const year = currentMonth.getFullYear();
     const month = currentMonth.getMonth();
@@ -54,6 +56,8 @@ function BookingCalendar({
         setLoading(true);
         setAvailabilityError("");
         setSelectedSlot(null);
+        setSelectionStart(null);
+        setSelectionMessage("");
 
         try {
             const response = await getVenueAvailability(
@@ -176,20 +180,56 @@ function BookingCalendar({
     };
 
     const handleTimeSelect = (slot) => {
-        const status = getSlotStatus(
-            slot.start,
-            slot.end
-        );
-
-        if (status) {
+        if (isSlotBooked(slot.start, slot.end)) {
             return;
         }
 
-        setSelectedSlot(slot);
-
-        if (onTimeSelect) {
-            onTimeSelect(slot);
+        // First click sets the start time. A second click sets the end
+        // of the booking, allowing any available multi-hour duration.
+        if (!selectionStart) {
+            setSelectionStart(slot);
+            setSelectedSlot(slot);
+            setSelectionMessage("Now choose the final hour of your booking.");
+            return;
         }
+
+        if (slot.start <= selectionStart.start) {
+            setSelectionStart(slot);
+            setSelectedSlot(slot);
+            setSelectionMessage("Start time updated. Choose the final hour.");
+            return;
+        }
+
+        const rangeIsAvailable = timeSlotsForRange(selectionStart.start, slot.end)
+            .every((rangeSlot) => !isSlotBooked(rangeSlot.start, rangeSlot.end));
+
+        if (!rangeIsAvailable) {
+            setSelectionMessage("That range includes a booked time. Choose an earlier end time or a different start.");
+            return;
+        }
+
+        const selectedRange = {
+            start: selectionStart.start,
+            end: slot.end
+        };
+        setSelectedSlot(selectedRange);
+        setSelectionMessage("");
+        if (onTimeSelect) {
+            onTimeSelect(selectedRange);
+        }
+    };
+
+    const timeSlotsForRange = (rangeStart, rangeEnd) => {
+        const slots = [];
+        const cursor = new Date(rangeStart);
+        while (cursor < rangeEnd) {
+            const start = new Date(cursor);
+            const end = new Date(cursor);
+            end.setHours(end.getHours() + 1);
+            slots.push({ start, end });
+            cursor.setHours(cursor.getHours() + 1);
+        }
+        return slots;
     };
 
     const selectedDateText = selectedDate
@@ -271,8 +311,7 @@ function BookingCalendar({
                         <h4>{selectedDateText}</h4>
 
                         <p>
-                            Select an available one-hour
-                            time slot.
+                            Choose a start hour, then choose the final hour. Bookings can last multiple hours.
                         </p>
                     </div>
 
@@ -286,6 +325,10 @@ function BookingCalendar({
                         <p className="availability-message error">
                             {availabilityError}
                         </p>
+                    )}
+
+                    {!loading && !availabilityError && selectionMessage && (
+                        <p className="availability-message">{selectionMessage}</p>
                     )}
 
                     {!loading &&
@@ -307,8 +350,8 @@ function BookingCalendar({
 
                                     const selected =
                                         selectedSlot &&
-                                        selectedSlot.start.getTime() ===
-                                            slot.start.getTime();
+                                        slot.start >= selectedSlot.start &&
+                                        slot.end <= selectedSlot.end;
 
                                     return (
                                         <button
@@ -346,7 +389,9 @@ function BookingCalendar({
                                                 {status ||
                                                     (selected
                                                         ? "Selected"
-                                                        : "Available")}
+                                                        : selectionStart && slot.start > selectionStart.start
+                                                            ? "Choose as end"
+                                                            : "Available")}
                                             </span>
                                         </button>
                                     );
