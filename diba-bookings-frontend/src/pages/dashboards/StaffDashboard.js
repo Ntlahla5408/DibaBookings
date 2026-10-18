@@ -308,6 +308,30 @@ return venueList;
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    // Refresh booking/payment statuses so staff can see a completed payment
+    // without having to sign out or manually reload the dashboard.
+    useEffect(() => {
+        const refreshBookings = async () => {
+            try {
+                const response = await getBookings();
+                if (!Array.isArray(response.data)) return;
+
+                setBookings(response.data);
+                setSelectedBooking((current) => {
+                    if (!current) return current;
+                    return response.data.find(
+                        (booking) => String(booking.bookingId) === String(current.bookingId)
+                    ) || current;
+                });
+            } catch {
+                // Keep the last successfully loaded dashboard data on transient errors.
+            }
+        };
+
+        const intervalId = window.setInterval(refreshBookings, 8000);
+        return () => window.clearInterval(intervalId);
+    }, []);
+
     const statuses = useMemo(
         () =>
             [...new Set(
