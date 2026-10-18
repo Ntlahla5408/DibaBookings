@@ -4,6 +4,7 @@ import { Badge, Button, Form, Modal, Table } from "react-bootstrap";
 import { toast } from "react-toastify";
 
 import {
+    createVenue,
     createVenueFeature,
     deleteVenueFeature,
     getVenueFeatures,
@@ -126,6 +127,7 @@ const emptyFeatureForm = {
 };
 
 function StaffVenueManagement({ venue, onClose, onSaved }) {
+    const isCreating = !venue?.venueId;
     const [venueForm, setVenueForm] = useState(() => createVenueForm(venue));
     const [newVenueImageData, setNewVenueImageData] = useState(null);
 const [processingImage, setProcessingImage] = useState(false);
@@ -306,21 +308,31 @@ const payload = {
     latitude,
     longitude,
     venueStatus: venueForm.venueStatus,
-
-    // Keep the existing image unless a replacement was selected.
     venueImageData:
-        newVenueImageData ?? venue.venueImageData ?? null
+        newVenueImageData ?? venue?.venueImageData ?? null
 };
 
         setSavingVenue(true);
 
         try {
-            await updateVenue(venue.venueId, payload);
-            toast.success("Venue information saved.");
-            await onSaved();
+            if (isCreating) {
+                await createVenue(payload);
+                toast.success("Venue created successfully.");
+                await onSaved();
+                onClose();
+            } else {
+                await updateVenue(venue.venueId, payload);
+                toast.success("Venue information saved.");
+                await onSaved();
+            }
         } catch (error) {
             toast.error(
-                getErrorMessage(error, "Could not save venue information.")
+                getErrorMessage(
+                    error,
+                    isCreating
+                        ? "Could not create the venue."
+                        : "Could not save venue information."
+                )
             );
         } finally {
             setSavingVenue(false);
@@ -443,7 +455,7 @@ const payload = {
         >
             <Modal.Header closeButton>
                 <Modal.Title>
-                    Manage venue: {venue?.venueName}
+                    {isCreating ? "Add venue" : `Manage venue: ${venue.venueName}`}
                 </Modal.Title>
             </Modal.Header>
 
@@ -627,9 +639,11 @@ const payload = {
                     </Form>
                 </section>
 
-                <hr />
+                {venue?.venueId && (
+                    <>
+                        <hr />
 
-                <section className="mt-4">
+                        <section className="mt-4">
                     <h5>Venue facilities</h5>
                     <p className="text-muted">
                         Manage facilities such as projectors, seating, Wi-Fi,
@@ -786,7 +800,9 @@ const payload = {
                             </div>
                         </Form>
                     </div>
-                </section>
+                        </section>
+                    </>
+                )}
             </Modal.Body>
 
             <Modal.Footer>

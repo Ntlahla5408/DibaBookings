@@ -305,9 +305,11 @@ function BookingCalendar({
                         type="button"
                         disabled={!day || isBeforeMinimumDate(day)}
                         className={
-                            day && isSelected(day)
-                                ? "calendar-day selected"
-                                : "calendar-day"
+                            !day
+                                ? "calendar-day calendar-day-empty"
+                                : isSelected(day)
+                                    ? "calendar-day selected"
+                                    : "calendar-day"
                         }
                         onClick={() =>
                             handleDateClick(day)

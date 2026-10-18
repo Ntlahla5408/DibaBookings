@@ -45,6 +45,14 @@ function EventForm({
 
     return (
         <section className="form-view">
+            <button
+                type="button"
+                className="back-link event-form-back"
+                onClick={onCancel}
+            >
+                <span aria-hidden="true">←</span> Back
+            </button>
+
             <FormIntro
                 title={editing ? "Edit event" : "Create booking"}
                 text="Your event details and venue request will be submitted together for staff approval."
@@ -83,62 +91,39 @@ function EventForm({
                     </Field>
 
                     <Field label="Venue" required>
-                        {selectedVenue ? (
-                            <div className="selected-venue">
-                                <strong>
-                                    {selectedVenue.venueName}
-                                </strong>
+                        <select
+                            required
+                            value={form.venueId || selectedVenue?.venueId || ""}
+                            onChange={(e) => {
+                                const venue = venues.find(
+                                    (item) => item.venueId === e.target.value
+                                );
 
-                                <span>
-                                    {selectedVenue.location} · Capacity{" "}
-                                    {selectedVenue.capacity}
-                                </span>
+                                setForm({
+                                    ...form,
+                                    venueId: e.target.value
+                                });
 
-                                <button
-                                    type="button"
-                                    onClick={() => onChangeVenue(null)}
+                                onChangeVenue(venue || null);
+                            }}
+                        >
+                            <option value="">Choose a venue</option>
+                            {venues.map((venue) => (
+                                <option
+                                    key={venue.venueId}
+                                    value={venue.venueId}
                                 >
-                                    Change Venue
-                                </button>
-                            </div>
-                        ) : (
-                            <select
-                                required
-                                value={form.venueId}
-                                onChange={(e) => {
-                                    const venue = venues.find(
-                                        (item) =>
-                                            item.venueId === e.target.value
-                                    );
-
-                                    setForm({
-                                        ...form,
-                                        venueId: e.target.value
-                                    });
-
-                                    onChangeVenue(venue);
-                                }}
-                            >
-                                <option value="">
-                                    Choose a venue
+                                    {venue.venueName}
                                 </option>
-
-                                {venues.map((venue) => (
-                                    <option
-                                        key={venue.venueId}
-                                        value={venue.venueId}
-                                    >
-                                        {venue.venueName}
-                                    </option>
-                                ))}
-                            </select>
-                        )}
+                            ))}
+                        </select>
                     </Field>
 
                     <Field label="Expected attendees" required>
                         <input
                             type="number"
                             min="1"
+                            max={selectedVenue?.capacity ?? undefined}
                             step="1"
                             required
                             value={form.eventAttendance}
@@ -150,6 +135,11 @@ function EventForm({
                             }
                             placeholder="e.g. 50"
                         />
+                        {selectedVenue?.capacity != null && Number(form.eventAttendance) > Number(selectedVenue.capacity) && (
+                            <span className="field-error" role="alert">
+                                This venue holds a maximum of {selectedVenue.capacity} attendees.
+                            </span>
+                        )}
                     </Field>
                 </div>
 
@@ -288,7 +278,7 @@ function EventForm({
                                     }
                                 />
                                 <span>
-                                    I confirm that the information provided is complete and accurate, and I have read and agree to the <Link to="/policies" target="_blank" rel="noreferrer">Terms and Conditions</Link>, including the venue rules and booking requirements.
+                                    I confirm that the information provided is complete and accurate, and I have read and agree to the <Link to="/dashboard?view=policies">Terms and Conditions</Link>, including the venue rules and booking requirements.
                                 </span>
                             </label>
                         </div>

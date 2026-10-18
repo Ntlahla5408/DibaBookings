@@ -50,7 +50,11 @@ const blankBooking = {
 };
 
 function useOrganizerDashboard() {
-    const [view, setView] = useState("dashboard");
+    const [view, setView] = useState(() =>
+        new URLSearchParams(window.location.search).get("view") === "policies"
+            ? "policies"
+            : "dashboard"
+    );
     const [drawerOpen, setDrawerOpen] = useState(false);
 
     const [venues, setVenues] = useState([]);
@@ -804,6 +808,7 @@ const submitEventAndBooking = async (event) => {
 
     const title = {
         dashboard: "Dashboard",
+        profile: "Profile",
         bookings: "My Bookings",
         events: "My Events",
         notifications: "Notifications",

@@ -1,6 +1,9 @@
 
 import api from "./api";
 
+// Create a venue.
+export const createVenue = (venue) => api.post("/Venues", venue);
+
 // Retrieve all venues.
 export const getVenues = () => api.get("/Venues");
 

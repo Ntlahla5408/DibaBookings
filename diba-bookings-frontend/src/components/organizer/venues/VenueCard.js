@@ -1,9 +1,28 @@
 import Status from "../../common/StatusBadge";
 
 function VenueCard({ venue, image, fallbackImage, onOpen }) {
-    return (
-        <article className="browse-venue-card">
+    const openVenue = () => onOpen(venue);
 
+    const handleCardKeyDown = (event) => {
+        if (event.target !== event.currentTarget) {
+            return;
+        }
+
+        if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            openVenue();
+        }
+    };
+
+    return (
+        <article
+            className="browse-venue-card"
+            role="button"
+            tabIndex={0}
+            aria-label={`View details for ${venue.venueName}`}
+            onClick={openVenue}
+            onKeyDown={handleCardKeyDown}
+        >
             <div className="venue-card-image">
                 <img
                     src={image}
@@ -18,13 +37,9 @@ function VenueCard({ venue, image, fallbackImage, onOpen }) {
             </div>
 
             <div className="browse-venue-body">
-
                 <div className="venue-card-title">
                     <h3>{venue.venueName}</h3>
-
-                    <Status
-                        status={venue.venueStatus}
-                    />
+                    <Status status={venue.venueStatus} />
                 </div>
 
                 <p className="venue-card-description">
@@ -33,11 +48,9 @@ function VenueCard({ venue, image, fallbackImage, onOpen }) {
                 </p>
 
                 <div className="venue-facts">
-
                     <span>
                         ⌖{" "}
-                        {venue.location ||
-                            "Location available on request"}
+                        {venue.location || "Location available on request"}
                     </span>
 
                     <span>
@@ -47,31 +60,25 @@ function VenueCard({ venue, image, fallbackImage, onOpen }) {
                     <span>
                         R{" "}
                         {venue.price != null
-                            ? Number(
-                                  venue.price
-                              ).toLocaleString(
-                                  "en-ZA",
-                                  {
-                                      minimumFractionDigits: 2,
-                                      maximumFractionDigits: 2
-                                  }
-                              )
+                            ? Number(venue.price).toLocaleString("en-ZA", {
+                                  minimumFractionDigits: 2,
+                                  maximumFractionDigits: 2
+                              })
                             : "Price on request"}
                     </span>
-
                 </div>
 
                 <button
                     className="outline-action"
                     type="button"
-                    onClick={() => onOpen(venue)}
+                    onClick={(event) => {
+                        event.stopPropagation();
+                        openVenue();
+                    }}
                 >
-                    Show More
-                    <span>→</span>
+                    Show More <span aria-hidden="true">→</span>
                 </button>
-
             </div>
-
         </article>
     );
 }

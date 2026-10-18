@@ -19,6 +19,7 @@ import StaffVenueManagement from "../../components/staff/VenueManagement";
 import BookingCalendar from "../../components/staff/BookingCalendar";
 import PolicyDocumentsPanel from "../../components/common/PolicyDocumentsPanel";
 import SupportTicketsPanel from "../../components/common/SupportTicketsPanel";
+import HelpContentManager from "../../components/common/HelpContentManager";
 
 function getErrorMessage(error, fallback) {
     const responseData = error.response?.data;
@@ -245,6 +246,7 @@ function BookingDetails({ booking, venue }) {
 }
 
 function StaffDashboard() {
+    const [showHelpContent, setShowHelpContent] = useState(false);
     const [bookings, setBookings] = useState([]);
     const [venues, setVenues] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -542,7 +544,9 @@ return venueList;
             title="Dashboard"
             onLogout={clearSession}
             profileLabel={firstName}
-            navigationItems={[]}
+            navigationItems={[
+                { label: "Help Centre Content", onClick: () => setShowHelpContent(true) }
+            ]}
         >
             {loading ? (
                 <LoadingIndicator />
@@ -877,12 +881,27 @@ return venueList;
                         <div className="panel" id="staff-venues">
                             <div className="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
                                 <h2>Venues</h2>
-                                {venues.length > 3 && (
-                                    <Button type="button" variant="link" size="sm" className="p-0 text-decoration-none"
-                                        onClick={() => setShowAllVenues((current) => !current)}>
-                                        {showAllVenues ? "Show less" : "See all"}
+                                <div className="d-flex align-items-center gap-3">
+                                    <Button
+                                        type="button"
+                                        size="sm"
+                                        variant="primary"
+                                        onClick={() => setManagedVenue({})}
+                                    >
+                                        Add venue
                                     </Button>
-                                )}
+                                    {venues.length > 3 && (
+                                        <Button
+                                            type="button"
+                                            variant="link"
+                                            size="sm"
+                                            className="p-0 text-decoration-none"
+                                            onClick={() => setShowAllVenues((current) => !current)}
+                                        >
+                                            {showAllVenues ? "Show less" : "See all"}
+                                        </Button>
+                                    )}
+                                </div>
                             </div>
 
                             {venues.length === 0 && (
@@ -1049,6 +1068,21 @@ return venueList;
                         </Button>
                     </Modal.Footer>
                 </Form>
+            </Modal>
+
+            <Modal
+                show={showHelpContent}
+                onHide={() => setShowHelpContent(false)}
+                size="xl"
+                centered
+                scrollable
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title>Help Centre Content</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <HelpContentManager />
+                </Modal.Body>
             </Modal>
 
             <StaffVenueManagement
