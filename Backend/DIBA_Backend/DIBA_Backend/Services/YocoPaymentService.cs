@@ -19,14 +19,19 @@ namespace DIBA_Backend.Services
 
         public async Task<YocoCheckoutResponse?> CreateCheckoutAsync(
             decimal amount,
-            string reference)
+            string reference,
+            Guid bookingId)
         {
             var secretKey = _configuration["Yoco:SecretKey"];
             var frontendBaseUrl = _configuration["Frontend:BaseUrl"]?.TrimEnd('/');
             var successUrl = ResolveReturnUrl(
-                _configuration["Yoco:SuccessUrl"], frontendBaseUrl, "/payment/success");
+                _configuration["Yoco:SuccessUrl"],
+                frontendBaseUrl,
+                $"/payment/success?bookingId={bookingId:D}");
             var cancelUrl = ResolveReturnUrl(
-                _configuration["Yoco:CancelUrl"], frontendBaseUrl, "/payment/cancel");
+                _configuration["Yoco:CancelUrl"],
+                frontendBaseUrl,
+                $"/payment/cancel?bookingId={bookingId:D}");
 
             if (string.IsNullOrWhiteSpace(secretKey))
             {
@@ -110,10 +115,16 @@ namespace DIBA_Backend.Services
             return configuredUrl!;
         }
 
-        // Keep an explicitly configured public URL for deployed environments.
+        // Keep an explicitly configured public URL for deployed environments,
+        // while preserving the booking context in the return URL.
         if (!string.IsNullOrWhiteSpace(configuredUrl))
         {
-            return configuredUrl;
+            var configuredUri = new UriBuilder(configuredUrl);
+            var query = configuredUri.Query.TrimStart('?');
+            var returnQuery = path.Contains('?') ? path[(path.IndexOf('?') + 1)..] : string.Empty;
+            configuredUri.Query = string.Join("&", new[] { query, returnQuery }
+                .Where(value => !string.IsNullOrWhiteSpace(value)));
+            return configuredUri.Uri.ToString();
         }
 
         if (hasFrontendBaseUrl)
