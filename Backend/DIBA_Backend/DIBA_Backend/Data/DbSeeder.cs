@@ -41,9 +41,7 @@ namespace DIBA_Backend.Data
             await SeedHelpContentAsync(db);
         }
 
-        // Seed sample FAQ and policy content for the first demonstration.
-        // The policy content is clearly marked as sample text and must be
-        // reviewed before the application is treated as a production system.
+        // Seed published help content without replacing policies that staff have edited.
         private static async Task SeedHelpContentAsync(DIBABookingsDbContext db)
         {
             if (!await db.FAQs.AnyAsync())
@@ -91,45 +89,177 @@ namespace DIBA_Backend.Data
                     });
             }
 
-            var samplePolicies = new[]
+            var policies = new[]
             {
                 new
                 {
                     Type = "TermsOfUse",
-                    Title = "Terms of Use (Sample)",
-                    Content = "SAMPLE DEMONSTRATION TEXT — NOT AN OFFICIAL NMU POLICY. Users should provide accurate booking information, use the system respectfully, and follow the current instructions displayed for their booking. Replace this text with approved terms before production."
+                    Title = "DIBA Bookings Terms and Conditions",
+                    Content = @"1. USING DIBA BOOKINGS
+
+DIBA Bookings is used to submit and manage requests to use Nelson Mandela University Conference Centre venues. Users must provide complete, accurate and up-to-date information and use the system only for legitimate booking purposes.
+
+2. SUBMITTING A BOOKING
+
+A booking request must be submitted at least seven calendar days before the requested event date. Requests are subject to venue availability and review by authorised Conference Centre staff. Submitting a request does not mean the venue has been reserved or that the request has been approved. A booking is confirmed only when its status is approved through the system or confirmation is provided by authorised staff.
+
+Organisers must provide the event name, purpose, date and times, expected attendance, selected venue, contact details and any relevant requirements. The expected attendance must not exceed the venue's stated capacity. Organisers must promptly notify staff if information changes.
+
+3. CHANGES AND CANCELLATIONS
+
+Organisers should submit booking changes or cancellation requests through the available booking process as soon as possible. A request to change or cancel is not complete until it has been acknowledged by authorised staff or reflected in the booking status. Venue availability and any applicable cancellation or refund conditions will be considered.
+
+4. USE OF THE VENUE
+
+Organisers are responsible for ensuring that their attendees follow the Venue Use and Safety Rules, respect the venue and equipment, observe capacity limits, and follow reasonable instructions from Conference Centre staff. The venue may only be used for the purpose described in the approved booking unless a change has been agreed with staff.
+
+5. PAYMENTS AND CHARGES
+
+Any venue fee, payment deadline, deposit, cancellation charge or refund condition applicable to a booking must be communicated through the relevant booking information or by authorised Conference Centre staff. This document does not establish an unlisted fee or a fixed refund timeframe.
+
+6. PERSONAL INFORMATION
+
+Personal information submitted through DIBA Bookings is handled as described in the DIBA Bookings Privacy Notice and applicable data-protection law.
+
+7. SYSTEM USE AND COMMUNICATION
+
+Users must keep their account credentials secure, provide truthful information, and promptly report suspected unauthorised access or incorrect booking records. System messages and booking-status updates should be checked regularly.
+
+8. APPLICABLE REQUIREMENTS
+
+Bookings and use of facilities remain subject to applicable Nelson Mandela University requirements, venue-specific instructions and South African law. If a provision of these terms conflicts with a mandatory legal requirement, the legal requirement takes precedence."
                 },
                 new
                 {
                     Type = "VenueRules",
-                    Title = "Venue Use and Damage Rules (Sample)",
-                    Content = "SAMPLE DEMONSTRATION TEXT — NOT AN OFFICIAL NMU POLICY. Organisers should use the venue and equipment responsibly, follow venue instructions, and report damage or incidents promptly. Any responsibility for damage must be assessed under the applicable approved policies and booking terms; this sample does not determine liability or charges."
+                    Title = "Venue Use and Safety Rules",
+                    Content = @"1. APPROVED USE
+
+Use the venue only for the activity and time period stated in the approved booking. Obtain staff approval before changing the event purpose, room arrangement, schedule or expected attendance.
+
+2. ATTENDANCE AND ACCESS
+
+The number of attendees must remain within the venue's stated capacity. Organisers are responsible for coordinating attendee arrival, access and departure and for following any access instructions provided by Conference Centre staff.
+
+3. FURNITURE, EQUIPMENT AND FACILITIES
+
+Use furniture, presentation equipment, audio-visual systems and other facilities carefully and only for their intended purpose. Do not move, install, attach or modify equipment or fixtures without permission. Report equipment faults, damage or missing items to Conference Centre staff promptly.
+
+4. CLEANLINESS AND SET-UP
+
+Keep the venue and surrounding areas orderly. Follow staff instructions about room layout, decorations, catering, waste disposal, set-up and clearing the venue after the event. Do not leave personal belongings, materials or equipment behind.
+
+5. SAFETY AND CONDUCT
+
+Attendees must behave respectfully and follow reasonable instructions from Conference Centre staff. Do not block entrances, exits, corridors or emergency equipment. Do not bring prohibited, dangerous or unlawful items into the venue or engage in activities that create an unreasonable safety risk.
+
+6. INCIDENTS AND EMERGENCIES
+
+Notify Conference Centre staff promptly about accidents, injuries, hazards, damage, lost property or other incidents. In an emergency, follow the venue's emergency procedures and instructions from authorised personnel.
+
+7. ACCESSIBILITY AND SPECIAL ARRANGEMENTS
+
+Raise accessibility, layout, equipment or other special requirements when submitting the booking so that arrangements can be discussed before the event. Any arrangement requiring staff, equipment or additional facilities is subject to confirmation.
+
+8. COMPLIANCE
+
+Organisers are responsible for communicating these rules to attendees and ensuring that the approved booking conditions are followed. Additional venue-specific instructions provided by authorised staff must also be observed."
+                },
+                new
+                {
+                    Type = "PrivacyNotice",
+                    Title = "DIBA Bookings Privacy Notice",
+                    Content = @"1. PURPOSE OF THIS NOTICE
+
+This notice explains how personal information is handled when you use DIBA Bookings to request, administer or support a venue booking.
+
+2. INFORMATION THAT MAY BE COLLECTED
+
+Depending on how you use the service, information may include your name, contact details, account information, event details, booking dates and times, expected attendance, selected venue, special requirements, communications about a booking and records of actions taken in the system.
+
+3. WHY INFORMATION IS USED
+
+Information is used to create and manage user accounts, assess and administer booking requests, communicate booking decisions and changes, coordinate venue arrangements, respond to support requests, maintain security, prevent misuse, keep appropriate operational records and meet applicable legal or university obligations.
+
+4. ACCESS AND SHARING
+
+Access to booking information is limited to authorised personnel who need it for booking administration, venue operations, support, security or related responsibilities. Information may be shared with relevant service providers where needed to operate the service, subject to appropriate safeguards, or where disclosure is required or permitted by law.
+
+5. SECURITY AND RETENTION
+
+Reasonable technical and organisational measures are used to protect personal information against loss, unauthorised access, use, alteration or disclosure. Information is retained for as long as needed for the purposes for which it was collected and for applicable recordkeeping, legal and university requirements.
+
+6. YOUR RIGHTS
+
+Subject to applicable law, you may request access to personal information held about you, ask for inaccurate information to be corrected, raise concerns about how it is handled, or exercise other rights available under the Protection of Personal Information Act (POPIA). Identity verification may be required before a request is processed.
+
+7. QUESTIONS OR REQUESTS
+
+For questions about personal information connected with a booking, contact the Conference Centre through its usual official contact channels and ask for the appropriate privacy contact. Requests will be directed to the responsible university office where necessary.
+
+8. LEGAL FRAMEWORK
+
+Personal information is handled in accordance with applicable South African data-protection requirements, including POPIA."
                 },
                 new
                 {
                     Type = "CancellationAndRefund",
-                    Title = "Cancellation and Refund Guidance (Sample)",
-                    Content = "SAMPLE DEMONSTRATION TEXT — NOT AN OFFICIAL NMU POLICY. Cancellation and refund requests should be submitted through the available booking or support process. The request may require staff review. No specific refund period, fee, or guaranteed outcome is defined by this sample text."
+                    Title = "Booking Changes, Cancellations and Refunds",
+                    Content = @"1. CHANGING A BOOKING
+
+Submit requests to change the event date, time, venue, attendance or other material booking details through the available booking process as soon as the change is known. Changes depend on availability and must be confirmed by authorised Conference Centre staff.
+
+2. CANCELLING A BOOKING
+
+Submit a cancellation request through the available booking process or contact Conference Centre staff. Check the booking status or obtain confirmation from staff to ensure that the cancellation has been recorded.
+
+3. FEES AND REFUNDS
+
+Any cancellation charges, deposits, payment deadlines and refund conditions applicable to a booking must be communicated in the relevant booking information or by authorised Conference Centre staff. Refund eligibility and any amount due depend on the terms applicable to that booking and relevant legal requirements. No refund should be assumed until the request has been reviewed and the outcome communicated.
+
+4. UNIVERSITY OR VENUE CHANGES
+
+If the Conference Centre needs to change or cancel an approved booking, staff will communicate the available information and next steps to the organiser.
+
+5. TIMELY COMMUNICATION
+
+Organisers should notify the Conference Centre as early as possible about changes or cancellations so that availability can be managed and any applicable conditions can be explained.
+
+6. QUESTIONS
+
+For a question about a particular cancellation, payment or refund, contact the Conference Centre through its usual official contact channels and include the booking reference where available."
                 }
             };
 
-            foreach (var sample in samplePolicies)
+            foreach (var policyContent in policies)
             {
-                if (await db.PolicyDocuments.AnyAsync(policy =>
-                    policy.PolicyType == sample.Type))
+                var versions = await db.PolicyDocuments
+                    .Where(policy => policy.PolicyType == policyContent.Type)
+                    .OrderByDescending(policy => policy.Version)
+                    .ToListAsync();
+
+                var currentPolicy = versions.FirstOrDefault(policy => policy.IsActive);
+
+                if (currentPolicy != null && !currentPolicy.IsSamplePolicy)
                 {
                     continue;
+                }
+
+                if (currentPolicy != null)
+                {
+                    currentPolicy.IsActive = false;
+                    currentPolicy.UpdatedAt = DateTime.UtcNow;
                 }
 
                 db.PolicyDocuments.Add(new PolicyDocument
                 {
                     PolicyDocumentId = Guid.NewGuid(),
-                    PolicyType = sample.Type,
-                    Title = sample.Title,
-                    Content = sample.Content,
-                    Version = 1,
+                    PolicyType = policyContent.Type,
+                    Title = policyContent.Title,
+                    Content = policyContent.Content,
+                    Version = versions.Count == 0 ? 1 : versions.Max(policy => policy.Version) + 1,
                     IsActive = true,
-                    IsSamplePolicy = true,
+                    IsSamplePolicy = false,
                     CreatedAt = DateTime.UtcNow,
                     UpdatedAt = DateTime.UtcNow
                 });
