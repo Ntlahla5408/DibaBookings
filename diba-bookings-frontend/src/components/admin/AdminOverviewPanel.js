@@ -1,7 +1,7 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import StatCard from "../common/StatCard";
-import { formatDate } from "../../utils/dateUtils";
+import { formatSouthAfricanDateTime } from "../../utils/dateUtils";
 
 function AdminOverviewPanel({ overview, onShowAudit }) {
     const [showAllActivity, setShowAllActivity] = useState(false);
@@ -84,7 +84,7 @@ function AdminOverviewPanel({ overview, onShowAudit }) {
                                             {item.userName || "Unknown user"}
                                         </span>
                                     </div>
-                                    <time>{formatDate(item.timestamp)}</time>
+                                    <time>{formatSouthAfricanDateTime(item.timestamp)}</time>
                                 </div>
                             ))}
                         </div>
@@ -96,3 +96,4 @@ function AdminOverviewPanel({ overview, onShowAudit }) {
 }
 
 export default AdminOverviewPanel;
+

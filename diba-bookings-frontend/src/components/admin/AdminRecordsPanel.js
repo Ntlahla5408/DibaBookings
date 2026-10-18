@@ -1,5 +1,5 @@
 import { Badge, Button, Form, Table } from "react-bootstrap";
-import { formatDate } from "../../utils/dateUtils";
+import { formatDate, formatSouthAfricanDateTime } from "../../utils/dateUtils";
 import { shortId } from "../../utils/dashboardUtils";
 
 const sectionTitles = {
@@ -222,7 +222,7 @@ function AdminRecordsPanel({
                                 <td><strong>{log.action}</strong></td>
                                 <td>{log.logDescription || "-"}</td>
                                 <td>{log.userName || shortId(log.userId)}</td>
-                                <td>{formatDate(log.timestamp)}</td>
+                                <td>{formatSouthAfricanDateTime(log.timestamp)}</td>
                             </tr>
                         ))}
                     </tbody>

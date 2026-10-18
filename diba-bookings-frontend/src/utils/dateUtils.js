@@ -43,3 +43,32 @@ export const localInput = (value) => {
         `T${pad(date.getHours())}:${pad(date.getMinutes())}`
     );
 };
+
+// Formats backend UTC timestamps in South African local time.
+export const formatSouthAfricanDateTime = (value) => {
+    if (!value) return "-";
+
+    const hasTimezone =
+        typeof value === "string" &&
+        /(?:Z|[+-]\d{2}:\d{2})$/i.test(value);
+
+    // Backend DateTime.UtcNow values may be serialized without a Z suffix.
+    const timestamp =
+        typeof value === "string" && !hasTimezone
+            ? `${value}Z`
+            : value;
+
+    const date = new Date(timestamp);
+
+    if (Number.isNaN(date.getTime())) return "-";
+
+    return date.toLocaleString("en-ZA", {
+        timeZone: "Africa/Johannesburg",
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false
+    });
+};

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Badge, Button, Form } from "react-bootstrap";
 import { toast } from "react-toastify";
 import api from "../../services/api";
+import { formatSouthAfricanDateTime } from "../../utils/dateUtils";
 
 const ticketStatuses = ["Open", "In Progress", "Waiting for User", "Resolved", "Closed"];
 
@@ -119,7 +120,7 @@ function SupportTicketsPanel({ staffMode = false }) {
                                 <div className="d-flex flex-wrap align-items-start justify-content-between gap-2">
                                     <div>
                                         <h3 className="h5 mb-1">{ticket.subject}</h3>
-                                        <p className="small text-muted mb-2">{ticket.ticketNumber} · {ticket.category} · Submitted {ticket.createdAt ? new Date(ticket.createdAt).toLocaleString() : "date unavailable"}</p>
+                                        <p className="small text-muted mb-2">{ticket.ticketNumber} · {ticket.category} · Submitted {ticket.createdAt ? formatSouthAfricanDateTime(ticket.createdAt) : "date unavailable"}</p>
                                         {staffMode && <p className="small mb-2"><strong>Organiser:</strong> {ticket.userName || ticket.userId || "Unknown user"}</p>}
                                     </div>
                                     <Badge bg={statusVariant(ticket.status)}>{ticket.status || "Open"}</Badge>
@@ -129,7 +130,7 @@ function SupportTicketsPanel({ staffMode = false }) {
                                     <div className="rounded p-3 mb-3" style={{ background: "#f2f6f9" }}>
                                         <strong>Staff response</strong>
                                         <p className="mb-1 mt-1" style={{ whiteSpace: "pre-wrap" }}>{ticket.staffResponse}</p>
-                                        {ticket.respondedAt && <small className="text-muted">{new Date(ticket.respondedAt).toLocaleString()}</small>}
+                                        {ticket.respondedAt && <small className="text-muted">{formatSouthAfricanDateTime(ticket.respondedAt)}</small>}
                                     </div>
                                 )}
                                 {staffMode && (
