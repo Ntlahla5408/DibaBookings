@@ -234,22 +234,53 @@ namespace DIBA_Backend.Controllers
                     "The venue does not have a valid price.");
             }
 
-            // Check if payment already exists.
-            // DIBA adaptation: each booking is restricted to one
-            // payment record.
-            var existingPayment = await dbContext.Payments
+            // Create or reuse the payment record before contacting Yoco.
+            // Once Pay Now is clicked, the payment must remain Pending even if
+            // checkout creation fails or the customer never reaches the success page.
+            var payment = await dbContext.Payments
                 .FirstOrDefaultAsync(
-                    p => p.BookingId == createPaymentDto.BookingId);
+                    item => item.BookingId == createPaymentDto.BookingId);
 
-            if (existingPayment != null)
+            if (payment != null &&
+                payment.PaymentStatus.Equals(
+                    "Paid",
+                    StringComparison.OrdinalIgnoreCase))
             {
-                return Conflict(
-                    "A payment already exists for this booking.");
+                return Conflict("This booking has already been paid.");
             }
 
-            // Generate DIBA payment reference.
-            var referenceNumber =
-                $"DIBA-{DateTime.UtcNow:yyyyMMddHHmmss}";
+            if (payment == null)
+            {
+                var referenceNumber = $"DIBA-{DateTime.UtcNow:yyyyMMddHHmmss}";
+
+                payment = new Payment
+                {
+                    PaymentId = Guid.NewGuid(),
+                    Amount = amount,
+                    PaymentDate = DateTime.UtcNow,
+                    ReferenceNumber = referenceNumber,
+                    PaymentStatus = "Pending",
+                    BookingId = booking.BookingId
+                };
+
+                dbContext.Payments.Add(payment);
+            }
+            else
+            {
+                // Reuse a pending record when the customer retries Pay Now.
+                payment.Amount = amount;
+                payment.PaymentStatus = "Pending";
+                payment.PaymentDate = DateTime.UtcNow;
+
+                if (string.IsNullOrWhiteSpace(payment.ReferenceNumber))
+                {
+                    payment.ReferenceNumber = $"DIBA-{DateTime.UtcNow:yyyyMMddHHmmss}";
+                }
+            }
+
+            // Persist Pending before calling Yoco. If checkout creation fails,
+            // the status remains Pending as required.
+            await dbContext.SaveChangesAsync();
 
             YocoCheckoutResponse? checkout;
 
@@ -257,7 +288,7 @@ namespace DIBA_Backend.Controllers
             {
                 checkout = await yocoPaymentService.CreateCheckoutAsync(
                     amount,
-                    referenceNumber,
+                    payment.ReferenceNumber!,
                     booking.BookingId);
             }
             catch (Exception ex)
@@ -266,8 +297,9 @@ namespace DIBA_Backend.Controllers
                     502,
                     new
                     {
-                        message = "Unable to create Yoco checkout.",
-                        error = ex.Message
+                        message = "Unable to create Yoco checkout. Payment remains pending.",
+                        error = ex.Message,
+                        paymentStatus = payment.PaymentStatus
                     });
             }
 
@@ -277,24 +309,15 @@ namespace DIBA_Backend.Controllers
             {
                 return StatusCode(
                     502,
-                    "Yoco did not return a valid checkout.");
+                    new
+                    {
+                        message = "Yoco did not return a valid checkout. Payment remains pending.",
+                        paymentStatus = payment.PaymentStatus
+                    });
             }
 
-            // DIBA-specific payment creation.
-            // A unique identifier and UTC timestamp are assigned when
-            // the payment record is created.
-            var payment = new Payment
-            {
-                PaymentId = Guid.NewGuid(),
-                Amount = amount,
-                PaymentDate = DateTime.UtcNow,
-                ReferenceNumber = referenceNumber,
-                YocoCheckoutId = checkout.Id,
-                PaymentStatus = "Pending",
-                BookingId = booking.BookingId
-            };
-
-            dbContext.Payments.Add(payment);
+            payment.YocoCheckoutId = checkout.Id;
+            payment.PaymentDate = DateTime.UtcNow;
 
             await dbContext.SaveChangesAsync();
 
