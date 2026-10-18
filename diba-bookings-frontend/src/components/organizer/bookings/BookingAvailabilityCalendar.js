@@ -193,7 +193,7 @@ function BookingCalendar({
             return;
         }
 
-        if (slot.start <= selectionStart.start) {
+        if (slot.start < selectionStart.start) {
             setSelectionStart(slot);
             setSelectedSlot(slot);
             setSelectionMessage("Start time updated. Choose the final hour.");
