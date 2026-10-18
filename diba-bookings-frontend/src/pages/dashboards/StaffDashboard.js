@@ -877,12 +877,27 @@ return venueList;
                         <div className="panel" id="staff-venues">
                             <div className="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
                                 <h2>Venues</h2>
-                                {venues.length > 3 && (
-                                    <Button type="button" variant="link" size="sm" className="p-0 text-decoration-none"
-                                        onClick={() => setShowAllVenues((current) => !current)}>
-                                        {showAllVenues ? "Show less" : "See all"}
+                                <div className="d-flex align-items-center gap-3">
+                                    <Button
+                                        type="button"
+                                        size="sm"
+                                        variant="primary"
+                                        onClick={() => setManagedVenue({})}
+                                    >
+                                        Add venue
                                     </Button>
-                                )}
+                                    {venues.length > 3 && (
+                                        <Button
+                                            type="button"
+                                            variant="link"
+                                            size="sm"
+                                            className="p-0 text-decoration-none"
+                                            onClick={() => setShowAllVenues((current) => !current)}
+                                        >
+                                            {showAllVenues ? "Show less" : "See all"}
+                                        </Button>
+                                    )}
+                                </div>
                             </div>
 
                             {venues.length === 0 && (
