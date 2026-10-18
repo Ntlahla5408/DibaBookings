@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { getBookings } from "../services/bookingService";
+import api from "../services/api";
 
 function PaymentReturnPage() {
     const location = useLocation();
@@ -26,6 +27,13 @@ function PaymentReturnPage() {
             }
 
             try {
+                // This endpoint only records a simulated payment when the API
+                // is running in Development with DemoPayments explicitly enabled.
+                // Production must use verified Yoco payment confirmation instead.
+                await api.post(
+                    `/Payments/demo-confirm-success/${encodeURIComponent(bookingId)}`
+                );
+
                 const response = await getBookings();
                 const booking = (response.data || []).find(
                     (item) => String(item.bookingId).toLowerCase() === bookingId.toLowerCase()
