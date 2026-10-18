@@ -551,6 +551,9 @@ namespace DIBA_Backend.Controllers
                 VenueId = booking.VenueId,
                 BookingStatusId =
                     booking.BookingStatusId,
+                StatusName = pendingStatus.StatusName,
+                EventName = eventEntity.EventName,
+                VenueName = venue.VenueName,
 
                 AcknowledgementAccepted =
                     booking.AcknowledgementAccepted,
