@@ -311,23 +311,16 @@ namespace DIBA_Backend.Controllers
             });
         }
 
-        // Presentation-only simulation. It is available only in Development
-        // when explicitly enabled in configuration. Replace this with verified
-        // Yoco confirmation/webhook processing after the presentation.
+        // Local presentation demo only. This endpoint is unavailable outside Development.
+        // After the presentation, replace it with verified Yoco webhook/API confirmation.
         [HttpPost("demo-confirm-success/{bookingId:guid}")]
-        [Authorize(Roles = "Event Organiser")]
+        [AllowAnonymous]
         public async Task<IActionResult> ConfirmDemoPaymentSuccess(Guid bookingId)
         {
             if (!environment.IsDevelopment() ||
                 !configuration.GetValue<bool>("DemoPayments:EnableSuccessReturnConfirmation"))
             {
                 return NotFound();
-            }
-
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-            if (userIdClaim == null || !Guid.TryParse(userIdClaim.Value, out var userId))
-            {
-                return Unauthorized("User ID could not be determined.");
             }
 
             var booking = await dbContext.Bookings
@@ -340,15 +333,14 @@ namespace DIBA_Backend.Controllers
                 return NotFound("Booking not found.");
             }
 
-            if (booking.UserId != userId)
-            {
-                return Forbid();
-            }
+            var currentBookingStatus = booking.BookingStatus?.StatusName;
+            var alreadyPaid =
+                string.Equals(currentBookingStatus, "Paid", StringComparison.OrdinalIgnoreCase) &&
+                booking.Payments.Any(item =>
+                    string.Equals(item.PaymentStatus, "Paid", StringComparison.OrdinalIgnoreCase));
 
-            if (!string.Equals(
-                    booking.BookingStatus?.StatusName,
-                    "Approved",
-                    StringComparison.OrdinalIgnoreCase))
+            if (!alreadyPaid &&
+                !string.Equals(currentBookingStatus, "Approved", StringComparison.OrdinalIgnoreCase))
             {
                 return BadRequest("Payment can only be recorded for an approved booking.");
             }
@@ -368,9 +360,6 @@ namespace DIBA_Backend.Controllers
                 return BadRequest("This payment is not pending and cannot be confirmed by the demo flow.");
             }
 
-            // Keep the booking workflow visible to staff and administrators:
-            // Approved -> Paid. Reuse the existing status row or add it without
-            // changing the database schema.
             var paidStatus = await dbContext.BookingStatuses
                 .FirstOrDefaultAsync(item => item.StatusName == "Paid");
 
