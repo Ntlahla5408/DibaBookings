@@ -23,13 +23,19 @@ namespace DIBA_Backend.Controllers
     {
         private readonly DIBABookingsDbContext dbContext;
         private readonly YocoPaymentService yocoPaymentService;
+        private readonly IConfiguration configuration;
+        private readonly IWebHostEnvironment environment;
 
         public PaymentsController(
             DIBABookingsDbContext dbContext,
-            YocoPaymentService yocoPaymentService)
+            YocoPaymentService yocoPaymentService,
+            IConfiguration configuration,
+            IWebHostEnvironment environment)
         {
             this.dbContext = dbContext;
             this.yocoPaymentService = yocoPaymentService;
+            this.configuration = configuration;
+            this.environment = environment;
         }
 
         // GET: api/Payments
@@ -304,5 +310,87 @@ namespace DIBA_Backend.Controllers
                 checkoutUrl = checkout.RedirectUrl
             });
         }
+
+        // Presentation-only simulation. It is available only in Development
+        // when explicitly enabled in configuration. Replace this with verified
+        // Yoco confirmation/webhook processing after the presentation.
+        [HttpPost("demo-confirm-success/{bookingId:guid}")]
+        [Authorize(Roles = "Event Organiser")]
+        public async Task<IActionResult> ConfirmDemoPaymentSuccess(Guid bookingId)
+        {
+            if (!environment.IsDevelopment() ||
+                !configuration.GetValue<bool>("DemoPayments:EnableSuccessReturnConfirmation"))
+            {
+                return NotFound();
+            }
+
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null || !Guid.TryParse(userIdClaim.Value, out var userId))
+            {
+                return Unauthorized("User ID could not be determined.");
+            }
+
+            var booking = await dbContext.Bookings
+                .Include(item => item.BookingStatus)
+                .Include(item => item.Payments)
+                .FirstOrDefaultAsync(item => item.BookingId == bookingId);
+
+            if (booking == null)
+            {
+                return NotFound("Booking not found.");
+            }
+
+            if (booking.UserId != userId)
+            {
+                return Forbid();
+            }
+
+            if (!string.Equals(
+                    booking.BookingStatus?.StatusName,
+                    "Approved",
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                return BadRequest("Payment can only be recorded for an approved booking.");
+            }
+
+            var payment = booking.Payments
+                .OrderByDescending(item => item.PaymentDate)
+                .FirstOrDefault();
+
+            if (payment == null)
+            {
+                return NotFound("No payment record was found for this booking.");
+            }
+
+            if (string.Equals(payment.PaymentStatus, "Paid", StringComparison.OrdinalIgnoreCase))
+            {
+                return Ok(new
+                {
+                    bookingId,
+                    paymentStatus = payment.PaymentStatus,
+                    bookingStatus = booking.BookingStatus?.StatusName,
+                    demoMode = true
+                });
+            }
+
+            if (!string.Equals(payment.PaymentStatus, "Pending", StringComparison.OrdinalIgnoreCase))
+            {
+                return BadRequest("This payment is not pending and cannot be confirmed by the demo flow.");
+            }
+
+            payment.PaymentStatus = "Paid";
+            payment.PaymentDate = DateTime.UtcNow;
+
+            await dbContext.SaveChangesAsync();
+
+            return Ok(new
+            {
+                bookingId,
+                paymentStatus = payment.PaymentStatus,
+                bookingStatus = booking.BookingStatus?.StatusName,
+                demoMode = true
+            });
+        }
+
     }
 }
