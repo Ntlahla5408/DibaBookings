@@ -14,6 +14,7 @@ import HelpCentre from "../HelpCentre";
 import PolicyDocumentsPanel from "../../components/common/PolicyDocumentsPanel";
 import SupportTicketsPanel from "../../components/common/SupportTicketsPanel";
 import ProfilePage from "../../components/common/ProfilePage";
+import SettingsPage from "../../components/common/SettingsPage";
 import OrganizerSidebar from "../../components/organizer/navigation/OrganizerSidebar";
 import OrganizerTopNav from "../../components/organizer/navigation/OrganizerTopNav";
 import useOrganizerDashboard from "../../hooks/useOrganizerDashboard";
@@ -231,6 +232,7 @@ function OrganizerDashboard() {
                 )}
 
                 {view === "profile" && <ProfilePage />}
+                {view === "settings" && <SettingsPage />}
                 {view === "help" && <HelpCentre />}
                 {view === "policies" && <PolicyDocumentsPanel />}
                 {view === "support" && <SupportTicketsPanel />}
