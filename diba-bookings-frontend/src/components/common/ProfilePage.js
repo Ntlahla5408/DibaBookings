@@ -89,7 +89,7 @@ function ProfilePage() {
             try {
                 localStorage.setItem(pictureKey, reader.result);
                 setProfilePicture(reader.result);
-                window.dispatchEvent(new CustomEvent("diba-profile-updated", { detail: { firstName: profile.firstName } }));
+                window.dispatchEvent(new CustomEvent("diba-profile-updated"));
                 toast.success("Profile picture updated on this browser.");
             } catch {
                 toast.error("This image is too large for browser storage. Choose a smaller image.");
