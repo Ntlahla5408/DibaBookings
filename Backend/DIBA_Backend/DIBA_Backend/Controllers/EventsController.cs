@@ -347,6 +347,15 @@ namespace DIBA_Backend.Controllers
                     "Pending booking status could not be found.");
             }
 
+            // Store the exact active venue-rules version acknowledged by
+            // the organiser, matching the standalone booking workflow.
+            var activeVenueRules = await _dbContext.PolicyDocuments
+                .Where(policy =>
+                    policy.PolicyType == "VenueRules" &&
+                    policy.IsActive)
+                .OrderByDescending(policy => policy.Version)
+                .FirstOrDefaultAsync();
+
             // Similar transaction logic: treating the creation of related
             // database records as one unit of work.
             //
@@ -384,6 +393,12 @@ namespace DIBA_Backend.Controllers
 
                     AcknowledgementAcceptedAt =
                         DateTime.UtcNow,
+
+                    AcknowledgementPolicyType =
+                        activeVenueRules?.PolicyType,
+
+                    AcknowledgementPolicyVersion =
+                        activeVenueRules?.Version,
 
                     UserId = userId,
                     EventId = eventEntity.EventId,
