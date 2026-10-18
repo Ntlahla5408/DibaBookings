@@ -37,5 +37,7 @@
         public string EventName { get; set; } = string.Empty;
 
         public string VenueName { get; set; } = string.Empty;
-\n        public string? PaymentStatus { get; set; }\n    }
+
+        public string? PaymentStatus { get; set; }
+    }
 }
