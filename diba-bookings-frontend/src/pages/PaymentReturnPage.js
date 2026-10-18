@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { getBookings } from "../services/bookingService";
 import api from "../services/api";
 
 function PaymentReturnPage() {
@@ -44,14 +43,8 @@ function PaymentReturnPage() {
                 } else {
                     setPaymentStatus("Verifying");
                 }
-            } catch (error) {
-                if (active) {
-                    setPaymentStatus(
-                        error.response?.data?.message ||
-                        error.response?.data ||
-                        "Verifying"
-                    );
-                }
+            } catch {
+                if (active) setPaymentStatus("Verifying");
             } finally {
                 if (active) setChecking(false);
             }
