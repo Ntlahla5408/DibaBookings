@@ -8,11 +8,28 @@ const sectionTitles = {
     audit: ["ACCOUNTABILITY", "Audit logs"]
 };
 
+function EmptyTableRow({ colSpan, children }) {
+    return (
+        <tr>
+            <td colSpan={colSpan} className="text-center text-muted py-4">
+                {children}
+            </td>
+        </tr>
+    );
+}
+
 function AdminRecordsPanel({
     activeSection,
     query,
     onQueryChange,
     users,
+    allUsers,
+    roles,
+    userStatusFilter,
+    onUserStatusFilterChange,
+    userRoleFilter,
+    onUserRoleFilterChange,
+    onClearUserFilters,
     bookings,
     logs,
     onCreateUser,
@@ -20,6 +37,12 @@ function AdminRecordsPanel({
     onUpdateUser
 }) {
     const [eyebrow, title] = sectionTitles[activeSection];
+    const activeUsers = allUsers.filter((user) => user.isActive).length;
+    const inactiveUsers = allUsers.length - activeUsers;
+    const userFiltersChanged =
+        query.trim() !== "" ||
+        userStatusFilter !== "all" ||
+        userRoleFilter !== "all";
 
     return (
         <section className="panel table-panel">
@@ -39,100 +62,147 @@ function AdminRecordsPanel({
                     placeholder={`Search ${activeSection}...`}
                     value={query}
                     onChange={(event) => onQueryChange(event.target.value)}
+                    aria-label={`Search ${activeSection}`}
                 />
             )}
 
             {activeSection === "users" && (
-                <Table responsive hover>
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Role</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {users.map((user) => (
-                            <tr key={user.userId}>
-                                <td>
-                                    {user.firstName} {user.lastName}
-                                </td>
-                                <td>{user.email}</td>
-                                <td>{user.role}</td>
-                                <td>
-                                    <Badge
-                                        bg={
-                                            user.isActive
-                                                ? "success"
-                                                : "secondary"
-                                        }
-                                    >
-                                        {user.isActive ? "Active" : "Inactive"}
-                                    </Badge>
-                                </td>
-                                <td>
-                                    <button
-                                        className="table-action"
-                                        onClick={() => onChangeRole(user)}
-                                    >
-                                        Change role
-                                    </button>
-                                    <button
-                                        className="table-action danger"
-                                        onClick={() => onUpdateUser(user)}
-                                    >
-                                        {user.isActive
-                                            ? "Deactivate"
-                                            : "Activate"}
-                                    </button>
-                                </td>
+                <>
+                    <div className="admin-user-summary" aria-label="User account totals">
+                        <span><strong>{allUsers.length}</strong> total</span>
+                        <span><strong>{activeUsers}</strong> active</span>
+                        <span><strong>{inactiveUsers}</strong> inactive</span>
+                    </div>
+
+                    <div className="admin-filter-row">
+                        <Form.Group className="admin-filter-field">
+                            <Form.Label>Account status</Form.Label>
+                            <Form.Select
+                                value={userStatusFilter}
+                                onChange={(event) => onUserStatusFilterChange(event.target.value)}
+                                aria-label="Filter users by account status"
+                            >
+                                <option value="all">All statuses</option>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </Form.Select>
+                        </Form.Group>
+
+                        <Form.Group className="admin-filter-field">
+                            <Form.Label>Role</Form.Label>
+                            <Form.Select
+                                value={userRoleFilter}
+                                onChange={(event) => onUserRoleFilterChange(event.target.value)}
+                                aria-label="Filter users by role"
+                            >
+                                <option value="all">All roles</option>
+                                {roles.map((role) => (
+                                    <option key={role.roleId} value={role.roleName}>
+                                        {role.roleName}
+                                    </option>
+                                ))}
+                            </Form.Select>
+                        </Form.Group>
+
+                        <div className="admin-filter-actions">
+                            <span className="text-muted small">
+                                Showing {users.length} of {allUsers.length} users
+                            </span>
+                            <Button
+                                variant="outline-secondary"
+                                size="sm"
+                                onClick={onClearUserFilters}
+                                disabled={!userFiltersChanged}
+                            >
+                                Clear filters
+                            </Button>
+                        </div>
+                    </div>
+
+                    <Table responsive hover>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Actions</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </Table>
+                        </thead>
+                        <tbody>
+                            {users.length === 0 ? (
+                                <EmptyTableRow colSpan={5}>
+                                    No users match these filters. Try changing the search or clearing the filters.
+                                </EmptyTableRow>
+                            ) : users.map((user) => (
+                                <tr key={user.userId}>
+                                    <td>{user.firstName} {user.lastName}</td>
+                                    <td>{user.email}</td>
+                                    <td>{user.role}</td>
+                                    <td>
+                                        <Badge bg={user.isActive ? "success" : "secondary"}>
+                                            {user.isActive ? "Active" : "Inactive"}
+                                        </Badge>
+                                    </td>
+                                    <td>
+                                        <button
+                                            className="table-action"
+                                            onClick={() => onChangeRole(user)}
+                                        >
+                                            Change role
+                                        </button>
+                                        <button
+                                            className="table-action danger"
+                                            onClick={() => onUpdateUser(user)}
+                                        >
+                                            {user.isActive ? "Deactivate" : "Activate"}
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </Table>
+                </>
             )}
 
             {activeSection === "bookings" && (
-                <Table responsive hover>
-                    <thead>
-                        <tr>
-                            <th>Booking</th>
-                            <th>Organiser</th>
-                            <th>Event</th>
-                            <th>Venue</th>
-                            <th>Submitted</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {bookings.map((booking) => (
-                            <tr key={booking.bookingId}>
-                                <td>{shortId(booking.bookingId)}</td>
-                                <td>
-                                    {booking.organiserName ||
-                                        shortId(booking.userId)}
-                                </td>
-                                <td>
-                                    {booking.eventName ||
-                                        shortId(booking.eventId)}
-                                </td>
-                                <td>
-                                    {booking.venueName ||
-                                        shortId(booking.venueId)}
-                                </td>
-                                <td>{formatDate(booking.bookingDate)}</td>
-                                <td>
-                                    <Badge bg="light" text="dark">
-                                        {booking.statusName ||
-                                            shortId(booking.bookingStatusId)}
-                                    </Badge>
-                                </td>
+                <>
+                    <p className="text-muted small">
+                        Showing {bookings.length} matching booking{bookings.length === 1 ? "" : "s"}
+                    </p>
+                    <Table responsive hover>
+                        <thead>
+                            <tr>
+                                <th>Booking</th>
+                                <th>Organiser</th>
+                                <th>Event</th>
+                                <th>Venue</th>
+                                <th>Submitted</th>
+                                <th>Status</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </Table>
+                        </thead>
+                        <tbody>
+                            {bookings.length === 0 ? (
+                                <EmptyTableRow colSpan={6}>
+                                    No bookings match your search.
+                                </EmptyTableRow>
+                            ) : bookings.map((booking) => (
+                                <tr key={booking.bookingId}>
+                                    <td>{shortId(booking.bookingId)}</td>
+                                    <td>{booking.organiserName || shortId(booking.userId)}</td>
+                                    <td>{booking.eventName || shortId(booking.eventId)}</td>
+                                    <td>{booking.venueName || shortId(booking.venueId)}</td>
+                                    <td>{formatDate(booking.bookingDate)}</td>
+                                    <td>
+                                        <Badge bg="light" text="dark">
+                                            {booking.statusName || shortId(booking.bookingStatusId)}
+                                        </Badge>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </Table>
+                </>
             )}
 
             {activeSection === "audit" && (
@@ -146,15 +216,13 @@ function AdminRecordsPanel({
                         </tr>
                     </thead>
                     <tbody>
-                        {logs.map((log) => (
+                        {logs.length === 0 ? (
+                            <EmptyTableRow colSpan={4}>No audit records are available.</EmptyTableRow>
+                        ) : logs.map((log) => (
                             <tr key={log.auditLogId}>
-                                <td>
-                                    <strong>{log.action}</strong>
-                                </td>
+                                <td><strong>{log.action}</strong></td>
                                 <td>{log.logDescription || "-"}</td>
-                                <td>
-                                    {log.userName || shortId(log.userId)}
-                                </td>
+                                <td>{log.userName || shortId(log.userId)}</td>
                                 <td>{formatDate(log.timestamp)}</td>
                             </tr>
                         ))}

@@ -1,13 +1,14 @@
 ﻿using DIBA_Backend.Data;
 using DIBA_Backend.Dto.Authentication;
 using DIBA_Backend.Models.Entities;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using DIBA_Backend.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace DIBA_Backend.Controllers
@@ -18,38 +19,35 @@ namespace DIBA_Backend.Controllers
     {
         private readonly DIBABookingsDbContext _dbContext;
         private readonly IConfiguration _configuration;
+        private readonly NotificationEmailService _notificationEmailService;
+        private readonly ILogger<AuthenticationController> _logger;
 
         public AuthenticationController(
             DIBABookingsDbContext dbContext,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            NotificationEmailService notificationEmailService,
+            ILogger<AuthenticationController> logger)
         {
             _dbContext = dbContext;
             _configuration = configuration;
+            _notificationEmailService = notificationEmailService;
+            _logger = logger;
         }
 
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterUserDto registerUser)
         {
-            // Reference: Olaide Ogunbunmi, "ASP.NET Core Role-Based Authentication API".
-            // Similar logic: checking whether a user already exists before
-            // creating a new account.
-            // DIBA adaptation: the email address is used to determine whether
-            // the Event Organiser is already registered.
-            // https://github.com/olaideogunbunmi/aspnetcore-auth-rbac
+            var normalizedEmail = registerUser.Email.Trim();
             var existingUser = await _dbContext.Users
-                .FirstOrDefaultAsync(user => user.Email == registerUser.Email);
+                .FirstOrDefaultAsync(user => user.Email == normalizedEmail);
 
             if (existingUser != null)
             {
                 return BadRequest("A user with this email already exists.");
             }
 
-
-            // Reference: Olaide Ogunbunmi, "ASP.NET Core Role-Based Authentication API".
-            // Similar logic: assigning roles to users during account management.
-            // DIBA adaptation: newly registered users are automatically assigned
-            // the Event Organiser role because this is the default registration role.
-            // https://github.com/olaideogunbunmi/aspnetcore-auth-rbac
+            // Public registration always assigns Event Organiser on the server.
+            // The client cannot choose or override this role.
             var eventOrganiserRole = await _dbContext.Roles
                 .FirstOrDefaultAsync(role => role.RoleName == "Event Organiser");
 
@@ -58,26 +56,17 @@ namespace DIBA_Backend.Controllers
                 return BadRequest("Default role was not found.");
             }
 
-
-            // Reference: BcryptNet, "BCrypt.Net".
-            // Similar logic: hashing a user's password before it is stored.
-            // DIBA adaptation: BCrypt.Net is used to create the PasswordHash
-            // stored in the DIBA Users table.
-            // https://github.com/BcryptNet/bcrypt.net
             var user = new User
             {
                 UserId = Guid.NewGuid(),
-                FirstName = registerUser.FirstName,
-                LastName = registerUser.LastName,
-                Email = registerUser.Email,
-                PasswordHash =
-                    BCrypt.Net.BCrypt.HashPassword(registerUser.Password),
+                FirstName = registerUser.FirstName.Trim(),
+                LastName = registerUser.LastName.Trim(),
+                Email = normalizedEmail,
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(registerUser.Password),
                 RoleId = eventOrganiserRole.RoleId
             };
 
             _dbContext.Users.Add(user);
-
-            // Save the new user to the database.
             await _dbContext.SaveChangesAsync();
 
             return Ok(new
@@ -91,63 +80,34 @@ namespace DIBA_Backend.Controllers
             });
         }
 
-
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto loginDto)
         {
-            // Similar database lookup logic is used in the reviewed
-            // ASP.NET Core authentication project by Olaide Ogunbunmi.
-            // DIBA adaptation: the user's Role navigation property is also
-            // loaded because the role is required when generating the JWT.
-            // Reference:
-            // https://github.com/olaideogunbunmi/aspnetcore-auth-rbac
+            var normalizedEmail = loginDto.Email.Trim();
             var user = await _dbContext.Users
                 .Include(user => user.Role)
-                .FirstOrDefaultAsync(user => user.Email == loginDto.Email);
+                .FirstOrDefaultAsync(user => user.Email == normalizedEmail);
 
             if (user == null)
             {
                 return Unauthorized("Invalid credentials.");
             }
 
-
-            // DIBA-specific business rule:
-            // a user account must be active before login is allowed.
             if (!user.IsActive)
             {
                 return Unauthorized("This account has been deactivated.");
             }
 
-
-            // Reference: BcryptNet, "BCrypt.Net".
-            // Similar logic: verifying a password supplied during login
-            // against the stored BCrypt password hash.
-            // DIBA adaptation: the submitted password is compared with
-            // the PasswordHash stored for the selected DIBA user.
-            // https://github.com/BcryptNet/bcrypt.net
-            if (!BCrypt.Net.BCrypt.Verify(
-                    loginDto.Password,
-                    user.PasswordHash))
+            if (!BCrypt.Net.BCrypt.Verify(loginDto.Password, user.PasswordHash))
             {
                 return Unauthorized("Invalid credentials.");
             }
 
-
-            // DIBA-specific validation:
-            // the authenticated user must have an assigned role because
-            // the role is included in the JWT.
             if (user.Role == null)
             {
                 return BadRequest("User role was not found.");
             }
 
-
-            // Reference: Olaide Ogunbunmi, "ASP.NET Core Role-Based Authentication API".
-            // Similar logic: successful authentication results in a JWT
-            // access token being issued to the client.
-            // DIBA adaptation: the generated token contains the DIBA user's
-            // identity and role.
-            // https://github.com/olaideogunbunmi/aspnetcore-auth-rbac
             var token = GenerateJwtToken(user);
 
             return Ok(new
@@ -161,93 +121,180 @@ namespace DIBA_Backend.Controllers
             });
         }
 
+        [EnableRateLimiting("password-reset")]
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordDto request)
+        {
+            // Always return the same response so callers cannot discover whether
+            // an email address belongs to an active account.
+            const string publicMessage =
+                "If an active account exists for that email, a password reset link will be sent shortly.";
+
+            var email = request.Email.Trim().ToLowerInvariant();
+            var user = await _dbContext.Users
+                .FirstOrDefaultAsync(candidate =>
+                    candidate.Email.ToLower() == email && candidate.IsActive);
+
+            if (user == null)
+            {
+                return Ok(new { message = publicMessage });
+            }
+
+            var signingKey = _configuration["Jwt:Key"];
+            if (string.IsNullOrWhiteSpace(signingKey))
+            {
+                _logger.LogError("Password reset email was not prepared because Jwt:Key is not configured.");
+                return Ok(new { message = publicMessage });
+            }
+
+            var token = GeneratePasswordResetToken(user, signingKey);
+            var frontendBaseUrl = (_configuration["Frontend:BaseUrl"] ?? "http://localhost:3000")
+                .TrimEnd('/');
+            var resetUrl = $"{frontendBaseUrl}/reset-password?token={Uri.EscapeDataString(token)}";
+            var body =
+                $"A password reset was requested for your DIBA Bookings account.\n\n" +
+                $"Use this link to choose a new password (valid for 30 minutes):\n{resetUrl}\n\n" +
+                "If you did not request this change, you can safely ignore this email.";
+
+            // Uses the existing Brevo notification-email infrastructure and its delivery logging.
+            // Delivery is controlled by the existing Email configuration.
+            await _notificationEmailService.TrySendAsync(
+                user.UserId,
+                null,
+                "Reset your DIBA Bookings password",
+                body);
+
+            return Ok(new { message = publicMessage });
+        }
+
+        [EnableRateLimiting("password-reset")]
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword(ResetPasswordDto request)
+        {
+            if (string.IsNullOrWhiteSpace(request.NewPassword) ||
+                request.NewPassword.Length < 8 ||
+                !request.NewPassword.Any(char.IsUpper) ||
+                !request.NewPassword.Any(char.IsLower) ||
+                !request.NewPassword.Any(char.IsDigit))
+            {
+                return BadRequest("Use at least 8 characters, including an uppercase letter, a lowercase letter and a number.");
+            }
+
+            var signingKey = _configuration["Jwt:Key"];
+            if (string.IsNullOrWhiteSpace(signingKey))
+            {
+                return BadRequest("The password reset link is invalid or has expired.");
+            }
+
+            ClaimsPrincipal principal;
+            try
+            {
+                var handler = new JwtSecurityTokenHandler();
+                principal = handler.ValidateToken(request.Token, new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidIssuer = _configuration["Jwt:Issuer"],
+                    ValidateAudience = true,
+                    ValidAudience = _configuration["Jwt:Audience"],
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(signingKey)),
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.Zero,
+                    ValidAlgorithms = new[] { SecurityAlgorithms.HmacSha256 }
+                }, out _);
+            }
+            catch (Exception exception) when (
+                exception is SecurityTokenException ||
+                exception is ArgumentException ||
+                exception is FormatException)
+            {
+                return BadRequest("The password reset link is invalid or has expired.");
+            }
+
+            if (principal.FindFirst("purpose")?.Value != "password-reset" ||
+                !Guid.TryParse(principal.FindFirst("userId")?.Value, out var userId))
+            {
+                return BadRequest("The password reset link is invalid or has expired.");
+            }
+
+            var suppliedFingerprint = principal.FindFirst("passwordHashFingerprint")?.Value;
+            var user = await _dbContext.Users.FirstOrDefaultAsync(candidate => candidate.UserId == userId);
+            if (user == null || !user.IsActive || string.IsNullOrWhiteSpace(suppliedFingerprint))
+            {
+                return BadRequest("The password reset link is invalid or has expired.");
+            }
+
+            byte[] suppliedFingerprintBytes;
+            try
+            {
+                suppliedFingerprintBytes = Convert.FromHexString(suppliedFingerprint);
+            }
+            catch (FormatException)
+            {
+                return BadRequest("The password reset link is invalid or has expired.");
+            }
+
+            // The token is single-use without adding a database table: changing
+            // the password changes its fingerprint and invalidates old reset tokens.
+            var currentFingerprint = SHA256.HashData(Encoding.UTF8.GetBytes(user.PasswordHash));
+            if (suppliedFingerprintBytes.Length != currentFingerprint.Length ||
+                !CryptographicOperations.FixedTimeEquals(suppliedFingerprintBytes, currentFingerprint))
+            {
+                return BadRequest("The password reset link is invalid or has expired.");
+            }
+
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);
+            await _dbContext.SaveChangesAsync();
+
+            return Ok(new { message = "Your password has been reset. You can now sign in." });
+        }
+
+        private string GeneratePasswordResetToken(User user, string signingKey)
+        {
+            var fingerprint = SHA256.HashData(Encoding.UTF8.GetBytes(user.PasswordHash));
+            var claims = new[]
+            {
+                new Claim("userId", user.UserId.ToString()),
+                new Claim("purpose", "password-reset"),
+                new Claim("passwordHashFingerprint", Convert.ToHexString(fingerprint)),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            };
+
+            var token = new JwtSecurityToken(
+                issuer: _configuration["Jwt:Issuer"],
+                audience: _configuration["Jwt:Audience"],
+                claims: claims,
+                notBefore: DateTime.UtcNow,
+                expires: DateTime.UtcNow.AddMinutes(30),
+                signingCredentials: new SigningCredentials(
+                    new SymmetricSecurityKey(Encoding.UTF8.GetBytes(signingKey)),
+                    SecurityAlgorithms.HmacSha256));
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
 
         private string GenerateJwtToken(User user)
         {
-            // Reference: Microsoft Learn, "Configure JWT bearer authentication
-            // in ASP.NET Core".
-            // Similar logic: a symmetric key is used to sign the JWT.
-            // DIBA adaptation: the signing key is loaded from configuration
-            // rather than being hard-coded in the controller.
-            // https://learn.microsoft.com/en-us/aspnet/core/security/authentication/configure-jwt-bearer-authentication
             var key = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(
-                    _configuration["Jwt:Key"]!));
-
-
-            // Reference: Microsoft Learn and reviewed JWT implementations.
-            // Similar logic: HMAC-SHA256 signing credentials are used to
-            // protect the integrity of the generated token.
-            // DIBA adaptation: the algorithm is applied using the configured
-            // symmetric security key.
-            var credentials = new SigningCredentials(
-                key,
-                SecurityAlgorithms.HmacSha256);
-
-
-            // Reference: Microsoft Learn, "Claim-based authorization in
-            // ASP.NET Core", and Olaide Ogunbunmi's JWT/RBAC project.
-            // Similar logic: user information and role information are
-            // represented as claims inside the authenticated identity.
-            // DIBA adaptation: the claims contain the DIBA UserId, email
-            // and RoleName required by the rest of the application.
-            // https://github.com/olaideogunbunmi/aspnetcore-auth-rbac
+                Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
+            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var claims = new[]
             {
-                new Claim(
-                    JwtRegisteredClaimNames.Sub,
-                    user.UserId.ToString()),
-
-                // Reference: common JWT implementation pattern.
-                // The JTI provides a unique identifier for the token.
-                new Claim(
-                    JwtRegisteredClaimNames.Jti,
-                    Guid.NewGuid().ToString()),
-
-                // Reference: Microsoft Learn, "Claim-based authorization
-                // in ASP.NET Core".
-                // DIBA uses NameIdentifier later to identify the logged-in
-                // user when accessing protected resources.
-                new Claim(
-                    ClaimTypes.NameIdentifier,
-                    user.UserId.ToString()),
-
-                // Reference: claim-based authentication pattern.
-                // DIBA stores the user's email as the authenticated name.
-                new Claim(
-                    ClaimTypes.Name,
-                    user.Email),
-
-                // Reference: Microsoft Learn, "Role-based authorization
-                // in ASP.NET Core".
-                // Similar logic: a role is represented as a role claim so
-                // ASP.NET Core can perform role-based authorization.
-                // DIBA adaptation: the role is taken from the user's
-                // Role navigation property.
-                new Claim(
-                    ClaimTypes.Role,
-                    user.Role!.RoleName)
+                new Claim(JwtRegisteredClaimNames.Sub, user.UserId.ToString()),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
+                new Claim(ClaimTypes.Name, user.Email),
+                new Claim(ClaimTypes.Role, user.Role!.RoleName)
             };
 
-
-            // Reference: Microsoft Learn and reviewed JWT implementations.
-            // Similar logic: a JwtSecurityToken is created using issuer,
-            // audience, claims, expiration and signing credentials.
-            // DIBA adaptation: the token is configured for the DIBA API
-            // and expires after one hour.
             var token = new JwtSecurityToken(
                 issuer: _configuration["Jwt:Issuer"],
                 audience: _configuration["Jwt:Audience"],
                 claims: claims,
                 expires: DateTime.UtcNow.AddHours(1),
-                signingCredentials: credentials
-            );
+                signingCredentials: credentials);
 
-
-            // Similar JWT implementation pattern: converting the generated
-            // JwtSecurityToken into the string sent to the client.
-            return new JwtSecurityTokenHandler()
-                .WriteToken(token);
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }

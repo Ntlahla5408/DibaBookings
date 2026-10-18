@@ -278,6 +278,14 @@ namespace DIBA_Backend.Controllers
                     "You must acknowledge the booking requirements before submitting the booking.");
             }
 
+            if (string.IsNullOrWhiteSpace(request.EventAttendance) ||
+                !int.TryParse(request.EventAttendance, out var expectedAttendees) ||
+                expectedAttendees < 1)
+            {
+                return BadRequest(
+                    "Expected attendees is required and must be a whole number greater than zero.");
+            }
+
             // Reference: ErmaoCyber, "meeting-room-reservation-api".
             // Similar logic: validating that the requested time period
             // is logically valid before checking availability.
@@ -285,6 +293,15 @@ namespace DIBA_Backend.Controllers
             {
                 return BadRequest(
                     "End date and time must be after the start date and time.");
+            }
+
+            // DIBA booking policy: the event start date must be at least
+            // seven calendar days after today's date in South Africa.
+            var southAfricanToday = DateTime.UtcNow.AddHours(2).Date;
+            if (request.StartDateTime.Date < southAfricanToday.AddDays(7))
+            {
+                return BadRequest(
+                    "Bookings must be made at least 7 days before the event start date.");
             }
 
             // DIBA-specific venue existence validation.
@@ -347,6 +364,15 @@ namespace DIBA_Backend.Controllers
                     "Pending booking status could not be found.");
             }
 
+            // Store the exact active venue-rules version acknowledged by
+            // the organiser, matching the standalone booking workflow.
+            var activeVenueRules = await _dbContext.PolicyDocuments
+                .Where(policy =>
+                    policy.PolicyType == "VenueRules" &&
+                    policy.IsActive)
+                .OrderByDescending(policy => policy.Version)
+                .FirstOrDefaultAsync();
+
             // Similar transaction logic: treating the creation of related
             // database records as one unit of work.
             //
@@ -384,6 +410,12 @@ namespace DIBA_Backend.Controllers
 
                     AcknowledgementAcceptedAt =
                         DateTime.UtcNow,
+
+                    AcknowledgementPolicyType =
+                        activeVenueRules?.PolicyType,
+
+                    AcknowledgementPolicyVersion =
+                        activeVenueRules?.Version,
 
                     UserId = userId,
                     EventId = eventEntity.EventId,
@@ -433,7 +465,16 @@ namespace DIBA_Backend.Controllers
                         AcknowledgementAcceptedAt =
         booking.AcknowledgementAcceptedAt,
 
+                        AcknowledgementPolicyType =
+                            booking.AcknowledgementPolicyType,
+
+                        AcknowledgementPolicyVersion =
+                            booking.AcknowledgementPolicyVersion,
+
                         UserId = booking.UserId,
+                        EventId = eventEntity.EventId,
+                        VenueId = venue.VenueId,
+                        BookingStatusId = pendingStatus.BookingStatusId,
                         StatusName =
                             pendingStatus.StatusName,
                         EventName =
@@ -551,6 +592,28 @@ namespace DIBA_Backend.Controllers
                     "The selected venue is already booked or awaiting approval for the requested time.");
             }
 
+            // Keep event schedule and its linked booking in sync. Approved
+            // reservations require a staff-managed change instead of being
+            // silently moved by editing the event details.
+            var linkedBookings = await _dbContext.Bookings
+                .Include(booking => booking.BookingStatus)
+                .Where(booking => booking.EventId == eventEntity.EventId)
+                .ToListAsync();
+
+            var scheduleOrVenueChanged =
+                eventEntity.StartDateTime != updateEventDto.StartDateTime ||
+                eventEntity.EndDateTime != updateEventDto.EndDateTime ||
+                eventEntity.VenueId != updateEventDto.VenueId;
+
+            if (scheduleOrVenueChanged &&
+                linkedBookings.Any(booking =>
+                    booking.BookingStatus != null &&
+                    booking.BookingStatus.StatusName == "Approved"))
+            {
+                return Conflict(
+                    "This event has an approved venue booking. Contact Conference Centre Staff to change its date, time, or venue.");
+            }
+
             eventEntity.EventName =
                 updateEventDto.EventName;
 
@@ -571,6 +634,19 @@ namespace DIBA_Backend.Controllers
 
             eventEntity.VenueId =
                 updateEventDto.VenueId;
+
+            // Pending requests follow the updated event schedule and venue,
+            // so the event list and booking list cannot show conflicting data.
+            foreach (var linkedBooking in linkedBookings)
+            {
+                if (linkedBooking.BookingStatus != null &&
+                    linkedBooking.BookingStatus.StatusName == "Pending")
+                {
+                    linkedBooking.StartDateTime = updateEventDto.StartDateTime;
+                    linkedBooking.EndDateTime = updateEventDto.EndDateTime;
+                    linkedBooking.VenueId = updateEventDto.VenueId;
+                }
+            }
 
             await _dbContext.SaveChangesAsync();
 

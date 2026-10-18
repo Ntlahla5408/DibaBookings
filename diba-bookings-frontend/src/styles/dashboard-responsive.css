@@ -59,7 +59,7 @@
 }
 
 
-/* Staff dashboard: keep every section inside the viewport. */
+/* Dashboard page sizing and overflow protection. */
 .app-shell {
     min-width: 0;
     width: 100%;
@@ -167,7 +167,6 @@
     }
 }
 
-
 .booking-calendar-grid {
     min-width: 0;
 }
@@ -210,7 +209,7 @@
     }
 }
 
-/* Staff overview cards: use the available width and give each metric room to breathe. */
+/* Overview metrics may sit in a compact row; the main page sections remain stacked. */
 #staff-overview {
     display: grid !important;
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -270,7 +269,7 @@
     }
 }
 
-/* Keep section navigation beside the NMU logo and use the dashboard navy/gold palette. */
+/* Dashboard header and section navigation. */
 .dashboard-topbar {
     width: 100%;
     min-width: 0;
@@ -338,7 +337,7 @@
     }
 }
 
-/* Optional dark theme for dashboard pages. The choice is saved in this browser. */
+/* Optional dark theme for dashboard pages. */
 html[data-theme="dark"] {
     color-scheme: dark;
     background: #0b1520;
@@ -465,3 +464,192 @@ html[data-theme="dark"] .dashboard-theme-toggle {
     }
 }
 
+
+/* Admin user management: compact account summary and usable filter controls. */
+.admin-user-summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 22px;
+    margin: 14px 0 18px;
+    color: var(--bs-secondary-color, #64748b);
+    font-size: 0.9rem;
+}
+
+.admin-user-summary strong {
+    color: inherit;
+    font-size: 1rem;
+}
+
+.admin-filter-row {
+    display: flex;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.admin-filter-field {
+    flex: 0 1 190px;
+    min-width: 150px;
+    margin: 0;
+}
+
+.admin-filter-field .form-label {
+    margin-bottom: 5px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.admin-filter-actions {
+    display: flex;
+    flex: 1 1 230px;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 10px;
+    min-height: 38px;
+}
+
+.admin-filter-actions .small {
+    white-space: nowrap;
+}
+
+@media (max-width: 560px) {
+    .admin-filter-field {
+        flex: 1 1 100%;
+    }
+
+    .admin-filter-actions {
+        justify-content: space-between;
+    }
+}
+
+
+/* Admin overview metrics. */
+#admin-overview {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px !important;
+    width: 100%;
+}
+
+#admin-overview > .stat-card {
+    width: 100%;
+    min-width: 0;
+    min-height: 142px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+#admin-overview > .stat-card span {
+    font-size: 1rem;
+    line-height: 1.35;
+}
+
+#admin-overview > .stat-card strong {
+    font-size: clamp(2rem, 2.8vw, 2.65rem);
+    line-height: 1.1;
+}
+
+@media (max-width: 900px) {
+    #admin-overview {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    #admin-overview > .stat-card {
+        min-height: 130px;
+        padding: 20px;
+    }
+}
+
+@media (max-width: 420px) {
+    #admin-overview {
+        gap: 10px !important;
+    }
+
+    #admin-overview > .stat-card {
+        min-height: 116px;
+        padding: 14px;
+        gap: 12px;
+    }
+
+    #admin-overview > .stat-card span {
+        font-size: 0.88rem;
+    }
+
+    #admin-overview > .stat-card strong {
+        font-size: 1.9rem;
+    }
+}
+
+
+/* Staff dashboard: single-column sections, each spanning the content width. */
+.staff-records-layout {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 18px;
+    width: 100%;
+}
+
+.staff-records-layout > * {
+    width: 100%;
+    min-width: 0;
+    margin-bottom: 0;
+}
+
+.staff-records-layout .table-responsive {
+    max-width: 100%;
+}
+
+.staff-policy-support-layout {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 18px;
+    width: 100%;
+}
+
+.staff-policy-support-layout > section {
+    width: 100%;
+    min-width: 0;
+    margin-bottom: 0;
+}
+
+#booking-calendar {
+    width: 100%;
+    margin-top: 0;
+}
+
+#booking-calendar > .calendar-panel-heading {
+    flex-wrap: nowrap;
+}
+
+#booking-calendar .calendar-filter-row {
+    display: grid;
+    gap: 14px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+#booking-calendar .calendar-filter-row > div {
+    min-width: 0;
+}
+
+@media (max-width: 600px) {
+    #booking-calendar > .calendar-panel-heading {
+        align-items: flex-start !important;
+        flex-direction: column;
+        flex-wrap: wrap;
+    }
+
+    #booking-calendar .calendar-filter-row {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    #booking-calendar .calendar-panel-heading > div {
+        max-width: 100%;
+    }
+}

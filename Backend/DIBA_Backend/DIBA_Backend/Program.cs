@@ -1,10 +1,12 @@
 ﻿using DIBA_Backend.Data;
 using DIBA_Backend.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using System.Threading.RateLimiting;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +16,23 @@ builder.Services.AddHttpClient("Brevo");
 builder.Services.AddScoped<NotificationEmailService>();
 
 builder.Services.AddHttpClient<DibaAssistantService>();
+
+// Limit public password recovery endpoints to reduce reset-email abuse.
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    options.AddPolicy("password-reset", httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 5,
+                Window = TimeSpan.FromMinutes(15),
+                QueueLimit = 0,
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                AutoReplenishment = true
+            }));
+});
 
 builder.Services.AddCors(options =>
 {
@@ -132,7 +151,22 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
+
+// DIBA-specific database initialization.
+// The application creates a service scope and obtains the database
+// context before seeding the required initial roles/statuses/test data.
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext =
+        scope.ServiceProvider
+            .GetRequiredService<DIBABookingsDbContext>();
+
+    await DbSeeder.SeedAsync(dbContext);
+}
+
+app.UseRouting();
 app.UseCors("MyPolicy");
+app.UseRateLimiter();
 
 if (app.Environment.IsDevelopment())
 {

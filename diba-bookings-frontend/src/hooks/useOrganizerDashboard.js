@@ -45,7 +45,8 @@ const blankBooking = {
     venueId: "",
     startDateTime: "",
     endDateTime: "",
-    specialRequirements: ""
+    specialRequirements: "",
+    acknowledgementAccepted: false
 };
 
 function useOrganizerDashboard() {
@@ -335,8 +336,7 @@ function useOrganizerDashboard() {
                 editingEvent
                     ? current.map(
                           (item) =>
-                              item.eventId ===
-                              response.data.eventId
+                              item.eventId === response.data.eventId
                                   ? response.data
                                   : item
                       )
@@ -346,6 +346,35 @@ function useOrganizerDashboard() {
                       ]
             );
 
+            if (editingEvent) {
+                const updatedVenue = venues.find(
+                    (venue) => venue.venueId === response.data.venueId
+                );
+
+                setBookings((current) =>
+                    current.map((booking) => {
+                        if (booking.eventId !== response.data.eventId) {
+                            return booking;
+                        }
+
+                        const isPending =
+                            (booking.statusName || "").toLowerCase() === "pending";
+
+                        return {
+                            ...booking,
+                            eventName: response.data.eventName,
+                            ...(isPending
+                                ? {
+                                      startDateTime: response.data.startDateTime,
+                                      endDateTime: response.data.endDateTime,
+                                      venueId: response.data.venueId,
+                                      venueName: updatedVenue?.venueName || booking.venueName
+                                  }
+                                : {})
+                        };
+                    })
+                );
+            }
 
             toast.success(
                 editingEvent
@@ -480,6 +509,10 @@ const submitEventAndBooking = async (event) => {
     const saveBooking = async (event) => {
         event.preventDefault();
 
+        if (!editingBooking && !bookingForm.acknowledgementAccepted) {
+            toast.error("Please confirm the booking acknowledgement before submitting.");
+            return;
+        }
 
         const candidate = {
             ...bookingForm,
@@ -771,10 +804,12 @@ const submitEventAndBooking = async (event) => {
 
     const title = {
         dashboard: "Dashboard",
-        venues: "Find a Venue",
         bookings: "My Bookings",
         events: "My Events",
         notifications: "Notifications",
+        help: "Help Centre",
+        policies: "Policy Documents",
+        support: "Support Tickets",
         "venue-detail": "Venue Details",
         "booking-detail": "Booking Details",
         "event-form": editingEvent ? "Edit Event" : "Create Booking",

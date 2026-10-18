@@ -1312,3 +1312,213 @@
     color: transparent;
     cursor: default;
 }
+
+
+/* Shared event and booking detail headings */
+.booking-detail-section-title {
+    border-top: 1px solid var(--organizer-line);
+    color: var(--organizer-navy);
+    font-size: 1rem;
+    margin: 24px 0 12px;
+    padding-top: 18px;
+}
+
+.booking-detail-grid dd {
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+}
+
+
+/* Compact availability calendar popup in the event booking form */
+.calendar-popup-anchor {
+    align-self: stretch;
+    position: relative;
+    width: 100%;
+}
+
+.calendar-selected-date {
+    color: var(--organizer-navy);
+    flex: 1;
+    font-size: 0.9rem;
+}
+
+.calendar-toggle-button > span[aria-hidden="true"] {
+    color: var(--organizer-blue);
+    flex: 0 0 auto;
+}
+
+.calendar-toggle-button {
+    align-items: center;
+    background: #fff;
+    border: 1px solid var(--organizer-line);
+    border-radius: 8px;
+    color: var(--organizer-navy);
+    cursor: pointer;
+    display: flex;
+    font: inherit;
+    font-size: 0.9rem;
+    gap: 12px;
+    justify-content: space-between;
+    min-height: 44px;
+    padding: 10px 12px;
+    text-align: left;
+    transition: background 0.2s ease, border-color 0.2s ease;
+    width: 100%;
+}
+
+.calendar-toggle-button:hover,
+.calendar-toggle-button[aria-expanded="true"] {
+    background: rgba(44, 122, 158, 0.08);
+    border-color: var(--organizer-light-blue);
+}
+
+.calendar-toggle-button:focus-visible,
+.calendar-popup-close:focus-visible {
+    outline: 3px solid rgba(44, 122, 158, 0.25);
+    outline-offset: 2px;
+}
+
+.calendar-popup {
+    background: #fff;
+    border: 1px solid var(--organizer-line);
+    border-radius: 12px;
+    box-shadow: 0 14px 35px rgba(7, 27, 44, 0.18);
+    left: 0;
+    max-height: min(70vh, 560px);
+    max-width: calc(100vw - 32px);
+    overflow-y: auto;
+    padding: 12px;
+    position: absolute;
+    top: calc(100% + 8px);
+    width: 360px;
+    z-index: 50;
+}
+
+.calendar-popup-heading {
+    align-items: center;
+    color: var(--organizer-navy);
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.calendar-popup-close {
+    align-items: center;
+    background: transparent;
+    border: 0;
+    border-radius: 6px;
+    color: var(--organizer-muted);
+    cursor: pointer;
+    display: inline-flex;
+    font-size: 1.3rem;
+    height: 30px;
+    justify-content: center;
+    width: 30px;
+}
+
+.calendar-popup .booking-calendar {
+    padding: 10px;
+}
+
+.calendar-popup .calendar-grid,
+.calendar-popup .calendar-weekdays {
+    gap: 4px;
+}
+
+.calendar-popup .calendar-day {
+    height: 32px;
+    min-height: 32px;
+}
+
+.calendar-popup .calendar-availability {
+    margin-top: 12px;
+    padding-top: 12px;
+}
+
+.calendar-popup .time-slot-list {
+    grid-template-columns: 1fr;
+}
+
+.calendar-popup .time-slot {
+    min-height: 42px;
+    padding: 8px 10px;
+}
+
+@media (max-width: 480px) {
+    .calendar-popup {
+        left: auto;
+        right: 0;
+        width: min(360px, calc(100vw - 32px));
+    }
+}
+
+
+/* Keep calendar dates and time availability visible together in the popup. */
+.calendar-popup {
+    width: 640px;
+}
+
+.calendar-popup .booking-calendar-layout {
+    align-items: start;
+    display: grid;
+    gap: 12px;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+
+.calendar-popup .calendar-date-panel {
+    min-width: 0;
+}
+
+.calendar-popup .calendar-availability {
+    border-top: 0;
+    margin-top: 0;
+    min-width: 0;
+    padding-top: 0;
+}
+
+.calendar-popup .availability-heading h4 {
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.calendar-popup .availability-heading p:not(.section-kicker) {
+    font-size: 0.75rem;
+    line-height: 1.35;
+}
+
+.calendar-popup .time-slot-list {
+    gap: 6px;
+    grid-template-columns: minmax(0, 1fr);
+}
+
+.calendar-popup .time-slot {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+}
+
+.calendar-popup .time-slot-time,
+.calendar-popup .time-slot-status {
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 600px) {
+    .calendar-popup {
+        width: min(640px, calc(100vw - 32px));
+    }
+
+    .calendar-popup .booking-calendar-layout {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .calendar-popup .calendar-availability {
+        border-top: 1px solid var(--organizer-line);
+        margin-top: 4px;
+        padding-top: 12px;
+    }
+
+    .calendar-popup .time-slot-list {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}

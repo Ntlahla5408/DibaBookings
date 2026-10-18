@@ -205,6 +205,7 @@ function VenueBrowser({
             key={venue.venueId}
             venue={venue}
             image={venue.venueImageData || fallbackImage}
+            fallbackImage={fallbackImage}
             onOpen={onOpen}
         />
     );

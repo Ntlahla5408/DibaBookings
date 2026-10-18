@@ -4,14 +4,15 @@ import diningImage from "../../assets/images/Dining Room.jpg";
 
 import LoadingIndicator from "../../components/common/LoadingIndicator";
 import OrganizerHome from "../../components/organizer/home/OrganizerHome";
-import VenueBrowser from "../../components/organizer/venues/VenueBrowser";
 import VenueDetails from "../../components/organizer/venues/VenueDetails";
 import EventForm from "../../components/organizer/events/EventForm";
-import EventsView from "../../components/organizer/events/EventsView";
 import BookingForm from "../../components/organizer/bookings/BookingForm";
-import BookingsView from "../../components/organizer/bookings/BookingsView";
 import BookingDetails from "../../components/organizer/bookings/BookingDetails";
+import EventBookingWorkspace from "../../components/organizer/workspace/EventBookingWorkspace";
 import NotificationsView from "../../components/organizer/notifications/NotificationsView";
+import HelpCentre from "../HelpCentre";
+import PolicyDocumentsPanel from "../../components/common/PolicyDocumentsPanel";
+import SupportTicketsPanel from "../../components/common/SupportTicketsPanel";
 import OrganizerSidebar from "../../components/organizer/navigation/OrganizerSidebar";
 import OrganizerTopNav from "../../components/organizer/navigation/OrganizerTopNav";
 import useOrganizerDashboard from "../../hooks/useOrganizerDashboard";
@@ -39,7 +40,6 @@ function OrganizerDashboard() {
         drawerOpen,
         setDrawerOpen,
         bookings,
-        upcoming,
         firstName,
         fullName,
         unread,
@@ -110,30 +110,23 @@ function OrganizerDashboard() {
     <OrganizerHome
         firstName={firstName}
         venues={venues}
+        bookings={bookings}
         query={query}
         setQuery={setQuery}
         onOpenVenue={openVenue}
-        onFindVenue={() => goTo("venues")}
     />
 )}
-
-                {view === "venues" && (
-                    <VenueBrowser
-                        venues={venues}
-                        query={query}
-                        setQuery={setQuery}
-                        onOpen={openVenue}
-                    />
-                )}
 
                 {view === "venue-detail" &&
                     activeVenue && (
                         <VenueDetails
                             venue={activeVenue}
-  image={
-    activeVenue.venueImageData ||
-    getVenueFallbackImage(activeVenue)
-}
+                            image={
+                                activeVenue.venueImageData ||
+                                getVenueFallbackImage(activeVenue)
+                            }
+                            onBack={() => goTo("dashboard")}
+                            onBook={() => startEvent(activeVenue)}
                         />
                     )}
 
@@ -180,45 +173,39 @@ function OrganizerDashboard() {
                     />
                 )}
 
-                {view === "bookings" && (
-                    <BookingsView
-                        bookings={bookings}
-                        onOpen={openBooking}
-                        onEdit={editBooking}
-                        onCancel={cancelBooking}
-                        saving={saving}
-                    />
-                )}
-
-                {view === "booking-detail" &&
-                    activeBooking && (
-                        <BookingDetails
-                            booking={activeBooking}
-                            onBack={() =>
-                                goTo("bookings")
-                            }
-                            onEdit={editBooking}
-                            onCancel={cancelBooking}
-                            saving={saving}
-                        />
-                    )}
-
-                {view === "events" && (
-                    <EventsView
+                {(view === "bookings" || view === "events") && (
+                    <EventBookingWorkspace
+                        perspective={view}
+                        onChangePerspective={goTo}
                         events={events}
                         bookings={bookings}
                         venues={venues}
-                        onEdit={startEvent}
-                        onBook={(event) =>
+                        onOpenBooking={openBooking}
+                        onEditEvent={startEvent}
+                        onBookEvent={(event) =>
                             startBooking(
                                 event,
                                 venues.find(
                                     (venue) =>
-                                        venue.venueId ===
-                                        event.venueId
+                                        venue.venueId === event.venueId
                                 )
                             )
                         }
+                        onEditBooking={editBooking}
+                        onCancelBooking={cancelBooking}
+                        saving={saving}
+                    />
+                )}
+
+                {view === "booking-detail" && activeBooking && (
+                    <BookingDetails
+                        booking={activeBooking}
+                        event={events.find((item) => item.eventId === activeBooking.eventId)}
+                        venue={venues.find((item) => item.venueId === activeBooking.venueId)}
+                        onBack={() => goTo("bookings")}
+                        onEdit={editBooking}
+                        onCancel={cancelBooking}
+                        saving={saving}
                     />
                 )}
 
@@ -241,6 +228,10 @@ function OrganizerDashboard() {
                         onPay={payForBooking}
                     />
                 )}
+
+                {view === "help" && <HelpCentre />}
+                {view === "policies" && <PolicyDocumentsPanel />}
+                {view === "support" && <SupportTicketsPanel />}
 
             </main>
         </div>

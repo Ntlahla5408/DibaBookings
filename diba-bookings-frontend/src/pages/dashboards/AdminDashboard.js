@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 
 import AdminOverviewPanel from "../../components/admin/AdminOverviewPanel";
 import AdminRecordsPanel from "../../components/admin/AdminRecordsPanel";
-import AdminSectionNavigation from "../../components/admin/AdminSectionNavigation";
+import ChangeUserRoleModal from "../../components/admin/ChangeUserRoleModal";
 import CreateUserModal from "../../components/admin/CreateUserModal";
 import DashboardShell from "../../components/common/DashboardShell";
 import LoadingIndicator from "../../components/common/LoadingIndicator";
@@ -27,9 +27,14 @@ function AdminDashboard() {
     const [logs, setLogs] = useState([]);
     const [roles, setRoles] = useState([]);
     const [query, setQuery] = useState("");
+    const [userStatusFilter, setUserStatusFilter] = useState("all");
+    const [userRoleFilter, setUserRoleFilter] = useState("all");
     const [activeSection, setActiveSection] = useState("overview");
     const [loading, setLoading] = useState(true);
     const [showCreate, setShowCreate] = useState(false);
+    const [userForRoleChange, setUserForRoleChange] = useState(null);
+    const [selectedRoleId, setSelectedRoleId] = useState("");
+    const [savingRole, setSavingRole] = useState(false);
     const [newUser, setNewUser] = useState({
         firstName: "",
         lastName: "",
@@ -80,12 +85,22 @@ function AdminDashboard() {
 
     const filteredUsers = useMemo(
         () =>
-            users.filter((user) =>
-                `${user.firstName} ${user.lastName} ${user.email} ${user.role}`
-                    .toLowerCase()
-                    .includes(query.toLowerCase())
-            ),
-        [users, query]
+            users.filter((user) => {
+                const matchesQuery =
+                    `${user.firstName} ${user.lastName} ${user.email} ${user.role}`
+                        .toLowerCase()
+                        .includes(query.trim().toLowerCase());
+                const matchesStatus =
+                    userStatusFilter === "all" ||
+                    (userStatusFilter === "active" && user.isActive) ||
+                    (userStatusFilter === "inactive" && !user.isActive);
+                const matchesRole =
+                    userRoleFilter === "all" ||
+                    String(user.role || "").toLowerCase() === userRoleFilter.toLowerCase();
+
+                return matchesQuery && matchesStatus && matchesRole;
+            }),
+        [users, query, userStatusFilter, userRoleFilter]
     );
 
     const filteredBookings = useMemo(
@@ -110,22 +125,29 @@ function AdminDashboard() {
         }
     };
 
-    const changeRole = async (user) => {
-        const roleName = window.prompt(
-            `Enter the role name for ${user.firstName} (Administrator, Staff, or Event Organiser):`
+    const changeRole = (user) => {
+        const currentRole = roles.find(
+            (role) => role.roleName.toLowerCase() === String(user.role || "").toLowerCase()
         );
-        const selected = roles.find(
-            (item) =>
-                item.roleName.toLowerCase() === roleName?.toLowerCase()
-        );
-        if (!selected) return;
+        setUserForRoleChange(user);
+        setSelectedRoleId(String(currentRole?.roleId ?? ""));
+    };
 
+    const submitRoleChange = async (event) => {
+        event.preventDefault();
+        if (!userForRoleChange || !selectedRoleId) return;
+
+        setSavingRole(true);
         try {
-            await updateUserRole(user.userId, selected.roleId);
-            toast.success("Role updated.");
-            loadData();
+            await updateUserRole(userForRoleChange.userId, selectedRoleId);
+            toast.success(`Role updated for ${userForRoleChange.firstName} ${userForRoleChange.lastName}.`);
+            setUserForRoleChange(null);
+            setSelectedRoleId("");
+            await loadData();
         } catch (error) {
             toast.error(error.response?.data || "Could not update role.");
+        } finally {
+            setSavingRole(false);
         }
     };
 
@@ -158,14 +180,15 @@ function AdminDashboard() {
     return (
         <DashboardShell
             title={`Good morning, ${firstName}`}
-            eyebrow="DIBA BOOKINGS / CONTROL ROOM"
-            subtitle="A clear view of users, bookings, payments, and system activity."
             onLogout={clearSession}
+            profileLabel={firstName}
+            navigationItems={[
+                { label: "Overview", onClick: () => setActiveSection("overview") },
+                { label: "Users", onClick: () => setActiveSection("users") },
+                { label: "Bookings", onClick: () => setActiveSection("bookings") },
+                { label: "Audit logs", onClick: () => setActiveSection("audit") },
+            ]}
         >
-            <AdminSectionNavigation
-                activeSection={activeSection}
-                onSelect={setActiveSection}
-            />
 
             {loading ? (
                 <LoadingIndicator label="Loading control room" />
@@ -181,6 +204,17 @@ function AdminDashboard() {
                     query={query}
                     onQueryChange={setQuery}
                     users={filteredUsers}
+                    allUsers={users}
+                    roles={roles}
+                    userStatusFilter={userStatusFilter}
+                    onUserStatusFilterChange={setUserStatusFilter}
+                    userRoleFilter={userRoleFilter}
+                    onUserRoleFilterChange={setUserRoleFilter}
+                    onClearUserFilters={() => {
+                        setQuery("");
+                        setUserStatusFilter("all");
+                        setUserRoleFilter("all");
+                    }}
                     bookings={filteredBookings}
                     logs={logs}
                     onCreateUser={() => setShowCreate(true)}
@@ -196,6 +230,22 @@ function AdminDashboard() {
                 onChange={updateNewUserField}
                 roles={roles}
                 onSubmit={handleCreateUser}
+            />
+
+            <ChangeUserRoleModal
+                show={Boolean(userForRoleChange)}
+                user={userForRoleChange}
+                roles={roles}
+                selectedRoleId={selectedRoleId}
+                onRoleChange={setSelectedRoleId}
+                onHide={() => {
+                    if (!savingRole) {
+                        setUserForRoleChange(null);
+                        setSelectedRoleId("");
+                    }
+                }}
+                onSubmit={submitRoleChange}
+                saving={savingRole}
             />
         </DashboardShell>
     );

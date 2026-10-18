@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import FormIntro from "./EventFormIntro";
 import Field from "./EventFormField";
 import FormActions from "./EventFormActions";
@@ -15,6 +16,10 @@ function EventForm({
     onChangeVenue,
     onCancel
 }) {
+    const [showCalendar, setShowCalendar] = useState(false);
+    const minimumBookingDate = new Date();
+    minimumBookingDate.setDate(minimumBookingDate.getDate() + 7);
+    minimumBookingDate.setHours(0, 0, 0, 0);
     const [selectedDate, setSelectedDate] = useState(
         form.startDateTime
             ? new Date(form.startDateTime)
@@ -28,13 +33,8 @@ function EventForm({
         const month = String(date.getMonth() + 1).padStart(2, "0");
         const day = String(date.getDate()).padStart(2, "0");
 
-        const startTime = form.startDateTime
-            ? new Date(form.startDateTime).toTimeString().slice(0, 5)
-            : "09:00";
-
-        const endTime = form.endDateTime
-            ? new Date(form.endDateTime).toTimeString().slice(0, 5)
-            : "10:00";
+        const startTime = form.startDateTime?.split("T")[1]?.slice(0, 5) || "09:00";
+        const endTime = form.endDateTime?.split("T")[1]?.slice(0, 5) || "10:00";
 
         setForm({
             ...form,
@@ -135,8 +135,12 @@ function EventForm({
                         )}
                     </Field>
 
-                    <Field label="Expected attendees">
+                    <Field label="Expected attendees" required>
                         <input
+                            type="number"
+                            min="1"
+                            step="1"
+                            required
                             value={form.eventAttendance}
                             onChange={(e) =>
                                 setForm({
@@ -150,84 +154,90 @@ function EventForm({
                 </div>
 
                 {!editing && selectedVenue && (
-                    <div className="booking-calendar-section">
-                        <div className="calendar-intro">
-                            <p className="section-kicker">
-                                CHECK AVAILABILITY
-                            </p>
+                    <div className="calendar-popup-anchor">
+                        <button
+                            type="button"
+                            className="calendar-toggle-button"
+                            aria-label={showCalendar ? "Close date and availability picker" : "Choose date and available times"}
+                            title={showCalendar ? "Close date and availability picker" : "Choose date and available times"}
+                            aria-expanded={showCalendar}
+                            onClick={() => setShowCalendar((visible) => !visible)}
+                        >
+                            <span className="calendar-selected-date">
+                                {selectedDate
+                                    ? selectedDate.toLocaleDateString([], {
+                                          day: "numeric",
+                                          month: "short",
+                                          year: "numeric"
+                                      })
+                                    : "Select booking date"}
+                            </span>
+                            <span aria-hidden="true">▦</span>
+                        </button>
 
-                            <h3>Select your event date</h3>
+                        {showCalendar && (
+                            <div className="calendar-popup" role="dialog" aria-label="Choose booking date and availability">
+                                <div className="calendar-popup-heading">
+                                    <strong>Choose a date</strong>
+                                    <span className="form-note">Book at least 7 days in advance.</span>
+                                    <button
+                                        type="button"
+                                        className="calendar-popup-close"
+                                        aria-label="Close calendar"
+                                        onClick={() => setShowCalendar(false)}
+                                    >
+                                        ×
+                                    </button>
+                                </div>
+                                <BookingCalendar
+                                    selectedDate={selectedDate}
+                                    minimumDate={minimumBookingDate}
+                                    onDateSelect={handleDateSelect}
+                                    venueId={form.venueId}
+                                    onTimeSelect={(slot) => {
+                                        const toLocalInput = (date) => {
+                                            const year = date.getFullYear();
+                                            const month = String(date.getMonth() + 1).padStart(2, "0");
+                                            const day = String(date.getDate()).padStart(2, "0");
+                                            const hours = String(date.getHours()).padStart(2, "0");
+                                            const minutes = String(date.getMinutes()).padStart(2, "0");
+                                            return `${year}-${month}-${day}T${hours}:${minutes}`;
+                                        };
 
-                            <p>
-                                Choose a date to continue with your venue
-                                booking.
-                            </p>
-                        </div>
-
-                        <BookingCalendar
-                            selectedDate={selectedDate}
-                            onDateSelect={handleDateSelect}
-                            venueId={form.venueId}
-                            onTimeSelect={(slot) => {
-                                const toLocalInput = (date) => {
-                                    const year = date.getFullYear();
-                                    const month = String(
-                                        date.getMonth() + 1
-                                    ).padStart(2, "0");
-                                    const day = String(
-                                        date.getDate()
-                                    ).padStart(2, "0");
-                                    const hours = String(
-                                        date.getHours()
-                                    ).padStart(2, "0");
-                                    const minutes = String(
-                                        date.getMinutes()
-                                    ).padStart(2, "0");
-
-                                    return `${year}-${month}-${day}T${hours}:${minutes}`;
-                                };
-
-                                setForm({
-                                    ...form,
-                                    startDateTime: toLocalInput(
-                                        slot.start
-                                    ),
-                                    endDateTime: toLocalInput(
-                                        slot.end
-                                    )
-                                });
-                            }}
-                        />
+                                        setForm({
+                                            ...form,
+                                            startDateTime: toLocalInput(slot.start),
+                                            endDateTime: toLocalInput(slot.end)
+                                        });
+                                        setShowCalendar(false);
+                                    }}
+                                />
+                            </div>
+                        )}
                     </div>
                 )}
 
                 <div className="form-grid">
 
-                    <Field label="Start date and time" required>
-                        <input
-                            required
-                            type="datetime-local"
-                            value={form.startDateTime}
-                            onChange={(e) =>
-                                setForm({
-                                    ...form,
-                                    startDateTime: e.target.value
-                                })
-                            }
+                    <Field label="Start time" required>
+                        <input required type="time"
+                            value={form.startDateTime?.split("T")[1]?.slice(0, 5) || ""}
+                            onChange={(e) => {
+                                const datePart = form.startDateTime?.split("T")[0] ||
+                                    (selectedDate ? `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, "0")}-${String(selectedDate.getDate()).padStart(2, "0")}` : "");
+                                setForm({ ...form, startDateTime: datePart ? `${datePart}T${e.target.value}` : "" });
+                            }}
                         />
                     </Field>
 
-                    <Field label="End date and time" required>
-                        <input
-                            required
-                            type="datetime-local"
-                            value={form.endDateTime}
-                            onChange={(e) =>
-                                setForm({
-                                    ...form,
-                                    endDateTime: e.target.value
-                                })
-                            }
+                    <Field label="End time" required>
+                        <input required type="time"
+                            value={form.endDateTime?.split("T")[1]?.slice(0, 5) || ""}
+                            onChange={(e) => {
+                                const datePart = form.endDateTime?.split("T")[0] || form.startDateTime?.split("T")[0] ||
+                                    (selectedDate ? `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, "0")}-${String(selectedDate.getDate()).padStart(2, "0")}` : "");
+                                setForm({ ...form, endDateTime: datePart ? `${datePart}T${e.target.value}` : "" });
+                            }}
                         />
                     </Field>
                 </div>
@@ -246,34 +256,21 @@ function EventForm({
                     />
                 </Field>
 
-{!editing && (
-    <div className="booking-acknowledgement">
-        <label className="acknowledgement-label">
-            <input
-                type="checkbox"
-                required
-                checked={form.acknowledgementAccepted || false}
-                onChange={(event) =>
-                    setForm({
-                        ...form,
-                        acknowledgementAccepted:
-                            event.target.checked
-                    })
-                }
-            />
-
-            <span>
-                I confirm that the information provided in this
-                booking is complete and accurate. I understand that
-                I am responsible for checking the event, venue,
-                equipment, and facility requirements for my booking.
-                I understand that DIBA Bookings provides the booking
-                platform and cannot be responsible for requirements
-                or information that I have not provided or specified.
-            </span>
-        </label>
-    </div>
-)}
+                {!editing && (
+                    <Field label="Special requirements">
+                        <textarea
+                            rows="3"
+                            value={form.specialRequirements || ""}
+                            onChange={(e) =>
+                                setForm({
+                                    ...form,
+                                    specialRequirements: e.target.value
+                                })
+                            }
+                            placeholder="Accessibility needs, room layout, equipment, catering, or other arrangements..."
+                        />
+                    </Field>
+                )}
 
                 {!editing && (
                     <>
@@ -282,39 +279,21 @@ function EventForm({
                                 <input
                                     type="checkbox"
                                     required
-                                    checked={
-                                        form.acknowledgementAccepted ||
-                                        false
-                                    }
-                                    onChange={(e) =>
+                                    checked={form.acknowledgementAccepted || false}
+                                    onChange={(event) =>
                                         setForm({
                                             ...form,
-                                            acknowledgementAccepted:
-                                                e.target.checked
+                                            acknowledgementAccepted: event.target.checked
                                         })
                                     }
                                 />
-
                                 <span>
-                                    I confirm that the information
-                                    provided in this booking is complete
-                                    and accurate. I understand that I am
-                                    responsible for checking the event,
-                                    venue, equipment, and facility
-                                    requirements for my booking. I
-                                    understand that DIBA Bookings
-                                    provides the booking platform and
-                                    cannot be responsible for
-                                    requirements or information that I
-                                    have not provided or specified.
+                                    I confirm that the information provided is complete and accurate, and I have read and agree to the <Link to="/policies" target="_blank" rel="noreferrer">Terms and Conditions</Link>, including the venue rules and booking requirements.
                                 </span>
                             </label>
                         </div>
-
                         <p className="form-note">
-                            This submits the event and venue booking as one
-                            action. Status after submission:{" "}
-                            <strong>Pending approval</strong>
+                            This submits the event and venue booking as one action. Status after submission: <strong>Pending approval</strong>
                         </p>
                     </>
                 )}
