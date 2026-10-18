@@ -45,7 +45,8 @@ const blankBooking = {
     venueId: "",
     startDateTime: "",
     endDateTime: "",
-    specialRequirements: ""
+    specialRequirements: "",
+    acknowledgementAccepted: false
 };
 
 function useOrganizerDashboard() {
@@ -508,6 +509,10 @@ const submitEventAndBooking = async (event) => {
     const saveBooking = async (event) => {
         event.preventDefault();
 
+        if (!editingBooking && !bookingForm.acknowledgementAccepted) {
+            toast.error("Please confirm the booking acknowledgement before submitting.");
+            return;
+        }
 
         const candidate = {
             ...bookingForm,
