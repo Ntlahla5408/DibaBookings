@@ -37,6 +37,7 @@ function BookingDetails({ booking, event, venue, onBack, onEdit, onCancel, savin
                 <div className="booking-detail-grid">
                     <Detail label="Status" value={status} />
                     <Detail label="Submitted" value={formatDate(booking.bookingDate)} />
+                    <Detail label="Payment status" value={booking.paymentStatus || "Not started"} />
                     <Detail label="Booking reference" value={shortId(booking.bookingId)} />
                     <Detail label="Requirements acknowledged" value={booking.acknowledgementAccepted ? "Yes" : "Not recorded"} />
                     {booking.acknowledgementAcceptedAt && (
