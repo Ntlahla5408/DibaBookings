@@ -42,7 +42,6 @@ function PoliciesPage() {
                         <h2>{policy.title}</h2>
                         <p className="policy-version">
                             {policy.policyType} · Version {policy.version}
-                            {policy.isSamplePolicy ? " · Sample policy — not yet confirmed as official" : ""}
                         </p>
                         <div className="policy-document-content">{policy.content}</div>
                     </article>
