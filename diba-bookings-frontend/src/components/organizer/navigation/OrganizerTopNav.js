@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+
 function OrganizerTopNav({
     title,
     firstName,
@@ -6,6 +8,13 @@ function OrganizerTopNav({
     setDrawerOpen,
     goTo
 }) {
+    const [profilePicture, setProfilePicture] = useState(() => localStorage.getItem("profilePicture:" + (localStorage.getItem("userId") || "current")) || "");
+    useEffect(() => {
+        const updatePicture = () => setProfilePicture(localStorage.getItem("profilePicture:" + (localStorage.getItem("userId") || "current")) || "");
+        window.addEventListener("diba-profile-updated", updatePicture);
+        return () => window.removeEventListener("diba-profile-updated", updatePicture);
+    }, []);
+
     return (
         <header className="organizer-header">
             <div className="header-title">
@@ -52,19 +61,10 @@ function OrganizerTopNav({
                     )}
                 </button>
 
-                <span className="avatar">
-                    {firstName
-                        .charAt(0)
-                        .toUpperCase()}
-                </span>
-
-                <div>
-                    <strong>{fullName}</strong>
-
-                    <span>
-                        Event Organiser
-                    </span>
-                </div>
+                <button type="button" className="profile-trigger d-flex align-items-center gap-2 border-0 bg-transparent p-0 text-start" onClick={() => goTo("profile")} aria-label="Open my profile" title="My profile">
+                    {profilePicture ? <img src={profilePicture} alt="" className="avatar" style={{ objectFit: "cover" }} /> : <span className="avatar">{firstName.charAt(0).toUpperCase()}</span>}
+                    <span className="d-flex flex-column"><strong>{fullName}</strong><span>Event Organiser</span></span>
+                </button>
             </div>
         </header>
     );
