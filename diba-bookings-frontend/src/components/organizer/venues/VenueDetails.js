@@ -87,11 +87,26 @@ function VenueDetails({ venue, image, onBack, onBook }) {
                     </p>
 
                     <dl>
-                        <div>
+                        <div className="venue-location-detail">
                             <dt>Location</dt>
                             <dd>
-                                {venue.location ||
-                                    "Not specified"}
+                                <a
+                                    href="#venue-map"
+                                    className="venue-location-link"
+                                    style={{
+                                        color: "#1a4b6b",
+                                        display: "inline-flex",
+                                        alignItems: "center",
+                                        gap: "6px",
+                                        fontWeight: 600,
+                                        textDecoration: "underline",
+                                        textUnderlineOffset: "3px"
+                                    }}
+                                    aria-label={`Show map for ${venue.venueName || "this venue"}`}
+                                >
+                                    {venue.location || "Not specified"}
+                                    <span aria-hidden="true">↘</span>
+                                </a>
                             </dd>
                         </div>
 
@@ -179,7 +194,12 @@ function VenueDetails({ venue, image, onBack, onBook }) {
                 </div>
             </div>
 
-            <div className="venue-map-section">
+            <div
+                className="venue-map-section"
+                id="venue-map"
+                tabIndex="-1"
+                style={{ scrollMarginTop: "24px" }}
+            >
                 <div className="section-heading">
                     <div>
                         <p className="section-kicker">
