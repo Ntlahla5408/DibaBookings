@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import FormIntro from "./EventFormIntro";
 import Field from "./EventFormField";
 import FormActions from "./EventFormActions";
@@ -134,8 +135,12 @@ function EventForm({
                         )}
                     </Field>
 
-                    <Field label="Expected attendees">
+                    <Field label="Expected attendees" required>
                         <input
+                            type="number"
+                            min="1"
+                            step="1"
+                            required
                             value={form.eventAttendance}
                             onChange={(e) =>
                                 setForm({
@@ -283,7 +288,7 @@ function EventForm({
                                     }
                                 />
                                 <span>
-                                    I confirm that the information provided in this booking is complete and accurate. I understand that I am responsible for checking the event, venue, equipment, and facility requirements for my booking. I understand that DIBA Bookings provides the booking platform and cannot be responsible for requirements or information that I have not provided or specified.
+                                    I confirm that the information provided is complete and accurate, and I have read and agree to the <Link to="/policies" target="_blank" rel="noreferrer">Terms and Conditions</Link>, including the venue rules and booking requirements.
                                 </span>
                             </label>
                         </div>
