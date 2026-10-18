@@ -880,3 +880,39 @@
 .home-venue-grid .browse-venue-body{gap:11px;padding:16px}.home-venue-grid .venue-card-title h3{font-size:1.08rem;line-height:1.35}.home-venue-grid .venue-card-description{font-size:.86rem;line-height:1.5;min-height:calc(1.5em * 2)}.home-venue-grid .venue-facts{font-size:.78rem}.home-venue-grid .outline-action{font-size:.82rem}
 @media(max-width:900px){.home-discovery-form{flex-wrap:wrap}.home-search-field{flex-basis:100%;border-bottom:1px solid var(--home-line)}.home-filter-control{flex:1 1 0}.home-filter-control:first-of-type{border-left:0}.home-venue-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:600px){.home-discovery-form{flex-direction:column}.home-search-field{flex-basis:auto;min-height:48px}.home-filter-control{border-left:0;border-top:1px solid var(--home-line);min-height:50px}.home-venue-grid{grid-template-columns:1fr}.home-venue-grid .browse-venue-body{padding:14px}}
+
+
+/* Make organiser venue cards visibly clickable while keeping Show More text-only. */
+.home-venue-grid .browse-venue-card {
+    cursor: pointer;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.home-venue-grid .browse-venue-card:focus-visible {
+    outline: 3px solid var(--home-light);
+    outline-offset: 3px;
+}
+
+.home-venue-grid .outline-action {
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    color: var(--home-blue);
+    cursor: pointer;
+    font: inherit;
+    font-size: 0.82rem;
+    font-weight: 700;
+    justify-content: flex-start;
+    padding: 2px 0;
+    text-align: left;
+    width: fit-content;
+}
+
+.home-venue-grid .outline-action:hover,
+.home-venue-grid .outline-action:focus-visible {
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    color: var(--home-navy);
+    text-decoration: underline;
+}
