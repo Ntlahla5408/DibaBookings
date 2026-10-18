@@ -335,8 +335,7 @@ function useOrganizerDashboard() {
                 editingEvent
                     ? current.map(
                           (item) =>
-                              item.eventId ===
-                              response.data.eventId
+                              item.eventId === response.data.eventId
                                   ? response.data
                                   : item
                       )
@@ -346,6 +345,35 @@ function useOrganizerDashboard() {
                       ]
             );
 
+            if (editingEvent) {
+                const updatedVenue = venues.find(
+                    (venue) => venue.venueId === response.data.venueId
+                );
+
+                setBookings((current) =>
+                    current.map((booking) => {
+                        if (booking.eventId !== response.data.eventId) {
+                            return booking;
+                        }
+
+                        const isPending =
+                            (booking.statusName || "").toLowerCase() === "pending";
+
+                        return {
+                            ...booking,
+                            eventName: response.data.eventName,
+                            ...(isPending
+                                ? {
+                                      startDateTime: response.data.startDateTime,
+                                      endDateTime: response.data.endDateTime,
+                                      venueId: response.data.venueId,
+                                      venueName: updatedVenue?.venueName || booking.venueName
+                                  }
+                                : {})
+                        };
+                    })
+                );
+            }
 
             toast.success(
                 editingEvent
