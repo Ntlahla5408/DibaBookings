@@ -1,5 +1,6 @@
 import { toast } from "react-toastify";
 
+import nmuLogo from "../../../assets/images/Nelson mandela uniLogo.png";
 import { clearSession } from "../../../utils/sessionUtils";
 
 const navItems = [
@@ -32,7 +33,14 @@ function OrganizerSidebar({
             <aside className={`organizer-drawer ${drawerOpen ? "open" : ""}`}>
                 <div className="drawer-header">
                     <div className="brand-lockup">
-                        <span className="brand-mark">D</span>
+                        <img
+                            className="brand-mark-logo"
+                            src={nmuLogo}
+                            alt="Nelson Mandela University"
+                            width="42"
+                            height="42"
+                            style={{ objectFit: "contain", flexShrink: 0 }}
+                        />
                         <div>
                             <strong>DIBA</strong>
                             <span>Bookings</span>
