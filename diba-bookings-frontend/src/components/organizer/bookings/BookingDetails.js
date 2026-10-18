@@ -27,10 +27,10 @@ function BookingDetails({ booking, event, venue, onBack, onEdit, onCancel, savin
                     <Detail label="Venue location" value={venue?.location || "Not provided"} />
                     <Detail label="Venue capacity" value={venue?.capacity ?? "Not provided"} />
                     <Detail label="Expected attendees" value={event?.eventAttendance || "Not provided"} />
-                    <Detail label="Date" value={dateText(event?.startDateTime || booking.startDateTime)} />
-                    <Detail label="Start time" value={timeText(event?.startDateTime || booking.startDateTime)} />
-                    <Detail label="End date" value={dateText(event?.endDateTime || booking.endDateTime)} />
-                    <Detail label="End time" value={timeText(event?.endDateTime || booking.endDateTime)} />
+                    <Detail label="Date" value={dateText(booking.startDateTime)} />
+                    <Detail label="Start time" value={timeText(booking.startDateTime)} />
+                    <Detail label="End date" value={dateText(booking.endDateTime)} />
+                    <Detail label="End time" value={timeText(booking.endDateTime)} />
                     <Detail label="Event description" value={event?.eventDescription || "No description provided."} />
                     <Detail label="Special requirements" value={booking.specialRequirements || "None provided."} />
                 </div>
