@@ -1312,3 +1312,18 @@
     color: transparent;
     cursor: default;
 }
+
+
+/* Shared event and booking detail headings */
+.booking-detail-section-title {
+    border-top: 1px solid var(--organizer-line);
+    color: var(--organizer-navy);
+    font-size: 1rem;
+    margin: 24px 0 12px;
+    padding-top: 18px;
+}
+
+.booking-detail-grid dd {
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+}
