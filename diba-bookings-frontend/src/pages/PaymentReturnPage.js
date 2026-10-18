@@ -1,27 +1,103 @@
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { getBookings } from "../services/bookingService";
 
 function PaymentReturnPage() {
     const location = useLocation();
     const cancelled = location.pathname === "/payment/cancel";
+    const bookingId = new URLSearchParams(location.search).get("bookingId");
+    const [paymentStatus, setPaymentStatus] = useState("Checking");
+    const [checking, setChecking] = useState(true);
+
+    useEffect(() => {
+        let active = true;
+
+        async function checkPayment() {
+            if (cancelled) {
+                setPaymentStatus("Cancelled");
+                setChecking(false);
+                return;
+            }
+
+            if (!bookingId || !localStorage.getItem("token")) {
+                setPaymentStatus("Verification required");
+                setChecking(false);
+                return;
+            }
+
+            try {
+                const response = await getBookings();
+                const booking = (response.data || []).find(
+                    (item) => String(item.bookingId).toLowerCase() === bookingId.toLowerCase()
+                );
+                const status = String(booking?.paymentStatus || "").trim().toLowerCase();
+
+                if (!active) return;
+
+                if (["paid", "successful", "completed"].includes(status)) {
+                    setPaymentStatus("Successful");
+                } else if (booking) {
+                    setPaymentStatus("Verifying");
+                } else {
+                    setPaymentStatus("Verification required");
+                }
+            } catch {
+                if (active) setPaymentStatus("Verifying");
+            } finally {
+                if (active) setChecking(false);
+            }
+        }
+
+        checkPayment();
+        return () => {
+            active = false;
+        };
+    }, [bookingId, cancelled]);
+
+    const successful = paymentStatus === "Successful";
+    const pendingVerification = paymentStatus === "Verifying" || paymentStatus === "Checking";
 
     return (
         <main className="container py-5">
             <div className="row justify-content-center">
                 <div className="col-12 col-md-8 col-lg-6">
                     <section className="card shadow-sm">
-                        <div className="card-body p-4 p-md-5">
+                        <div className="card-body p-4 p-md-5 text-center">
+                            {successful && (
+                                <div className="mb-3" aria-hidden="true">
+                                    <span className="d-inline-flex align-items-center justify-content-center rounded-circle bg-success-subtle text-success" style={{ width: 64, height: 64, fontSize: 36 }}>✓</span>
+                                </div>
+                            )}
                             <h1 className="h3 mb-3">
-                                {cancelled ? "Payment cancelled" : "Payment return received"}
+                                {cancelled
+                                    ? "Payment cancelled"
+                                    : successful
+                                        ? "Payment Successful"
+                                        : pendingVerification || checking
+                                            ? "Verifying payment"
+                                            : "Payment status unavailable"}
                             </h1>
                             <p className="mb-4">
                                 {cancelled
-                                    ? "Your payment was cancelled. You can return to DIBA Bookings and try again when you are ready."
-                                    : "You have returned to DIBA Bookings. Your payment must still be verified by the system before it can be marked as paid. Check your booking status before trying to pay again."}
+                                    ? "Your payment was cancelled."
+                                    : successful
+                                        ? "Your payment has been confirmed."
+                                        : pendingVerification || checking
+                                            ? "Yoco has returned you to DIBA Bookings. Your payment status is still being confirmed. Please check your booking before trying to pay again."
+                                            : "Sign in and open your booking to check its latest payment status."}
                             </p>
-                            <div className="d-flex flex-wrap gap-2">
-                                <Link className="btn btn-primary" to="/dashboard">Go to dashboard</Link>
-                                <Link className="btn btn-outline-secondary" to="/login">Sign in</Link>
-                            </div>
+                            {bookingId ? (
+                                <Link
+                                    className="btn btn-primary"
+                                    to={`/dashboard?view=booking-detail&bookingId=${encodeURIComponent(bookingId)}`}
+                                >
+                                    Return to Booking
+                                </Link>
+                            ) : (
+                                <Link className="btn btn-primary" to="/dashboard?view=bookings">
+                                    Return to Bookings
+                                </Link>
+                            )}
                         </div>
                     </section>
                 </div>
