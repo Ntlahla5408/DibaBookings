@@ -251,7 +251,8 @@ namespace DIBA_Backend.Controllers
             {
                 checkout = await yocoPaymentService.CreateCheckoutAsync(
                     amount,
-                    referenceNumber);
+                    referenceNumber,
+                    booking.BookingId);
             }
             catch (Exception ex)
             {
