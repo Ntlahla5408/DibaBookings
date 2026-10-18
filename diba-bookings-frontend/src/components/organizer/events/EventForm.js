@@ -155,11 +155,12 @@ function EventForm({
                         <button
                             type="button"
                             className="calendar-toggle-button"
+                            aria-label={showCalendar ? "Close calendar" : "Open calendar and availability"}
+                            title={showCalendar ? "Close calendar" : "Open calendar and availability"}
                             aria-expanded={showCalendar}
                             onClick={() => setShowCalendar((visible) => !visible)}
                         >
                             <span aria-hidden="true">▦</span>
-                            {showCalendar ? "Hide availability" : "Choose date & availability"}
                         </button>
 
                         {showCalendar && (
