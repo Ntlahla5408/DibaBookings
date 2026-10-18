@@ -4,7 +4,6 @@ import { clearSession } from "../../../utils/sessionUtils";
 
 const navItems = [
     ["⌂", "Dashboard", "dashboard"],
-    ["⌖", "Find a Venue", "venues"],
     ["▣", "My Bookings", "bookings"],
     ["◫", "My Events", "events"],
     ["◌", "Notifications", "notifications"],
