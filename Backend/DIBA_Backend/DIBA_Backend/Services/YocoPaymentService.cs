@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Headers;
+﻿
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 
@@ -23,15 +24,21 @@ namespace DIBA_Backend.Services
             Guid bookingId)
         {
             var secretKey = _configuration["Yoco:SecretKey"];
-            var frontendBaseUrl = _configuration["Frontend:BaseUrl"]?.TrimEnd('/');
+            var frontendBaseUrl =
+                _configuration["Frontend:BaseUrl"]?.TrimEnd('/');
+
             var successUrl = ResolveReturnUrl(
                 _configuration["Yoco:SuccessUrl"],
                 frontendBaseUrl,
                 $"/payment/success?bookingId={bookingId:D}");
+
             var cancelUrl = ResolveReturnUrl(
                 _configuration["Yoco:CancelUrl"],
                 frontendBaseUrl,
                 $"/payment/cancel?bookingId={bookingId:D}");
+
+            Console.WriteLine($"Yoco success URL: {successUrl}");
+            Console.WriteLine($"Yoco cancel URL: {cancelUrl}");
 
             if (string.IsNullOrWhiteSpace(secretKey))
             {
@@ -47,11 +54,11 @@ namespace DIBA_Backend.Services
             {
                 amount = amountInCents,
                 currency = "ZAR",
-                successUrl = successUrl,
-                cancelUrl = cancelUrl,
+                successUrl,
+                cancelUrl,
                 metadata = new
                 {
-                    reference = reference
+                    reference
                 }
             };
 
@@ -62,9 +69,7 @@ namespace DIBA_Backend.Services
                 "https://payments.yoco.com/api/checkouts");
 
             request.Headers.Authorization =
-                new AuthenticationHeaderValue(
-                    "Bearer",
-                    secretKey);
+                new AuthenticationHeaderValue("Bearer", secretKey);
 
             request.Content = new StringContent(
                 json,
@@ -72,8 +77,8 @@ namespace DIBA_Backend.Services
                 "application/json");
 
             var response = await _httpClient.SendAsync(request);
-
-            var responseContent = await response.Content.ReadAsStringAsync();
+            var responseContent =
+                await response.Content.ReadAsStringAsync();
 
             if (!response.IsSuccessStatusCode)
             {
@@ -94,46 +99,69 @@ namespace DIBA_Backend.Services
             return result;
         }
 
-        private static string ResolveReturnUrl(string? configuredUrl, string? frontendBaseUrl, string path)
-    {
-        var hasFrontendBaseUrl = Uri.TryCreate(frontendBaseUrl, UriKind.Absolute, out _);
-        var configuredUrlIsLocal =
-            Uri.TryCreate(configuredUrl, UriKind.Absolute, out var configuredUri) &&
-            (configuredUri.IsLoopback ||
-             configuredUri.Host.Equals("localhost", StringComparison.OrdinalIgnoreCase));
-
-        // Local settings sometimes contain https://localhost even though the React
-        // development server runs on http://localhost:3000. Always use the frontend
-        // base URL for local return links so the scheme and port match the app.
-        if (configuredUrlIsLocal)
+        private static string ResolveReturnUrl(
+            string? configuredUrl,
+            string? frontendBaseUrl,
+            string path)
         {
+            var hasFrontendBaseUrl =
+                Uri.TryCreate(
+                    frontendBaseUrl,
+                    UriKind.Absolute,
+                    out _);
+
+            var isConfiguredUrlLocal =
+                Uri.TryCreate(
+                    configuredUrl,
+                    UriKind.Absolute,
+                    out var configuredUri) &&
+                (configuredUri.IsLoopback ||
+                 configuredUri.Host.Equals(
+                     "localhost",
+                     StringComparison.OrdinalIgnoreCase));
+
+            // For local development, use the React application's base URL.
+            if (isConfiguredUrlLocal)
+            {
+                if (hasFrontendBaseUrl)
+                {
+                    return $"{frontendBaseUrl}{path}";
+                }
+
+                return configuredUrl!;
+            }
+
+            // Preserve explicitly configured public URLs and add booking context.
+            if (!string.IsNullOrWhiteSpace(configuredUrl))
+            {
+                var publicUrlBuilder = new UriBuilder(configuredUrl);
+                var existingQuery =
+                    publicUrlBuilder.Query.TrimStart('?');
+
+                var returnQuery = path.Contains('?')
+                    ? path[(path.IndexOf('?') + 1)..]
+                    : string.Empty;
+
+                var combinedQuery = new[]
+                    {
+                        existingQuery,
+                        returnQuery
+                    }
+                    .Where(value => !string.IsNullOrWhiteSpace(value));
+
+                publicUrlBuilder.Query =
+                    string.Join("&", combinedQuery);
+
+                return publicUrlBuilder.Uri.ToString();
+            }
+
             if (hasFrontendBaseUrl)
             {
                 return $"{frontendBaseUrl}{path}";
             }
 
-            return configuredUrl!;
-        }
-
-        // Keep an explicitly configured public URL for deployed environments,
-        // while preserving the booking context in the return URL.
-        if (!string.IsNullOrWhiteSpace(configuredUrl))
-        {
-            var configuredUri = new UriBuilder(configuredUrl);
-            var query = configuredUri.Query.TrimStart('?');
-            var returnQuery = path.Contains('?') ? path[(path.IndexOf('?') + 1)..] : string.Empty;
-            configuredUri.Query = string.Join("&", new[] { query, returnQuery }
-                .Where(value => !string.IsNullOrWhiteSpace(value)));
-            return configuredUri.Uri.ToString();
-        }
-
-        if (hasFrontendBaseUrl)
-        {
-            return $"{frontendBaseUrl}{path}";
-        }
-
-        throw new InvalidOperationException(
-            $"Yoco return URL for {path} is not configured.");
+            throw new InvalidOperationException(
+                $"Yoco return URL for {path} is not configured.");
         }
     }
 
