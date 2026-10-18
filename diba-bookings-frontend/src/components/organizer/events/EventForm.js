@@ -15,6 +15,7 @@ function EventForm({
     onChangeVenue,
     onCancel
 }) {
+    const [showCalendar, setShowCalendar] = useState(false);
     const [selectedDate, setSelectedDate] = useState(
         form.startDateTime
             ? new Date(form.startDateTime)
@@ -150,54 +151,53 @@ function EventForm({
                 </div>
 
                 {!editing && selectedVenue && (
-                    <div className="booking-calendar-section">
-                        <div className="calendar-intro">
-                            <p className="section-kicker">
-                                CHECK AVAILABILITY
-                            </p>
+                    <div className="calendar-popup-anchor">
+                        <button
+                            type="button"
+                            className="calendar-toggle-button"
+                            aria-expanded={showCalendar}
+                            onClick={() => setShowCalendar((visible) => !visible)}
+                        >
+                            <span aria-hidden="true">▦</span>
+                            {showCalendar ? "Hide availability" : "Choose date & availability"}
+                        </button>
 
-                            <h3>Select your event date</h3>
+                        {showCalendar && (
+                            <div className="calendar-popup" role="dialog" aria-label="Choose booking date and availability">
+                                <div className="calendar-popup-heading">
+                                    <strong>Choose a date</strong>
+                                    <button
+                                        type="button"
+                                        className="calendar-popup-close"
+                                        aria-label="Close calendar"
+                                        onClick={() => setShowCalendar(false)}
+                                    >
+                                        ×
+                                    </button>
+                                </div>
+                                <BookingCalendar
+                                    selectedDate={selectedDate}
+                                    onDateSelect={handleDateSelect}
+                                    venueId={form.venueId}
+                                    onTimeSelect={(slot) => {
+                                        const toLocalInput = (date) => {
+                                            const year = date.getFullYear();
+                                            const month = String(date.getMonth() + 1).padStart(2, "0");
+                                            const day = String(date.getDate()).padStart(2, "0");
+                                            const hours = String(date.getHours()).padStart(2, "0");
+                                            const minutes = String(date.getMinutes()).padStart(2, "0");
+                                            return `${year}-${month}-${day}T${hours}:${minutes}`;
+                                        };
 
-                            <p>
-                                Choose a date to continue with your venue
-                                booking.
-                            </p>
-                        </div>
-
-                        <BookingCalendar
-                            selectedDate={selectedDate}
-                            onDateSelect={handleDateSelect}
-                            venueId={form.venueId}
-                            onTimeSelect={(slot) => {
-                                const toLocalInput = (date) => {
-                                    const year = date.getFullYear();
-                                    const month = String(
-                                        date.getMonth() + 1
-                                    ).padStart(2, "0");
-                                    const day = String(
-                                        date.getDate()
-                                    ).padStart(2, "0");
-                                    const hours = String(
-                                        date.getHours()
-                                    ).padStart(2, "0");
-                                    const minutes = String(
-                                        date.getMinutes()
-                                    ).padStart(2, "0");
-
-                                    return `${year}-${month}-${day}T${hours}:${minutes}`;
-                                };
-
-                                setForm({
-                                    ...form,
-                                    startDateTime: toLocalInput(
-                                        slot.start
-                                    ),
-                                    endDateTime: toLocalInput(
-                                        slot.end
-                                    )
-                                });
-                            }}
-                        />
+                                        setForm({
+                                            ...form,
+                                            startDateTime: toLocalInput(slot.start),
+                                            endDateTime: toLocalInput(slot.end)
+                                        });
+                                    }}
+                                />
+                            </div>
+                        )}
                     </div>
                 )}
 
