@@ -451,7 +451,8 @@ namespace DIBA_Backend.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(320)
+                        .HasColumnType("nvarchar(320)");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -472,6 +473,9 @@ namespace DIBA_Backend.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("UserId");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
 
                     b.HasIndex("RoleId");
 
@@ -497,15 +501,15 @@ namespace DIBA_Backend.Migrations
                     b.Property<double>("Longitude")
                         .HasColumnType("float");
 
-                    b.Property<string>("VenueImageData")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<decimal>("Price")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("VenueDescription")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("VenueImageData")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("VenueName")

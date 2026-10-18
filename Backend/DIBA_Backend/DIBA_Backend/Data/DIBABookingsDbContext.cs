@@ -81,6 +81,10 @@ namespace DIBA_Backend.Data
                         modelBuilder.Entity<EmailDeliveryLog>()
                             .HasIndex(log => log.AttemptedAtUtc);
 
+            modelBuilder.Entity<User>()
+    .HasIndex(user => user.Email)
+    .IsUnique();
+
 
             // =========================================================
             // ROLE → USER

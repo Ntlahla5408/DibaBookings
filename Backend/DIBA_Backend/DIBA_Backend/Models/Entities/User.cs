@@ -1,4 +1,7 @@
-﻿namespace DIBA_Backend.Models.Entities
+﻿
+using System.ComponentModel.DataAnnotations;
+
+namespace DIBA_Backend.Models.Entities
 {
     public class User
     {
@@ -8,6 +11,8 @@
 
         public required string LastName { get; set; } = string.Empty;
 
+        [Required]
+        [MaxLength(320)]
         public required string Email { get; set; } = string.Empty;
 
         public required string PasswordHash { get; set; } = string.Empty;
