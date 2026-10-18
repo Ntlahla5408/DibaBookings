@@ -174,6 +174,7 @@ function EventForm({
                             <div className="calendar-popup" role="dialog" aria-label="Choose booking date and availability">
                                 <div className="calendar-popup-heading">
                                     <strong>Choose a date</strong>
+                                    <span className="form-note">Book at least 7 days in advance.</span>
                                     <button
                                         type="button"
                                         className="calendar-popup-close"
