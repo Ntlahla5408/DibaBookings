@@ -9,6 +9,7 @@ import Dashboard from "./pages/dashboards/Dashboard";
 import LandingPage from "./pages/LandingPage";
 import PoliciesPage from "./pages/PoliciesPage";
 import DibaAssistantWidget from "./components/common/DibaAssistantWidget";
+import PaymentReturnPage from "./pages/PaymentReturnPage";
 
 function App() {
     return (
@@ -21,6 +22,8 @@ function App() {
                 <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route path="/reset-password" element={<ResetPassword />} />
                 <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/payment/success" element={<PaymentReturnPage />} />
+                <Route path="/payment/cancel" element={<PaymentReturnPage />} />
             </Routes>
             <DibaAssistantWidget />
             <ToastContainer position="top-right" autoClose={3000} />
