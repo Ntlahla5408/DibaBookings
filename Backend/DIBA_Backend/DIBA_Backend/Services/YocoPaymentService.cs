@@ -22,8 +22,11 @@ namespace DIBA_Backend.Services
             string reference)
         {
             var secretKey = _configuration["Yoco:SecretKey"];
-            var successUrl = _configuration["Yoco:SuccessUrl"];
-            var cancelUrl = _configuration["Yoco:CancelUrl"];
+            var frontendBaseUrl = _configuration["Frontend:BaseUrl"]?.TrimEnd('/');
+            var successUrl = ResolveReturnUrl(
+                _configuration["Yoco:SuccessUrl"], frontendBaseUrl, "/payment/success");
+            var cancelUrl = ResolveReturnUrl(
+                _configuration["Yoco:CancelUrl"], frontendBaseUrl, "/payment/cancel");
 
             if (string.IsNullOrWhiteSpace(secretKey))
             {
@@ -85,6 +88,42 @@ namespace DIBA_Backend.Services
 
             return result;
         }
+    }
+
+    private static string ResolveReturnUrl(string? configuredUrl, string? frontendBaseUrl, string path)
+    {
+        var hasFrontendBaseUrl = Uri.TryCreate(frontendBaseUrl, UriKind.Absolute, out var frontendUri);
+        var configuredUrlIsLocal =
+            Uri.TryCreate(configuredUrl, UriKind.Absolute, out var configuredUri) &&
+            (configuredUri.IsLoopback ||
+             configuredUri.Host.Equals("localhost", StringComparison.OrdinalIgnoreCase));
+
+        // Local settings sometimes contain https://localhost even though the React
+        // development server runs on http://localhost:3000. Always use the frontend
+        // base URL for local return links so the scheme and port match the app.
+        if (configuredUrlIsLocal)
+        {
+            if (hasFrontendBaseUrl)
+            {
+                return $"{frontendBaseUrl}{path}";
+            }
+
+            return configuredUrl!;
+        }
+
+        // Keep an explicitly configured public URL for deployed environments.
+        if (!string.IsNullOrWhiteSpace(configuredUrl))
+        {
+            return configuredUrl;
+        }
+
+        if (hasFrontendBaseUrl)
+        {
+            return $"{frontendBaseUrl}{path}";
+        }
+
+        throw new InvalidOperationException(
+            $"Yoco return URL for {path} is not configured.");
     }
 
     public class YocoCheckoutResponse
