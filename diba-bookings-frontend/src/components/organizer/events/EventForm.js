@@ -247,6 +247,22 @@ function EventForm({
                 </Field>
 
                 {!editing && (
+                    <Field label="Special requirements">
+                        <textarea
+                            rows="3"
+                            value={form.specialRequirements || ""}
+                            onChange={(e) =>
+                                setForm({
+                                    ...form,
+                                    specialRequirements: e.target.value
+                                })
+                            }
+                            placeholder="Accessibility needs, room layout, equipment, catering, or other arrangements..."
+                        />
+                    </Field>
+                )}
+
+                {!editing && (
                     <>
                         <div className="booking-acknowledgement">
                             <label className="acknowledgement-label">
