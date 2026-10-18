@@ -551,6 +551,28 @@ namespace DIBA_Backend.Controllers
                     "The selected venue is already booked or awaiting approval for the requested time.");
             }
 
+            // Keep event schedule and its linked booking in sync. Approved
+            // reservations require a staff-managed change instead of being
+            // silently moved by editing the event details.
+            var linkedBookings = await _dbContext.Bookings
+                .Include(booking => booking.BookingStatus)
+                .Where(booking => booking.EventId == eventEntity.EventId)
+                .ToListAsync();
+
+            var scheduleOrVenueChanged =
+                eventEntity.StartDateTime != updateEventDto.StartDateTime ||
+                eventEntity.EndDateTime != updateEventDto.EndDateTime ||
+                eventEntity.VenueId != updateEventDto.VenueId;
+
+            if (scheduleOrVenueChanged &&
+                linkedBookings.Any(booking =>
+                    booking.BookingStatus != null &&
+                    booking.BookingStatus.StatusName == "Approved"))
+            {
+                return Conflict(
+                    "This event has an approved venue booking. Contact Conference Centre Staff to change its date, time, or venue.");
+            }
+
             eventEntity.EventName =
                 updateEventDto.EventName;
 
@@ -571,6 +593,19 @@ namespace DIBA_Backend.Controllers
 
             eventEntity.VenueId =
                 updateEventDto.VenueId;
+
+            // Pending requests follow the updated event schedule and venue,
+            // so the event list and booking list cannot show conflicting data.
+            foreach (var linkedBooking in linkedBookings)
+            {
+                if (linkedBooking.BookingStatus != null &&
+                    linkedBooking.BookingStatus.StatusName == "Pending")
+                {
+                    linkedBooking.StartDateTime = updateEventDto.StartDateTime;
+                    linkedBooking.EndDateTime = updateEventDto.EndDateTime;
+                    linkedBooking.VenueId = updateEventDto.VenueId;
+                }
+            }
 
             await _dbContext.SaveChangesAsync();
 
