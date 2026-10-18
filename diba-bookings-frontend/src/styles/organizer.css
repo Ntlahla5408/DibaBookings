@@ -4,13 +4,13 @@
 
 .organizer-dashboard,
 .organizer-app {
-    --organizer-navy: #071b2c;
-    --organizer-blue: #1a4b6b;
-    --organizer-light-blue: #2c7a9e;
-    --organizer-yellow: #f2c84b;
-    --organizer-paper: #f7f8f5;
-    --organizer-muted: #61727d;
-    --organizer-line: #dce4e5;
+    --organizer-navy: var(--navy-deep);
+    --organizer-blue: var(--blue);
+    --organizer-light-blue: var(--blue);
+    --organizer-yellow: var(--gold);
+    --organizer-paper: #ffffff;
+    --organizer-muted: var(--muted);
+    --organizer-line: var(--line);
 }
 
 /* =========================================================

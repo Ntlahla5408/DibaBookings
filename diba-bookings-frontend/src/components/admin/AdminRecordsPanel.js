@@ -3,9 +3,9 @@ import { formatDate } from "../../utils/dateUtils";
 import { shortId } from "../../utils/dashboardUtils";
 
 const sectionTitles = {
-    users: ["USER MANAGEMENT", "Users"],
-    bookings: ["BOOKING OVERSIGHT", "All bookings"],
-    audit: ["ACCOUNTABILITY", "Audit logs"]
+    users: "Users",
+    bookings: "All bookings",
+    audit: "Audit logs"
 };
 
 function EmptyTableRow({ colSpan, children }) {
@@ -36,7 +36,7 @@ function AdminRecordsPanel({
     onChangeRole,
     onUpdateUser
 }) {
-    const [eyebrow, title] = sectionTitles[activeSection];
+    const title = sectionTitles[activeSection];
     const activeUsers = allUsers.filter((user) => user.isActive).length;
     const inactiveUsers = allUsers.length - activeUsers;
     const userFiltersChanged =
@@ -48,7 +48,6 @@ function AdminRecordsPanel({
         <section className="panel table-panel">
             <div className="panel-heading">
                 <div>
-                    <p className="eyebrow">{eyebrow}</p>
                     <h2>{title}</h2>
                 </div>
                 {activeSection === "users" && (
@@ -132,7 +131,7 @@ function AdminRecordsPanel({
                         <tbody>
                             {users.length === 0 ? (
                                 <EmptyTableRow colSpan={5}>
-                                    No users match these filters. Try changing the search or clearing the filters.
+                                    No matching users.
                                 </EmptyTableRow>
                             ) : users.map((user) => (
                                 <tr key={user.userId}>
@@ -184,7 +183,7 @@ function AdminRecordsPanel({
                         <tbody>
                             {bookings.length === 0 ? (
                                 <EmptyTableRow colSpan={6}>
-                                    No bookings match your search.
+                                    No matching bookings.
                                 </EmptyTableRow>
                             ) : bookings.map((booking) => (
                                 <tr key={booking.bookingId}>

@@ -8,7 +8,6 @@ import EmptyState from "../../common/EmptyState";
 import VenueCard from "../venues/VenueCard";
 
 function OrganizerHome({
-    firstName,
     venues,
     query,
     setQuery,
@@ -16,14 +15,6 @@ function OrganizerHome({
 }) {
     const [minimumCapacity, setMinimumCapacity] = useState("");
     const [maximumPrice, setMaximumPrice] = useState("");
-
-    const greeting = useMemo(() => {
-        const hour = new Date().getHours();
-
-        if (hour < 12) return "Good morning";
-        if (hour < 18) return "Good afternoon";
-        return "Good evening";
-    }, []);
 
     const filteredVenues = useMemo(() => {
         const search = query.trim().toLowerCase();
@@ -57,8 +48,7 @@ function OrganizerHome({
         <main className="organizer-home">
             <section className="home-introduction">
                 <div className="home-welcome-copy">
-                    <h1>{greeting}, <em>{firstName}</em></h1>
-                    <p>Browse our venue collection and find the perfect space for your next event.</p>
+                    <h1>Venues</h1>
                 </div>
             </section>
             <section className="home-discovery" aria-label="Venue search and filters">
@@ -76,7 +66,7 @@ function OrganizerHome({
             <section className="home-venue-section">
                 <div className="home-section-heading">
                     <div>
-                        <h2>Explore venues</h2>
+                        <h2>Available venues</h2>
                     </div>
                 </div>
 

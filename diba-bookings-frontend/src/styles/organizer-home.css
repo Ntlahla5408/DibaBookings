@@ -4,13 +4,13 @@
    ========================================================= */
 
 .organizer-home {
-    --home-navy: #071b2c;
-    --home-blue: #1a4b6b;
-    --home-light: #2c7a9e;
-    --home-yellow: #f2c84b;
-    --home-paper: #f7f8f5;
-    --home-muted: #61727d;
-    --home-line: #dce4e5;
+    --home-navy: var(--navy-deep);
+    --home-blue: var(--blue);
+    --home-light: var(--blue);
+    --home-yellow: var(--gold);
+    --home-paper: #ffffff;
+    --home-muted: var(--muted);
+    --home-line: var(--line);
 
     background: var(--home-paper);
     color: var(--home-navy);
