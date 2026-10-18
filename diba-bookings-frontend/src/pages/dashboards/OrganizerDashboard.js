@@ -4,7 +4,6 @@ import diningImage from "../../assets/images/Dining Room.jpg";
 
 import LoadingIndicator from "../../components/common/LoadingIndicator";
 import OrganizerHome from "../../components/organizer/home/OrganizerHome";
-import VenueBrowser from "../../components/organizer/venues/VenueBrowser";
 import VenueDetails from "../../components/organizer/venues/VenueDetails";
 import EventForm from "../../components/organizer/events/EventForm";
 import EventsView from "../../components/organizer/events/EventsView";
@@ -118,15 +117,6 @@ function OrganizerDashboard() {
         onOpenVenue={openVenue}
     />
 )}
-
-                {view === "venues" && (
-                    <VenueBrowser
-                        venues={venues}
-                        query={query}
-                        setQuery={setQuery}
-                        onOpen={openVenue}
-                    />
-                )}
 
                 {view === "venue-detail" &&
                     activeVenue && (
