@@ -278,7 +278,7 @@ function EventForm({
                                     }
                                 />
                                 <span>
-                                    I confirm that the information provided is complete and accurate, and I have read and agree to the <Link to="/policies" target="_blank" rel="noreferrer">Terms and Conditions</Link>, including the venue rules and booking requirements.
+                                    I confirm that the information provided is complete and accurate, and I have read and agree to the <Link to="/dashboard?view=policies">Terms and Conditions</Link>, including the venue rules and booking requirements.
                                 </span>
                             </label>
                         </div>
