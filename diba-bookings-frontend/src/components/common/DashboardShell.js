@@ -38,7 +38,7 @@ function DashboardShell({
                                     {...(item.onClick
                                         ? { onClick: item.onClick }
                                         : { as: "a", href: item.href })}
-                                    variant="outline-primary"
+                                    variant={item.active ? "primary" : "outline-primary"}
                                     size="sm"
                                     className="dashboard-nav-button text-nowrap"
                                 >
