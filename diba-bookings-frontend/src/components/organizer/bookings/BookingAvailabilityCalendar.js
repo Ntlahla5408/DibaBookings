@@ -248,8 +248,9 @@ function BookingCalendar({
 
     return (
         <div className="booking-calendar">
-
-            <div className="calendar-header">
+            <div className="booking-calendar-layout">
+                <div className="calendar-date-panel">
+                    <div className="calendar-header">
                 <button
                     type="button"
                     onClick={goToPreviousMonth}
@@ -303,7 +304,9 @@ function BookingCalendar({
                 ))}
             </div>
 
-            {selectedDate && (
+                </div>
+
+                {selectedDate && (
                 <div className="calendar-availability">
 
                     <div className="availability-heading">
@@ -404,7 +407,8 @@ function BookingCalendar({
                             </div>
                         )}
                 </div>
-            )}
+                )}
+            </div>
         </div>
     );
 }
