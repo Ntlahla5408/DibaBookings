@@ -287,6 +287,16 @@ namespace DIBA_Backend.Controllers
                     "End date and time must be after the start date and time.");
             }
 
+            // DIBA booking policy: event bookings must be submitted at
+            // least seven days before the event start time. South Africa
+            // uses UTC+2 year-round, so compare against South African local time.
+            var southAfricanNow = DateTime.UtcNow.AddHours(2);
+            if (request.StartDateTime < southAfricanNow.AddDays(7))
+            {
+                return BadRequest(
+                    "Bookings must be made at least 7 days before the event start date.");
+            }
+
             // DIBA-specific venue existence validation.
             var venue = await _dbContext.Venues
                 .FirstOrDefaultAsync(
