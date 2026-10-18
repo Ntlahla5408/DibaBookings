@@ -362,24 +362,37 @@ namespace DIBA_Backend.Controllers
                 return NotFound("No payment record was found for this booking.");
             }
 
-            if (string.Equals(payment.PaymentStatus, "Paid", StringComparison.OrdinalIgnoreCase))
-            {
-                return Ok(new
-                {
-                    bookingId,
-                    paymentStatus = payment.PaymentStatus,
-                    bookingStatus = booking.BookingStatus?.StatusName,
-                    demoMode = true
-                });
-            }
-
-            if (!string.Equals(payment.PaymentStatus, "Pending", StringComparison.OrdinalIgnoreCase))
+            if (!string.Equals(payment.PaymentStatus, "Pending", StringComparison.OrdinalIgnoreCase) &&
+                !string.Equals(payment.PaymentStatus, "Paid", StringComparison.OrdinalIgnoreCase))
             {
                 return BadRequest("This payment is not pending and cannot be confirmed by the demo flow.");
             }
 
-            payment.PaymentStatus = "Paid";
-            payment.PaymentDate = DateTime.UtcNow;
+            // Keep the booking workflow visible to staff and administrators:
+            // Approved -> Paid. Reuse the existing status row or add it without
+            // changing the database schema.
+            var paidStatus = await dbContext.BookingStatuses
+                .FirstOrDefaultAsync(item => item.StatusName == "Paid");
+
+            if (paidStatus == null)
+            {
+                paidStatus = new BookingStatus
+                {
+                    BookingStatusId = Guid.NewGuid(),
+                    StatusName = "Paid",
+                    StatusDescription = "Payment recorded for the approved venue booking."
+                };
+
+                dbContext.BookingStatuses.Add(paidStatus);
+            }
+
+            booking.BookingStatusId = paidStatus.BookingStatusId;
+
+            if (!string.Equals(payment.PaymentStatus, "Paid", StringComparison.OrdinalIgnoreCase))
+            {
+                payment.PaymentStatus = "Paid";
+                payment.PaymentDate = DateTime.UtcNow;
+            }
 
             await dbContext.SaveChangesAsync();
 
@@ -387,7 +400,7 @@ namespace DIBA_Backend.Controllers
             {
                 bookingId,
                 paymentStatus = payment.PaymentStatus,
-                bookingStatus = booking.BookingStatus?.StatusName,
+                bookingStatus = paidStatus.StatusName,
                 demoMode = true
             });
         }
