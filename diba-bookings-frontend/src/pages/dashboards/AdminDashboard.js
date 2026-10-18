@@ -8,6 +8,7 @@ import CreateUserModal from "../../components/admin/CreateUserModal";
 import DashboardShell from "../../components/common/DashboardShell";
 import HelpContentManager from "../../components/common/HelpContentManager";
 import LoadingIndicator from "../../components/common/LoadingIndicator";
+import ProfilePage from "../../components/common/ProfilePage";
 import {
     createUser,
     getAdminOverview,
@@ -183,6 +184,7 @@ function AdminDashboard() {
             title={`Good morning, ${firstName}`}
             onLogout={clearSession}
             profileLabel={firstName}
+            onProfileClick={() => setActiveSection("profile")}
             navigationItems={[
                 { label: "Overview", onClick: () => setActiveSection("overview") },
                 { label: "Users", onClick: () => setActiveSection("users") },
@@ -192,7 +194,9 @@ function AdminDashboard() {
             ]}
         >
 
-            {loading ? (
+            {activeSection === "profile" ? (
+                <ProfilePage />
+            ) : loading ? (
                 <LoadingIndicator label="Loading control room" />
             ) : activeSection === "overview" ? (
                 <AdminOverviewPanel

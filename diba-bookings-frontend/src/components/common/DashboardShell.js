@@ -7,16 +7,28 @@ function DashboardShell({
     onLogout,
     children,
     profileLabel = "Staff",
+    onProfileClick,
     navigationItems = []
 }) {
     const [isDarkMode, setIsDarkMode] = useState(() => localStorage.getItem("diba-bookings-theme") === "dark");
+    const [displayName, setDisplayName] = useState(profileLabel);
+    const [profilePicture, setProfilePicture] = useState(() => localStorage.getItem("profilePicture:" + (localStorage.getItem("userId") || "current")) || "");
+    useEffect(() => { setDisplayName(profileLabel); }, [profileLabel]);
+    useEffect(() => {
+        const updateProfileDisplay = (event) => {
+            if (event.detail && event.detail.firstName) setDisplayName(event.detail.firstName);
+            setProfilePicture(localStorage.getItem("profilePicture:" + (localStorage.getItem("userId") || "current")) || "");
+        };
+        window.addEventListener("diba-profile-updated", updateProfileDisplay);
+        return () => window.removeEventListener("diba-profile-updated", updateProfileDisplay);
+    }, []);
 
     useEffect(() => {
         document.documentElement.dataset.theme = isDarkMode ? "dark" : "light";
         localStorage.setItem("diba-bookings-theme", isDarkMode ? "dark" : "light");
     }, [isDarkMode]);
 
-    const initials = String(profileLabel || "Staff")
+    const initials = String(displayName || "Staff")
         .trim()
         .split(/\s+/)
         .slice(0, 2)
@@ -58,10 +70,10 @@ function DashboardShell({
                         >
                             {isDarkMode ? "☀ Light mode" : "☾ Dark mode"}
                         </Button>
-                        <div className="d-flex align-items-center gap-2">
-                            <span className="rounded-circle d-inline-flex align-items-center justify-content-center fw-semibold" style={{ width: 36, height: 36, background: "#eaf0f5", color: "#071B2C" }} aria-label={`Profile: ${profileLabel}`}>{initials}</span>
-                            <span className="small fw-semibold d-none d-sm-inline">{profileLabel}</span>
-                        </div>
+                        <Button type="button" variant="light" className="d-flex align-items-center gap-2 border-0 p-1 text-start" onClick={onProfileClick} aria-label="Open my profile" title="My profile">
+                            {profilePicture ? <img src={profilePicture} alt="" className="rounded-circle" style={{ width: 36, height: 36, objectFit: "cover" }} /> : <span className="rounded-circle d-inline-flex align-items-center justify-content-center fw-semibold" style={{ width: 36, height: 36, background: "#eaf0f5", color: "#071B2C" }}>{initials}</span>}
+                            <span className="small fw-semibold d-none d-sm-inline">{displayName}</span>
+                        </Button>
                         <Button variant="outline-dark" size="sm" onClick={onLogout}>Sign out</Button>
                     </div>
                 </div>

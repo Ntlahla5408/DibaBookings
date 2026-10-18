@@ -31,6 +31,7 @@ function ProfilePage() {
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [loadError, setLoadError] = useState("");
+    const [profilePicture, setProfilePicture] = useState("");
 
     useEffect(() => {
         let active = true;
@@ -46,6 +47,8 @@ function ProfilePage() {
                         ...emptyProfile,
                         ...response.data
                     });
+                    const pictureKey = "profilePicture:" + (response.data.userId || localStorage.getItem("userId") || "current");
+                    setProfilePicture(localStorage.getItem(pictureKey) || "");
                 }
             } catch (error) {
                 if (active) setLoadError(getErrorMessage(error));
@@ -64,6 +67,36 @@ function ProfilePage() {
     const updateField = (event) => {
         const { name, value } = event.target;
         setProfile((current) => ({ ...current, [name]: value }));
+    };
+
+    const handlePictureChange = (event) => {
+        const file = event.target.files && event.target.files[0];
+        if (!file) return;
+        if (!file.type.startsWith("image/")) {
+            toast.error("Choose an image file.");
+            event.target.value = "";
+            return;
+        }
+        if (file.size > 2 * 1024 * 1024) {
+            toast.error("Profile pictures must be 2 MB or smaller.");
+            event.target.value = "";
+            return;
+        }
+        const reader = new FileReader();
+        reader.onload = () => {
+            if (typeof reader.result !== "string") return;
+            const pictureKey = "profilePicture:" + (profile.userId || localStorage.getItem("userId") || "current");
+            try {
+                localStorage.setItem(pictureKey, reader.result);
+                setProfilePicture(reader.result);
+                window.dispatchEvent(new CustomEvent("diba-profile-updated"));
+                toast.success("Profile picture updated on this browser.");
+            } catch {
+                toast.error("This image is too large for browser storage. Choose a smaller image.");
+            }
+        };
+        reader.readAsDataURL(file);
+        event.target.value = "";
     };
 
     const handleSubmit = async (event) => {
@@ -93,6 +126,7 @@ function ProfilePage() {
             localStorage.setItem("firstName", firstName);
             localStorage.setItem("lastName", lastName);
             localStorage.setItem("email", email);
+            window.dispatchEvent(new CustomEvent("diba-profile-updated", { detail: { firstName, lastName, email } }));
 
             toast.success("Profile updated.");
         } catch (error) {
@@ -129,6 +163,14 @@ function ProfilePage() {
                 <Card className="border-0 shadow-sm">
                     <Card.Body className="p-4">
                         <h2 className="h5 mb-4">Personal information</h2>
+                        <div className="d-flex align-items-center gap-3 mb-4">
+                            {profilePicture ? <img src={profilePicture} alt="Profile preview" className="rounded-circle border" style={{ width: 76, height: 76, objectFit: "cover" }} /> : <div className="rounded-circle d-flex align-items-center justify-content-center fw-semibold" style={{ width: 76, height: 76, background: "#eaf0f5", color: "#071B2C", fontSize: 24 }}>{(profile.firstName.charAt(0) + profile.lastName.charAt(0)).toUpperCase()}</div>}
+                            <div>
+                                <Form.Label htmlFor="profilePicture" className="mb-1">Profile picture</Form.Label>
+                                <Form.Control id="profilePicture" type="file" accept="image/*" onChange={handlePictureChange} size="sm" />
+                                <div className="small text-secondary mt-1">Image only · maximum 2 MB</div>
+                            </div>
+                        </div>
                         <Form onSubmit={handleSubmit}>
                             <Row className="g-3">
                                 <Col xs={12} md={6}>
