@@ -88,11 +88,10 @@ namespace DIBA_Backend.Services
 
             return result;
         }
-    }
 
-    private static string ResolveReturnUrl(string? configuredUrl, string? frontendBaseUrl, string path)
+        private static string ResolveReturnUrl(string? configuredUrl, string? frontendBaseUrl, string path)
     {
-        var hasFrontendBaseUrl = Uri.TryCreate(frontendBaseUrl, UriKind.Absolute, out var frontendUri);
+        var hasFrontendBaseUrl = Uri.TryCreate(frontendBaseUrl, UriKind.Absolute, out _);
         var configuredUrlIsLocal =
             Uri.TryCreate(configuredUrl, UriKind.Absolute, out var configuredUri) &&
             (configuredUri.IsLoopback ||
@@ -124,6 +123,7 @@ namespace DIBA_Backend.Services
 
         throw new InvalidOperationException(
             $"Yoco return URL for {path} is not configured.");
+        }
     }
 
     public class YocoCheckoutResponse
