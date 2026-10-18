@@ -7,7 +7,7 @@ const navItems = [
     ["⌂", "Dashboard", "dashboard"],
     ["▣", "My Bookings", "bookings"],
     ["◫", "My Events", "events"],
-    ["◌", "Notifications", "notifications"],
+    ["bell", "Notifications", "notifications"],
     ["▤", "Policies", "policies"],
     ["✉", "Support Tickets", "support"],
     ["?", "Help Centre", "help"]
@@ -58,10 +58,29 @@ function OrganizerSidebar({
                             className={`nav-item ${view === key ? "active" : ""}`}
                             onClick={() => goTo(key)}
                         >
-                            <span className="nav-icon">{icon}</span>
+                            <span className="nav-icon" aria-hidden="true">
+                                {key === "notifications" ? (
+                                    <svg
+                                        viewBox="0 0 24 24"
+                                        width="20"
+                                        height="20"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="1.8"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        style={{ display: "block", margin: "0 auto" }}
+                                    >
+                                        <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9" />
+                                        <path d="M10 21h4" />
+                                    </svg>
+                                ) : icon}
+                            </span>
                             <span>{label}</span>
                             {key === "notifications" && unread > 0 && (
-                                <span className="nav-count">{unread}</span>
+                                <span className="nav-count" aria-label={`${unread} unread notifications`}>
+                                    {unread > 99 ? "99+" : unread}
+                                </span>
                             )}
                         </button>
                     ))}
