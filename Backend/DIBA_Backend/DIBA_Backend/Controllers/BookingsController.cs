@@ -136,7 +136,12 @@ namespace DIBA_Backend.Controllers
                     VenueName =
                         booking.Venue != null
                             ? booking.Venue.VenueName
-                            : string.Empty
+                            : string.Empty,
+
+                    PaymentStatus = booking.Payments
+                        .OrderByDescending(payment => payment.PaymentDate)
+                        .Select(payment => payment.PaymentStatus)
+                        .FirstOrDefault()
                 })
                 .ToListAsync();
 
@@ -153,6 +158,7 @@ namespace DIBA_Backend.Controllers
                 .Include(booking => booking.Event)
                 .Include(booking => booking.Venue)
                 .Include(booking => booking.BookingStatus)
+                .Include(booking => booking.Payments)
                 .FirstOrDefaultAsync(
                     booking => booking.BookingId == id);
 
@@ -240,7 +246,12 @@ namespace DIBA_Backend.Controllers
 
                 VenueName =
                     booking.Venue?.VenueName ??
-                    string.Empty
+                    string.Empty,
+
+                PaymentStatus = booking.Payments
+                    .OrderByDescending(payment => payment.PaymentDate)
+                    .Select(payment => payment.PaymentStatus)
+                    .FirstOrDefault()
             };
 
             return Ok(response);
