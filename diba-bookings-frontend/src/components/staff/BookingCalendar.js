@@ -63,12 +63,12 @@ function BookingCalendar({ bookings = [], venues = [], onSelectBooking }) {
                 </div>
             </div>
             <div className="calendar-filter-row mb-3">
-                <div className="col-12 col-sm-6"><Form.Label htmlFor="calendar-status-filter">Booking status</Form.Label>
+                <div className="calendar-filter-field"><Form.Label htmlFor="calendar-status-filter">Booking status</Form.Label>
                     <Form.Select id="calendar-status-filter" value={status} onChange={(e) => setStatus(e.target.value)}>
                         <option value="all">All statuses</option><option value="pending">Pending</option><option value="approved">Approved</option><option value="rejected">Rejected</option><option value="cancelled">Cancelled</option>
                     </Form.Select>
                 </div>
-                <div className="col-12 col-sm-6"><Form.Label htmlFor="calendar-venue-filter">Venue</Form.Label>
+                <div className="calendar-filter-field"><Form.Label htmlFor="calendar-venue-filter">Venue</Form.Label>
                     <Form.Select id="calendar-venue-filter" value={venueId} onChange={(e) => setVenueId(e.target.value)}>
                         <option value="all">All venues</option>{venues.map((v) => <option key={v.venueId} value={String(v.venueId)}>{v.venueName || `Venue ${v.venueId}`}</option>)}
                     </Form.Select>
