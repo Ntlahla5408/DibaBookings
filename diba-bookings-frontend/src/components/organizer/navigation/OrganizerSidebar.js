@@ -85,7 +85,7 @@ function OrganizerSidebar({
                 </nav>
 
                 <div className="sidebar-bottom">
-                    <button type="button" className="nav-item" onClick={() => goTo("profile")}>
+                    <button type="button" className={`nav-item ${view === "profile" ? "active" : ""}`} onClick={() => goTo("profile")}>
                         <span className="nav-icon">◎</span><span>Profile</span>
                     </button>
                     <button type="button" className="nav-item" onClick={() => toast.info("Settings are not available in the current API.")}>
