@@ -200,6 +200,17 @@ namespace DIBA_Backend.Controllers
                 return NotFound("Venue not found.");
             }
 
+            if (!int.TryParse(createEventDto.EventAttendance, out var expectedAttendees) ||
+                expectedAttendees < 1)
+            {
+                return BadRequest("Expected attendees must be a whole number greater than zero.");
+            }
+
+            if (expectedAttendees > venue.Capacity)
+            {
+                return BadRequest($"Expected attendees cannot exceed the venue capacity of {venue.Capacity}.");
+            }
+
             // DIBA-specific business rule:
             // events may only be created using an available venue.
             if (!venue.VenueStatus.Equals(
@@ -312,6 +323,11 @@ namespace DIBA_Backend.Controllers
             if (venue == null)
             {
                 return NotFound("Venue not found.");
+            }
+
+            if (expectedAttendees > venue.Capacity)
+            {
+                return BadRequest($"Expected attendees cannot exceed the venue capacity of {venue.Capacity}.");
             }
 
             // DIBA-specific venue availability rule.
@@ -556,6 +572,17 @@ namespace DIBA_Backend.Controllers
             if (venue == null)
             {
                 return NotFound("Venue not found.");
+            }
+
+            if (!int.TryParse(updateEventDto.EventAttendance, out var expectedAttendees) ||
+                expectedAttendees < 1)
+            {
+                return BadRequest("Expected attendees must be a whole number greater than zero.");
+            }
+
+            if (expectedAttendees > venue.Capacity)
+            {
+                return BadRequest($"Expected attendees cannot exceed the venue capacity of {venue.Capacity}.");
             }
 
             // DIBA-specific venue availability rule.
