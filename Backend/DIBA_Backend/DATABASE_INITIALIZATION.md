@@ -9,7 +9,7 @@
 
 ## 1. Configure the database connection
 
-Configure `ConnectionStrings:DbConn` using the deployment environment's secret/configuration facility (the environment-variable key is `ConnectionStrings__DbConn`). Do not commit production credentials to `appsettings.json`.
+Configure `ConnectionStrings:DbConn` using the deployment environment's secret/configuration facility (the environment-variable key is `ConnectionStrings__DbConn`). Do not commit production credentials to `appsettings.json`. Also configure a strong, randomly generated JWT signing key and the expected issuer/audience using `Jwt__Key`, `Jwt__Issuer` and `Jwt__Audience`. The API's authentication configuration requires these values; do not leave the signing key blank or use a development key in production. Store all of these values in the deployment's secret/configuration facility, not in source control.
 
 ## 2. Apply migrations explicitly
 
