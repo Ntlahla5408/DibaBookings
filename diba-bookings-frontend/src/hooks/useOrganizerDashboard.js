@@ -809,16 +809,9 @@ const submitEventAndBooking = async (event) => {
             );
 
 
-            window.open(
-                checkoutUrl,
-                "_blank",
-                "noopener,noreferrer"
-            );
-
-
-            toast.success(
-                "Payment opened successfully."
-            );
+            // Redirect this tab to Yoco. Yoco then returns the customer
+            // to the configured payment success or cancellation route.
+            window.location.assign(checkoutUrl);
 
         } catch (error) {
             const message =
