@@ -85,6 +85,23 @@ function AdminDashboard() {
         loadData();
     }, []);
 
+    // Keep payment status current in the administrator's booking records.
+    useEffect(() => {
+        const refreshBookings = async () => {
+            try {
+                const response = await getBookings();
+                if (Array.isArray(response.data)) {
+                    setBookings(response.data);
+                }
+            } catch {
+                // Preserve the last successful result if the API is temporarily unavailable.
+            }
+        };
+
+        const intervalId = window.setInterval(refreshBookings, 8000);
+        return () => window.clearInterval(intervalId);
+    }, []);
+
     const filteredUsers = useMemo(
         () =>
             users.filter((user) => {
