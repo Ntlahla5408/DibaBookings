@@ -50,11 +50,17 @@ const blankBooking = {
 };
 
 function useOrganizerDashboard() {
-    const [view, setView] = useState(() =>
-        new URLSearchParams(window.location.search).get("view") === "policies"
-            ? "policies"
-            : "dashboard"
-    );
+    const [view, setView] = useState(() => {
+        const requestedView = new URLSearchParams(window.location.search).get("view");
+        if (requestedView === "policies") {
+            return "policies";
+        }
+
+        const savedDefaultView = localStorage.getItem("organizerDefaultView");
+        return ["dashboard", "bookings", "events"].includes(savedDefaultView)
+            ? savedDefaultView
+            : "dashboard";
+    });
     const [drawerOpen, setDrawerOpen] = useState(false);
 
     const [venues, setVenues] = useState([]);
@@ -809,6 +815,7 @@ const submitEventAndBooking = async (event) => {
     const title = {
         dashboard: "Dashboard",
         profile: "Profile",
+        settings: "Settings",
         bookings: "My Bookings",
         events: "My Events",
         notifications: "Notifications",
