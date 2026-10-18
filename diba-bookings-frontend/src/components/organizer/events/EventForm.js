@@ -195,6 +195,7 @@ function EventForm({
                                             startDateTime: toLocalInput(slot.start),
                                             endDateTime: toLocalInput(slot.end)
                                         });
+                                        setShowCalendar(false);
                                     }}
                                 />
                             </div>
