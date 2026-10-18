@@ -177,12 +177,13 @@ function AdminRecordsPanel({
                                 <th>Event</th>
                                 <th>Venue</th>
                                 <th>Submitted</th>
-                                <th>Status</th>
+                                <th>Booking status</th>
+                                <th>Payment status</th>
                             </tr>
                         </thead>
                         <tbody>
                             {bookings.length === 0 ? (
-                                <EmptyTableRow colSpan={6}>
+                                <EmptyTableRow colSpan={7}>
                                     No matching bookings.
                                 </EmptyTableRow>
                             ) : bookings.map((booking) => (
@@ -195,6 +196,17 @@ function AdminRecordsPanel({
                                     <td>
                                         <Badge bg="light" text="dark">
                                             {booking.statusName || shortId(booking.bookingStatusId)}
+                                        </Badge>
+                                    </td>
+                                    <td>
+                                        <Badge
+                                            bg={
+                                                String(booking.paymentStatus || "").toLowerCase() === "paid"
+                                                    ? "success"
+                                                    : "secondary"
+                                            }
+                                        >
+                                            {booking.paymentStatus || "Not started"}
                                         </Badge>
                                     </td>
                                 </tr>
