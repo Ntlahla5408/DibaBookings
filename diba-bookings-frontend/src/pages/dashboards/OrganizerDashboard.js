@@ -121,10 +121,12 @@ function OrganizerDashboard() {
                     activeVenue && (
                         <VenueDetails
                             venue={activeVenue}
-  image={
-    activeVenue.venueImageData ||
-    getVenueFallbackImage(activeVenue)
-}
+                            image={
+                                activeVenue.venueImageData ||
+                                getVenueFallbackImage(activeVenue)
+                            }
+                            onBack={() => goTo("dashboard")}
+                            onBook={() => startEvent(activeVenue)}
                         />
                     )}
 
