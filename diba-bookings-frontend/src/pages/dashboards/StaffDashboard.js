@@ -20,6 +20,7 @@ import BookingCalendar from "../../components/staff/BookingCalendar";
 import PolicyDocumentsPanel from "../../components/common/PolicyDocumentsPanel";
 import SupportTicketsPanel from "../../components/common/SupportTicketsPanel";
 import HelpContentManager from "../../components/common/HelpContentManager";
+import ProfilePage from "../../components/common/ProfilePage";
 
 function getErrorMessage(error, fallback) {
     const responseData = error.response?.data;
@@ -544,6 +545,7 @@ return venueList;
             title={activeSection === "policies" ? "Policies" : activeSection === "support" ? "Support tickets" : activeSection === "help" ? "Help Centre" : "Dashboard"}
             onLogout={clearSession}
             profileLabel={firstName}
+            onProfileClick={() => setActiveSection("profile")}
             navigationItems={[
                 { label: "Dashboard", active: activeSection === "dashboard", onClick: () => setActiveSection("dashboard") },
                 { label: "Policies", active: activeSection === "policies", onClick: () => setActiveSection("policies") },
@@ -551,7 +553,9 @@ return venueList;
                 { label: "Help Centre", active: activeSection === "help", onClick: () => setActiveSection("help") }
             ]}
         >
-            {loading ? (
+            {activeSection === "profile" ? (
+                <ProfilePage />
+            ) : loading ? (
                 <LoadingIndicator />
             ) : activeSection === "policies" ? (
                 <PolicyDocumentsPanel canManage />
