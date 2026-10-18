@@ -104,6 +104,10 @@ function EventBookingWorkspace({
                             <span>Submitted</span>
                             <strong>{formatDate(booking.bookingDate)}</strong>
                         </div>
+                        <div className="shared-detail">
+                            <span>Payment status</span>
+                            <strong>{booking.paymentStatus || "Not started"}</strong>
+                        </div>
                         <div className="shared-detail shared-detail-wide">
                             <span>Special requirements</span>
                             <p>{booking.specialRequirements || "None provided."}</p>
