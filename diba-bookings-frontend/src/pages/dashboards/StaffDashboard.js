@@ -542,15 +542,7 @@ return venueList;
             title="Dashboard"
             onLogout={clearSession}
             profileLabel={firstName}
-            navigationItems={[
-                { label: "Overview", href: "#staff-overview" },
-                { label: "Upcoming & pending", href: "#staff-upcoming" },
-                { label: "All bookings", href: "#all-bookings" },
-                { label: "Venues", href: "#staff-venues" },
-                { label: "Calendar", href: "#booking-calendar" },
-                { label: "Policies", href: "#staff-policies" },
-                { label: "Support tickets", href: "#staff-support" },
-            ]}
+            navigationItems={[]}
         >
             {loading ? (
                 <LoadingIndicator />
@@ -665,7 +657,7 @@ return venueList;
                         </div>
                     </section>
 
-                    <section className="d-flex flex-column gap-4 mb-4" id="all-bookings">
+                    <section className="staff-records-layout mb-4" id="all-bookings">
                         <div className="panel table-panel">
                             <div className="panel-heading d-flex flex-wrap justify-content-between align-items-center gap-3">
                                 <h2>All bookings</h2>
@@ -931,20 +923,22 @@ return venueList;
                         </div>
                     </section>
 
-                    <BookingCalendar
-                        bookings={bookings}
-                        venues={venues}
-                        onSelectBooking={setSelectedBooking}
-                    />
                 </>
             )}
 
-            <section id="staff-policies" className="mb-4 panel">
-                <PolicyDocumentsPanel canManage />
-            </section>
-            <section id="staff-support" className="mb-4 panel">
-                <SupportTicketsPanel staffMode />
-            </section>
+            <div className="staff-policy-support-layout mb-4">
+                <section id="staff-policies" className="panel">
+                    <PolicyDocumentsPanel canManage />
+                </section>
+                <section id="staff-support" className="panel">
+                    <SupportTicketsPanel staffMode />
+                </section>
+            </div>
+            <BookingCalendar
+                bookings={bookings}
+                venues={venues}
+                onSelectBooking={setSelectedBooking}
+            />
 
             <Modal
                 show={Boolean(selectedBooking)}
