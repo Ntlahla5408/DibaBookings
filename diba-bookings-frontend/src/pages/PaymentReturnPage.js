@@ -20,31 +20,17 @@ function PaymentReturnPage() {
             }
 
             if (!bookingId) {
-                setPaymentStatus("Verification required");
+                setPaymentStatus("Failed");
                 setChecking(false);
                 return;
             }
 
             try {
-                // Local presentation demo: the Development-only backend endpoint
-                // records Paid in the database for this approved booking.
-                // This must be replaced by verified Yoco confirmation after the presentation.
-                const confirmation = await api.post(
-                    `/Payments/demo-confirm-success/${encodeURIComponent(bookingId)}`
-                );
-
-                if (!active) return;
-
-                if (
-                    String(confirmation.data?.paymentStatus || "").toLowerCase() === "paid" &&
-                    String(confirmation.data?.bookingStatus || "").toLowerCase() === "paid"
-                ) {
-                    setPaymentStatus("Successful");
-                } else {
-                    setPaymentStatus("Verifying");
-                }
+                // Presentation demo: opening this page marks the payment as Paid in the database.
+                await api.post("/Payments/demo-confirm-success/" + encodeURIComponent(bookingId));
+                if (active) setPaymentStatus("Successful");
             } catch {
-                if (active) setPaymentStatus("Verifying");
+                if (active) setPaymentStatus("Failed");
             } finally {
                 if (active) setChecking(false);
             }
@@ -57,10 +43,7 @@ function PaymentReturnPage() {
     }, [bookingId, cancelled]);
 
     const successful = paymentStatus === "Successful";
-    const pendingVerification =
-        paymentStatus === "Verifying" ||
-        paymentStatus === "Checking" ||
-        paymentStatus === "Verification required";
+    const updateFailed = paymentStatus === "Failed";
 
     return (
         <main className="container py-5">
@@ -78,9 +61,9 @@ function PaymentReturnPage() {
                                     ? "Payment cancelled"
                                     : successful
                                         ? "Payment Successful"
-                                        : pendingVerification || checking
-                                            ? "Verifying payment"
-                                            : "Payment status unavailable"}
+                                        : checking
+                                            ? "Updating payment"
+                                            : "Payment update failed"}
                             </h1>
                             <p className="mb-4">
                                 {cancelled
@@ -88,8 +71,8 @@ function PaymentReturnPage() {
                                     : successful
                                         ? "Your payment has been confirmed."
                                         : pendingVerification || checking
-                                            ? "Yoco has returned you to DIBA Bookings. Your payment status is still being confirmed. Please check your booking before trying to pay again."
-                                            : "Sign in and open your booking to check its latest payment status."}
+                                            ? "Updating payment status."
+                                            : "The payment status could not be updated. Please return to your booking and try again."}
                             </p>
                             {bookingId ? (
                                 <Link
