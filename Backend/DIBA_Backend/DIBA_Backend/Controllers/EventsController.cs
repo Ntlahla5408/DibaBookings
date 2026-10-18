@@ -433,7 +433,16 @@ namespace DIBA_Backend.Controllers
                         AcknowledgementAcceptedAt =
         booking.AcknowledgementAcceptedAt,
 
+                        AcknowledgementPolicyType =
+                            booking.AcknowledgementPolicyType,
+
+                        AcknowledgementPolicyVersion =
+                            booking.AcknowledgementPolicyVersion,
+
                         UserId = booking.UserId,
+                        EventId = eventEntity.EventId,
+                        VenueId = venue.VenueId,
+                        BookingStatusId = pendingStatus.BookingStatusId,
                         StatusName =
                             pendingStatus.StatusName,
                         EventName =
