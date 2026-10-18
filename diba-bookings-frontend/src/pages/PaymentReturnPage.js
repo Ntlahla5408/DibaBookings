@@ -20,37 +20,38 @@ function PaymentReturnPage() {
                 return;
             }
 
-            if (!bookingId || !localStorage.getItem("token")) {
+            if (!bookingId) {
                 setPaymentStatus("Verification required");
                 setChecking(false);
                 return;
             }
 
             try {
-                // This endpoint only records a simulated payment when the API
-                // is running in Development with DemoPayments explicitly enabled.
-                // Production must use verified Yoco payment confirmation instead.
-                await api.post(
+                // Local presentation demo: the Development-only backend endpoint
+                // records Paid in the database for this approved booking.
+                // This must be replaced by verified Yoco confirmation after the presentation.
+                const confirmation = await api.post(
                     `/Payments/demo-confirm-success/${encodeURIComponent(bookingId)}`
                 );
 
-                const response = await getBookings();
-                const booking = (response.data || []).find(
-                    (item) => String(item.bookingId).toLowerCase() === bookingId.toLowerCase()
-                );
-                const status = String(booking?.paymentStatus || "").trim().toLowerCase();
-
                 if (!active) return;
 
-                if (["paid", "successful", "completed"].includes(status)) {
+                if (
+                    String(confirmation.data?.paymentStatus || "").toLowerCase() === "paid" &&
+                    String(confirmation.data?.bookingStatus || "").toLowerCase() === "paid"
+                ) {
                     setPaymentStatus("Successful");
-                } else if (booking) {
-                    setPaymentStatus("Verifying");
                 } else {
-                    setPaymentStatus("Verification required");
+                    setPaymentStatus("Verifying");
                 }
-            } catch {
-                if (active) setPaymentStatus("Verifying");
+            } catch (error) {
+                if (active) {
+                    setPaymentStatus(
+                        error.response?.data?.message ||
+                        error.response?.data ||
+                        "Verifying"
+                    );
+                }
             } finally {
                 if (active) setChecking(false);
             }
@@ -63,7 +64,10 @@ function PaymentReturnPage() {
     }, [bookingId, cancelled]);
 
     const successful = paymentStatus === "Successful";
-    const pendingVerification = paymentStatus === "Verifying" || paymentStatus === "Checking";
+    const pendingVerification =
+        paymentStatus === "Verifying" ||
+        paymentStatus === "Checking" ||
+        paymentStatus === "Verification required";
 
     return (
         <main className="container py-5">
