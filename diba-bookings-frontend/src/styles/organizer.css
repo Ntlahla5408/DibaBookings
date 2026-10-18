@@ -1331,8 +1331,16 @@
 
 /* Compact availability calendar popup in the event booking form */
 .calendar-popup-anchor {
+    align-items: center;
     align-self: flex-start;
+    display: flex;
+    gap: 10px;
     position: relative;
+}
+
+.calendar-selected-date {
+    color: var(--organizer-muted);
+    font-size: 0.9rem;
 }
 
 .calendar-toggle-button {
