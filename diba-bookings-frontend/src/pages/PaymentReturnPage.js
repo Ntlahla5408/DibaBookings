@@ -43,7 +43,6 @@ function PaymentReturnPage() {
     }, [bookingId, cancelled]);
 
     const successful = paymentStatus === "Successful";
-    const updateFailed = paymentStatus === "Failed";
 
     return (
         <main className="container py-5">
@@ -70,7 +69,7 @@ function PaymentReturnPage() {
                                     ? "Your payment was cancelled."
                                     : successful
                                         ? "Your payment has been confirmed."
-                                        : pendingVerification || checking
+                                        : checking
                                             ? "Updating payment status."
                                             : "The payment status could not be updated. Please return to your booking and try again."}
                             </p>
