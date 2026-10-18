@@ -142,8 +142,8 @@ function HelpContentManager() {
                 <div>
                     <h2>Help Centre Content</h2>
                 </div>
-                {!editingId && (
-                    <Button onClick={() => { resetForm(); setShowForm(true); }}>+ Add question</Button>
+                {!showForm && (
+                    <Button onClick={() => setShowForm(true)}>+ Add question</Button>
                 )}
             </div>
 
@@ -216,16 +216,14 @@ function HelpContentManager() {
                         <Button type="submit" disabled={saving}>
                             {saving ? "Saving…" : editingId ? "Save changes" : "Add question"}
                         </Button>
-                        {editingId && (
-                            <Button
-                                type="button"
-                                variant="outline-secondary"
-                                disabled={saving}
-                                onClick={resetForm}
-                            >
-                                Cancel
-                            </Button>
-                        )}
+                        <Button
+                            type="button"
+                            variant="outline-secondary"
+                            disabled={saving}
+                            onClick={resetForm}
+                        >
+                            Cancel
+                        </Button>
                     </div>
                 </Form>
             )}
