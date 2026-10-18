@@ -194,8 +194,12 @@ function EventBookingWorkspace({
                         const event = record.event;
                         const booking = record.booking;
                         const status = booking?.statusName || "No booking";
-                        const start = event?.startDateTime || booking?.startDateTime;
-                        const end = event?.endDateTime || booking?.endDateTime;
+                        const start = isEvents
+                            ? event?.startDateTime || booking?.startDateTime
+                            : booking?.startDateTime || event?.startDateTime;
+                        const end = isEvents
+                            ? event?.endDateTime || booking?.endDateTime
+                            : booking?.endDateTime || event?.endDateTime;
 
                         return (
                             <article className="shared-record-card" key={isEvents ? event.eventId : booking.bookingId}>
