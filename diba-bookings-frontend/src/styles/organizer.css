@@ -1541,3 +1541,9 @@
 .calendar-grid .calendar-day:disabled {
     text-decoration: none;
 }
+
+.calendar-grid .calendar-day-empty:disabled {
+    background: transparent;
+    border-color: transparent;
+    color: transparent;
+}
