@@ -16,6 +16,9 @@ function EventForm({
     onCancel
 }) {
     const [showCalendar, setShowCalendar] = useState(false);
+    const minimumBookingDate = new Date();
+    minimumBookingDate.setDate(minimumBookingDate.getDate() + 7);
+    minimumBookingDate.setHours(0, 0, 0, 0);
     const [selectedDate, setSelectedDate] = useState(
         form.startDateTime
             ? new Date(form.startDateTime)
@@ -182,6 +185,7 @@ function EventForm({
                                 </div>
                                 <BookingCalendar
                                     selectedDate={selectedDate}
+                                    minimumDate={minimumBookingDate}
                                     onDateSelect={handleDateSelect}
                                     venueId={form.venueId}
                                     onTimeSelect={(slot) => {
