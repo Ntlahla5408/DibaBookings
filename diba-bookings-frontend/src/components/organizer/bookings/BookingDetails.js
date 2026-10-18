@@ -24,6 +24,8 @@ function BookingDetails({ booking, event, venue, onBack, onEdit, onCancel, savin
                     <Detail label="Event name" value={event?.eventName || booking.eventName} />
                     <Detail label="Event type" value={event?.eventType || "Not provided"} />
                     <Detail label="Venue" value={venue?.venueName || booking.venueName} />
+                    <Detail label="Venue location" value={venue?.location || "Not provided"} />
+                    <Detail label="Venue capacity" value={venue?.capacity ?? "Not provided"} />
                     <Detail label="Expected attendees" value={event?.eventAttendance || "Not provided"} />
                     <Detail label="Date" value={dateText(event?.startDateTime || booking.startDateTime)} />
                     <Detail label="Start time" value={timeText(event?.startDateTime || booking.startDateTime)} />
