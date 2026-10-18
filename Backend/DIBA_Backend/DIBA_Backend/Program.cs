@@ -32,6 +32,18 @@ builder.Services.AddRateLimiter(options =>
                 QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
                 AutoReplenishment = true
             }));
+    // The one-time administrator bootstrap endpoint is also rate-limited.
+    options.AddPolicy("bootstrap-admin", httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 5,
+                Window = TimeSpan.FromMinutes(15),
+                QueueLimit = 0,
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                AutoReplenishment = true
+            }));
 });
 
 builder.Services.AddCors(options =>
@@ -152,17 +164,8 @@ builder.Services.AddAuthorization();
 var app = builder.Build();
 
 
-// DIBA-specific database initialization.
-// The application creates a service scope and obtains the database
-// context before seeding the required initial roles/statuses/test data.
-using (var scope = app.Services.CreateScope())
-{
-    var dbContext =
-        scope.ServiceProvider
-            .GetRequiredService<DIBABookingsDbContext>();
-
-    await DbSeeder.SeedAsync(dbContext);
-}
+// Database schema changes are applied explicitly during deployment with EF Core migrations.
+// The application does not migrate the database or insert demonstration records at startup.
 
 app.UseRouting();
 app.UseCors("MyPolicy");
