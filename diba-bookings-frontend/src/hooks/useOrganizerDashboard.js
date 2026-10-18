@@ -808,6 +808,7 @@ const submitEventAndBooking = async (event) => {
 
     const title = {
         dashboard: "Dashboard",
+        profile: "Profile",
         bookings: "My Bookings",
         events: "My Events",
         notifications: "Notifications",
