@@ -71,8 +71,8 @@ function DashboardShell({
                             {isDarkMode ? "☀ Light mode" : "☾ Dark mode"}
                         </Button>
                         <Button type="button" variant="light" className="d-flex align-items-center gap-2 border-0 p-1 text-start" onClick={onProfileClick} aria-label="Open my profile" title="My profile">
-                            {profilePicture ? <img src={profilePicture} alt="" className="rounded-circle" style={{ width: 36, height: 36, objectFit: "cover" }} /> : <span className="rounded-circle d-inline-flex align-items-center justify-content-center fw-semibold" style={{ width: 36, height: 36, background: "#eaf0f5", color: "#071B2C" }}>{${initials}}</span>}
-                            <span className="small fw-semibold d-none d-sm-inline">{${displayName}}</span>
+                            {profilePicture ? <img src={profilePicture} alt="" className="rounded-circle" style={{ width: 36, height: 36, objectFit: "cover" }} /> : <span className="rounded-circle d-inline-flex align-items-center justify-content-center fw-semibold" style={{ width: 36, height: 36, background: "#eaf0f5", color: "#071B2C" }}>{initials}</span>}
+                            <span className="small fw-semibold d-none d-sm-inline">{displayName}</span>
                         </Button>
                         <Button variant="outline-dark" size="sm" onClick={onLogout}>Sign out</Button>
                     </div>
