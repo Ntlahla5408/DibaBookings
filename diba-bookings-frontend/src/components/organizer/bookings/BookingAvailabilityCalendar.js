@@ -3,6 +3,7 @@ import { getVenueAvailability } from "../../../services/bookingService";
 
 function BookingCalendar({
     selectedDate,
+    minimumDate,
     onDateSelect,
     venueId,
     onTimeSelect
@@ -98,11 +99,24 @@ function BookingCalendar({
     };
 
     const handleDateClick = (day) => {
-        if (!day) return;
+        if (!day || isBeforeMinimumDate(day)) return;
 
         const date = new Date(year, month, day);
 
         onDateSelect(date);
+    };
+
+    const isBeforeMinimumDate = (day) => {
+        if (!day || !minimumDate) return false;
+
+        const date = new Date(year, month, day);
+        const minimum = new Date(
+            minimumDate.getFullYear(),
+            minimumDate.getMonth(),
+            minimumDate.getDate()
+        );
+
+        return date < minimum;
     };
 
     const isSelected = (day) => {
@@ -289,7 +303,7 @@ function BookingCalendar({
                     <button
                         key={index}
                         type="button"
-                        disabled={!day}
+                        disabled={!day || isBeforeMinimumDate(day)}
                         className={
                             day && isSelected(day)
                                 ? "calendar-day selected"
