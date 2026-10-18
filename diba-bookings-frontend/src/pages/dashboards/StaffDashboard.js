@@ -246,7 +246,7 @@ function BookingDetails({ booking, venue }) {
 }
 
 function StaffDashboard() {
-    const [showHelpContent, setShowHelpContent] = useState(false);
+    const [activeSection, setActiveSection] = useState("dashboard");
     const [bookings, setBookings] = useState([]);
     const [venues, setVenues] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -545,11 +545,20 @@ return venueList;
             onLogout={clearSession}
             profileLabel={firstName}
             navigationItems={[
-                { label: "Help Centre Content", onClick: () => setShowHelpContent(true) }
+                { label: "Dashboard", active: activeSection === "dashboard", onClick: () => setActiveSection("dashboard") },
+                { label: "Policies", active: activeSection === "policies", onClick: () => setActiveSection("policies") },
+                { label: "Support tickets", active: activeSection === "support", onClick: () => setActiveSection("support") },
+                { label: "Help Centre", active: activeSection === "help", onClick: () => setActiveSection("help") }
             ]}
         >
             {loading ? (
                 <LoadingIndicator />
+            ) : activeSection === "policies" ? (
+                <PolicyDocumentsPanel canManage />
+            ) : activeSection === "support" ? (
+                <SupportTicketsPanel staffMode />
+            ) : activeSection === "help" ? (
+                <HelpContentManager />
             ) : (
                 <>
                     <section id="staff-overview" className="d-flex flex-wrap gap-3 mb-4" aria-label="Staff quick overview">
@@ -945,14 +954,6 @@ return venueList;
                 </>
             )}
 
-            <div className="staff-policy-support-layout mb-4">
-                <section id="staff-policies" className="panel">
-                    <PolicyDocumentsPanel canManage />
-                </section>
-                <section id="staff-support" className="panel">
-                    <SupportTicketsPanel staffMode />
-                </section>
-            </div>
             <BookingCalendar
                 bookings={bookings}
                 venues={venues}
@@ -1068,21 +1069,6 @@ return venueList;
                         </Button>
                     </Modal.Footer>
                 </Form>
-            </Modal>
-
-            <Modal
-                show={showHelpContent}
-                onHide={() => setShowHelpContent(false)}
-                size="xl"
-                centered
-                scrollable
-            >
-                <Modal.Header closeButton>
-                    <Modal.Title>Help Centre Content</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <HelpContentManager />
-                </Modal.Body>
             </Modal>
 
             <StaffVenueManagement
