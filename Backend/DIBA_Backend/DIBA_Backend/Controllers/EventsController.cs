@@ -278,6 +278,14 @@ namespace DIBA_Backend.Controllers
                     "You must acknowledge the booking requirements before submitting the booking.");
             }
 
+            if (string.IsNullOrWhiteSpace(request.EventAttendance) ||
+                !int.TryParse(request.EventAttendance, out var expectedAttendees) ||
+                expectedAttendees < 1)
+            {
+                return BadRequest(
+                    "Expected attendees is required and must be a whole number greater than zero.");
+            }
+
             // Reference: ErmaoCyber, "meeting-room-reservation-api".
             // Similar logic: validating that the requested time period
             // is logically valid before checking availability.
