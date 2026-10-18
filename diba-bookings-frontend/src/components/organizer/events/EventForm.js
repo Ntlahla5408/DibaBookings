@@ -29,13 +29,8 @@ function EventForm({
         const month = String(date.getMonth() + 1).padStart(2, "0");
         const day = String(date.getDate()).padStart(2, "0");
 
-        const startTime = form.startDateTime
-            ? new Date(form.startDateTime).toTimeString().slice(0, 5)
-            : "09:00";
-
-        const endTime = form.endDateTime
-            ? new Date(form.endDateTime).toTimeString().slice(0, 5)
-            : "10:00";
+        const startTime = form.startDateTime?.split("T")[1]?.slice(0, 5) || "09:00";
+        const endTime = form.endDateTime?.split("T")[1]?.slice(0, 5) || "10:00";
 
         setForm({
             ...form,
@@ -155,8 +150,8 @@ function EventForm({
                         <button
                             type="button"
                             className="calendar-toggle-button"
-                            aria-label={showCalendar ? "Close calendar" : "Open calendar and availability"}
-                            title={showCalendar ? "Close calendar" : "Open calendar and availability"}
+                            aria-label={showCalendar ? "Close date and availability picker" : "Choose date and available times"}
+                            title={showCalendar ? "Close date and availability picker" : "Choose date and available times"}
                             aria-expanded={showCalendar}
                             onClick={() => setShowCalendar((visible) => !visible)}
                         >
@@ -205,36 +200,29 @@ function EventForm({
 
                 <div className="form-grid">
 
-                    <Field label="Start date and time" required>
-                        <input
-                            required
-                            type="datetime-local"
-                            value={form.startDateTime}
-                            onChange={(e) =>
-                                setForm({
-                                    ...form,
-                                    startDateTime: e.target.value
-                                })
-                            }
+                    <Field label="Start time" required>
+                        <input required type="time"
+                            value={form.startDateTime?.split("T")[1]?.slice(0, 5) || ""}
+                            onChange={(e) => {
+                                const datePart = form.startDateTime?.split("T")[0] ||
+                                    (selectedDate ? `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, "0")}-${String(selectedDate.getDate()).padStart(2, "0")}` : "");
+                                setForm({ ...form, startDateTime: datePart ? `${datePart}T${e.target.value}` : "" });
+                            }}
                         />
                     </Field>
 
-                    <Field label="End date and time" required>
-                        <input
-                            required
-                            type="datetime-local"
-                            value={form.endDateTime}
-                            onChange={(e) =>
-                                setForm({
-                                    ...form,
-                                    endDateTime: e.target.value
-                                })
-                            }
+                    <Field label="End time" required>
+                        <input required type="time"
+                            value={form.endDateTime?.split("T")[1]?.slice(0, 5) || ""}
+                            onChange={(e) => {
+                                const datePart = form.endDateTime?.split("T")[0] || form.startDateTime?.split("T")[0] ||
+                                    (selectedDate ? `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, "0")}-${String(selectedDate.getDate()).padStart(2, "0")}` : "");
+                                setForm({ ...form, endDateTime: datePart ? `${datePart}T${e.target.value}` : "" });
+                            }}
                         />
                     </Field>
-                </div>
 
-                <Field label="Description" required>
+                                <Field label="Description" required>
                     <textarea
                         required
                         rows="4"
