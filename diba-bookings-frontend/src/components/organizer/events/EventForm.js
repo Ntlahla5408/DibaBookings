@@ -221,8 +221,9 @@ function EventForm({
                             }}
                         />
                     </Field>
+                </div>
 
-                                <Field label="Description" required>
+                <Field label="Description" required>
                     <textarea
                         required
                         rows="4"
