@@ -165,15 +165,22 @@ namespace DIBA_Backend.Controllers
             Guid id,
             UpdateVenueDto updateVenueDto)
         {
+            if (!UserHelper.TryGetUserId(User, out Guid staffUserId))
+            {
+                return Unauthorized("User ID could not be determined.");
+            }
+
             var venue = await _dbContext.Venues
                 .FirstOrDefaultAsync(venue => venue.VenueId == id);
 
-    if (venue == null)
-    {
-        return NotFound("Venue not found.");
-    }
+            if (venue == null)
+            {
+                return NotFound("Venue not found.");
+            }
 
-    venue.VenueName = updateVenueDto.VenueName;
+            var previousVenueName = venue.VenueName;
+
+            venue.VenueName = updateVenueDto.VenueName;
     venue.VenueDescription = updateVenueDto.VenueDescription;
     venue.Capacity = updateVenueDto.Capacity;
     venue.Price = updateVenueDto.Price;
@@ -187,6 +194,15 @@ namespace DIBA_Backend.Controllers
             {
                 venue.VenueImageData = updateVenueDto.VenueImageData;
             }
+            _dbContext.AuditLogs.Add(new AuditLog
+            {
+                AuditLogId = Guid.NewGuid(),
+                Action = "Updated Venue",
+                LogDescription = $"Venue '{previousVenueName}' (ID: {venue.VenueId}) was updated. Current name: '{venue.VenueName}'.",
+                Timestamp = DateTime.UtcNow,
+                UserId = staffUserId
+            });
+
             await _dbContext.SaveChangesAsync();
 
             return Ok(new
@@ -248,10 +264,15 @@ namespace DIBA_Backend.Controllers
             Guid venueId,
             CreateVenueFeatureDto createVenueFeatureDto)
         {
-            var venueExists = await _dbContext.Venues
-                .AnyAsync(venue => venue.VenueId == venueId);
+            if (!UserHelper.TryGetUserId(User, out Guid staffUserId))
+            {
+                return Unauthorized("User ID could not be determined.");
+            }
 
-            if (!venueExists)
+            var venue = await _dbContext.Venues
+                .FirstOrDefaultAsync(venue => venue.VenueId == venueId);
+
+            if (venue == null)
             {
                 return NotFound("Venue not found.");
             }
@@ -270,6 +291,15 @@ namespace DIBA_Backend.Controllers
             };
 
             _dbContext.VenueFeatures.Add(venueFeature);
+
+            _dbContext.AuditLogs.Add(new AuditLog
+            {
+                AuditLogId = Guid.NewGuid(),
+                Action = "Added Venue Facility",
+                LogDescription = $"Facility '{venueFeature.FeatureName}' (ID: {venueFeature.VenueFeatureId}) was added to venue '{venue.VenueName}' (ID: {venue.VenueId}).",
+                Timestamp = DateTime.UtcNow,
+                UserId = staffUserId
+            });
 
             await _dbContext.SaveChangesAsync();
 
@@ -296,6 +326,11 @@ namespace DIBA_Backend.Controllers
             Guid featureId,
             UpdateVenueFeatureDto updateVenueFeatureDto)
         {
+            if (!UserHelper.TryGetUserId(User, out Guid staffUserId))
+            {
+                return Unauthorized("User ID could not be determined.");
+            }
+
             // Similar parent-child resource validation:
             // both identifiers are checked so that a feature cannot be
             // modified through a different venue's route.
@@ -311,9 +346,20 @@ namespace DIBA_Backend.Controllers
                 return NotFound("Venue feature not found.");
             }
 
+            var previousFeatureName = venueFeature.FeatureName;
+
             venueFeature.FeatureName = updateVenueFeatureDto.FeatureName;
             venueFeature.FeatureDescription = updateVenueFeatureDto.FeatureDescription;
             venueFeature.FeatureStatus = updateVenueFeatureDto.FeatureStatus;
+
+            _dbContext.AuditLogs.Add(new AuditLog
+            {
+                AuditLogId = Guid.NewGuid(),
+                Action = "Updated Venue Facility",
+                LogDescription = $"Facility '{previousFeatureName}' (ID: {venueFeature.VenueFeatureId}) in venue ID {venueId} was updated. Current name: '{venueFeature.FeatureName}'.",
+                Timestamp = DateTime.UtcNow,
+                UserId = staffUserId
+            });
 
             await _dbContext.SaveChangesAsync();
 
@@ -343,6 +389,11 @@ namespace DIBA_Backend.Controllers
             Guid venueId,
             Guid featureId)
         {
+            if (!UserHelper.TryGetUserId(User, out Guid staffUserId))
+            {
+                return Unauthorized("User ID could not be determined.");
+            }
+
             // Similar parent-child validation:
             // the query checks both the child ID and its parent ID before
             // allowing the record to be deleted.
@@ -357,6 +408,15 @@ namespace DIBA_Backend.Controllers
             {
                 return NotFound("Venue feature not found.");
             }
+
+            _dbContext.AuditLogs.Add(new AuditLog
+            {
+                AuditLogId = Guid.NewGuid(),
+                Action = "Removed Venue Facility",
+                LogDescription = $"Facility '{venueFeature.FeatureName}' (ID: {venueFeature.VenueFeatureId}) was removed from venue ID {venueId}.",
+                Timestamp = DateTime.UtcNow,
+                UserId = staffUserId
+            });
 
             _dbContext.VenueFeatures.Remove(venueFeature);
 
