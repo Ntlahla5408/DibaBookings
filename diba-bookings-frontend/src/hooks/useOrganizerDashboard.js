@@ -163,6 +163,26 @@ function useOrganizerDashboard() {
         loadData();
     }, [loadData]);
 
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        const requestedBookingId = params.get("bookingId");
+        const requestedView = params.get("view");
+
+        if (!requestedBookingId || requestedView !== "booking-detail" || loading) {
+            return;
+        }
+
+        const matchingBooking = bookings.find(
+            (booking) => String(booking.bookingId).toLowerCase() === requestedBookingId.toLowerCase()
+        );
+
+        if (matchingBooking) {
+            setActiveBooking(matchingBooking);
+            setView("booking-detail");
+            setDrawerOpen(false);
+        }
+    }, [bookings, loading]);
+
 
     const goTo = (nextView) => {
         setView(nextView);
