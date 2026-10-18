@@ -50,7 +50,11 @@ const blankBooking = {
 };
 
 function useOrganizerDashboard() {
-    const [view, setView] = useState("dashboard");
+    const [view, setView] = useState(() =>
+        new URLSearchParams(window.location.search).get("view") === "policies"
+            ? "policies"
+            : "dashboard"
+    );
     const [drawerOpen, setDrawerOpen] = useState(false);
 
     const [venues, setVenues] = useState([]);
