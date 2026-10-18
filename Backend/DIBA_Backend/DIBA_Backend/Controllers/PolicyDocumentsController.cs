@@ -157,13 +157,13 @@ namespace DIBA_Backend.Controllers
 
     /// <summary>
     /// Request body for publishing a policy or a revised policy version.
-    /// Keep IsSamplePolicy true until the content has been confirmed as official.
+    /// Indicates whether the document is marked as illustrative content.
     /// </summary>
     public class SavePolicyDocumentRequest
     {
         public string PolicyType { get; set; } = string.Empty;
         public string Title { get; set; } = string.Empty;
         public string Content { get; set; } = string.Empty;
-        public bool IsSamplePolicy { get; set; } = true;
+        public bool IsSamplePolicy { get; set; } = false;
     }
 }
