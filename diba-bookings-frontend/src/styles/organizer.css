@@ -1307,10 +1307,11 @@
 }
 
 .calendar-day:disabled {
-    background: transparent;
-    border-color: transparent;
-    color: transparent;
+    background: #f3f5f7;
+    border-color: #e2e7eb;
+    color: #a0aab3;
     cursor: default;
+    opacity: 1;
 }
 
 
@@ -1521,4 +1522,22 @@
     .calendar-popup .time-slot-list {
         grid-template-columns: minmax(0, 1fr);
     }
+}
+
+
+/* Create booking form navigation and capacity feedback */
+.event-form-back {
+    align-self: flex-start;
+    margin: 0 0 14px;
+}
+
+.workflow-form .field-error {
+    color: #b42318;
+    display: block;
+    font-size: 0.82rem;
+    margin-top: 6px;
+}
+
+.calendar-grid .calendar-day:disabled {
+    text-decoration: none;
 }
