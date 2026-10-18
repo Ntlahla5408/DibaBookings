@@ -157,6 +157,15 @@ function EventForm({
                         >
                             <span aria-hidden="true">▦</span>
                         </button>
+                        <span className="calendar-selected-date">
+                            {selectedDate
+                                ? selectedDate.toLocaleDateString([], {
+                                      day: "numeric",
+                                      month: "short",
+                                      year: "numeric"
+                                  })
+                                : "Choose date"}
+                        </span>
 
                         {showCalendar && (
                             <div className="calendar-popup" role="dialog" aria-label="Choose booking date and availability">
