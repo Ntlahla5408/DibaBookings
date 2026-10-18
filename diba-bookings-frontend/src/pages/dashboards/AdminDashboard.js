@@ -6,6 +6,7 @@ import AdminRecordsPanel from "../../components/admin/AdminRecordsPanel";
 import ChangeUserRoleModal from "../../components/admin/ChangeUserRoleModal";
 import CreateUserModal from "../../components/admin/CreateUserModal";
 import DashboardShell from "../../components/common/DashboardShell";
+import HelpContentManager from "../../components/common/HelpContentManager";
 import LoadingIndicator from "../../components/common/LoadingIndicator";
 import {
     createUser,
@@ -187,6 +188,7 @@ function AdminDashboard() {
                 { label: "Users", onClick: () => setActiveSection("users") },
                 { label: "Bookings", onClick: () => setActiveSection("bookings") },
                 { label: "Audit logs", onClick: () => setActiveSection("audit") },
+                { label: "Help content", onClick: () => setActiveSection("help") },
             ]}
         >
 
@@ -198,6 +200,8 @@ function AdminDashboard() {
                     onShowAudit={() => setActiveSection("audit")}
                     onShowBookings={() => setActiveSection("bookings")}
                 />
+            ) : activeSection === "help" ? (
+                <HelpContentManager />
             ) : (
                 <AdminRecordsPanel
                     activeSection={activeSection}
