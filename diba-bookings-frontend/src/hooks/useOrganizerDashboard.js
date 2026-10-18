@@ -771,7 +771,6 @@ const submitEventAndBooking = async (event) => {
 
     const title = {
         dashboard: "Dashboard",
-        venues: "Find a Venue",
         bookings: "My Bookings",
         events: "My Events",
         notifications: "Notifications",
