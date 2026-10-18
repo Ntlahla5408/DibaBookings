@@ -90,6 +90,14 @@ function EventBookingWorkspace({
                     <span>Expected attendees</span>
                     <strong>{event?.eventAttendance || "Not provided"}</strong>
                 </div>
+                <div className="shared-detail">
+                    <span>Venue location</span>
+                    <strong>{record.venue?.location || "Not provided"}</strong>
+                </div>
+                <div className="shared-detail">
+                    <span>Venue capacity</span>
+                    <strong>{record.venue?.capacity ?? "Not provided"}</strong>
+                </div>
                 <div className="shared-detail shared-detail-wide">
                     <span>Description</span>
                     <p>{event?.eventDescription || "No description provided."}</p>
