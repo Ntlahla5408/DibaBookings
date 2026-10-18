@@ -541,7 +541,7 @@ return venueList;
 
     return (
         <DashboardShell
-            title="Dashboard"
+            title={activeSection === "policies" ? "Policies" : activeSection === "support" ? "Support tickets" : activeSection === "help" ? "Help Centre" : "Dashboard"}
             onLogout={clearSession}
             profileLabel={firstName}
             navigationItems={[
