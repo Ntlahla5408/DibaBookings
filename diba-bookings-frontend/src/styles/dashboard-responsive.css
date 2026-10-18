@@ -59,7 +59,7 @@
 }
 
 
-/* Staff dashboard: keep every section inside the viewport. */
+/* Dashboard page sizing and overflow protection. */
 .app-shell {
     min-width: 0;
     width: 100%;
@@ -167,7 +167,6 @@
     }
 }
 
-
 .booking-calendar-grid {
     min-width: 0;
 }
@@ -210,7 +209,7 @@
     }
 }
 
-/* Staff overview cards: use the available width and give each metric room to breathe. */
+/* Overview metrics may sit in a compact row; the main page sections remain stacked. */
 #staff-overview {
     display: grid !important;
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -270,7 +269,7 @@
     }
 }
 
-/* Keep section navigation beside the NMU logo and use the dashboard navy/gold palette. */
+/* Dashboard header and section navigation. */
 .dashboard-topbar {
     width: 100%;
     min-width: 0;
@@ -338,7 +337,7 @@
     }
 }
 
-/* Optional dark theme for dashboard pages. The choice is saved in this browser. */
+/* Optional dark theme for dashboard pages. */
 html[data-theme="dark"] {
     color-scheme: dark;
     background: #0b1520;
@@ -466,7 +465,6 @@ html[data-theme="dark"] .dashboard-theme-toggle {
 }
 
 
-
 /* Admin user management: compact account summary and usable filter controls. */
 .admin-user-summary {
     display: flex;
@@ -527,7 +525,7 @@ html[data-theme="dark"] .dashboard-theme-toggle {
 }
 
 
-/* Admin overview mirrors the staff dashboard's four-card quick overview. */
+/* Admin overview metrics. */
 #admin-overview {
     display: grid !important;
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -588,16 +586,17 @@ html[data-theme="dark"] .dashboard-theme-toggle {
 }
 
 
-/* Staff dashboard: horizontal workspace sections with the calendar at the bottom. */
+/* Staff dashboard: single-column sections, each spanning the content width. */
 .staff-records-layout {
-    align-items: start;
-    display: grid;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
     gap: 18px;
-    grid-template-columns: minmax(0, 1.65fr) minmax(280px, 0.85fr);
     width: 100%;
 }
 
 .staff-records-layout > * {
+    width: 100%;
     min-width: 0;
     margin-bottom: 0;
 }
@@ -607,13 +606,15 @@ html[data-theme="dark"] .dashboard-theme-toggle {
 }
 
 .staff-policy-support-layout {
+    display: flex;
+    flex-direction: column;
     align-items: stretch;
-    display: grid;
     gap: 18px;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
 }
 
 .staff-policy-support-layout > section {
+    width: 100%;
     min-width: 0;
     margin-bottom: 0;
 }
@@ -635,16 +636,6 @@ html[data-theme="dark"] .dashboard-theme-toggle {
 
 #booking-calendar .calendar-filter-row > div {
     min-width: 0;
-}
-
-@media (max-width: 1100px) {
-    .staff-records-layout {
-        grid-template-columns: minmax(0, 1fr);
-    }
-
-    .staff-policy-support-layout {
-        grid-template-columns: minmax(0, 1fr);
-    }
 }
 
 @media (max-width: 600px) {
