@@ -91,56 +91,32 @@ function EventForm({
                     </Field>
 
                     <Field label="Venue" required>
-                        {selectedVenue ? (
-                            <div className="selected-venue">
-                                <strong>
-                                    {selectedVenue.venueName}
-                                </strong>
+                        <select
+                            required
+                            value={form.venueId || selectedVenue?.venueId || ""}
+                            onChange={(e) => {
+                                const venue = venues.find(
+                                    (item) => item.venueId === e.target.value
+                                );
 
-                                <span>
-                                    {selectedVenue.location} · Capacity{" "}
-                                    {selectedVenue.capacity}
-                                </span>
+                                setForm({
+                                    ...form,
+                                    venueId: e.target.value
+                                });
 
-                                <button
-                                    type="button"
-                                    onClick={() => onChangeVenue(null)}
+                                onChangeVenue(venue || null);
+                            }}
+                        >
+                            <option value="">Choose a venue</option>
+                            {venues.map((venue) => (
+                                <option
+                                    key={venue.venueId}
+                                    value={venue.venueId}
                                 >
-                                    Change Venue
-                                </button>
-                            </div>
-                        ) : (
-                            <select
-                                required
-                                value={form.venueId}
-                                onChange={(e) => {
-                                    const venue = venues.find(
-                                        (item) =>
-                                            item.venueId === e.target.value
-                                    );
-
-                                    setForm({
-                                        ...form,
-                                        venueId: e.target.value
-                                    });
-
-                                    onChangeVenue(venue);
-                                }}
-                            >
-                                <option value="">
-                                    Choose a venue
+                                    {venue.venueName}
                                 </option>
-
-                                {venues.map((venue) => (
-                                    <option
-                                        key={venue.venueId}
-                                        value={venue.venueId}
-                                    >
-                                        {venue.venueName}
-                                    </option>
-                                ))}
-                            </select>
-                        )}
+                            ))}
+                        </select>
                     </Field>
 
                     <Field label="Expected attendees" required>
