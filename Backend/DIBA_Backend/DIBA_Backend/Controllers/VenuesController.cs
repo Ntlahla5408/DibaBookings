@@ -1,6 +1,7 @@
 ﻿using DIBA_Backend.Data;
 using DIBA_Backend.Dto.Venue;
 using DIBA_Backend.Dto.VenueFeature;
+using DIBA_Backend.Helpers;
 using DIBA_Backend.Models.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -94,6 +95,13 @@ namespace DIBA_Backend.Controllers
         [Authorize(Roles = "Administrator,Staff")]
         public async Task<IActionResult> CreateVenue(CreateVenueDto createVenueDto)
         {
+            // Resolve the authenticated staff member before creating records.
+            // The AuditLog.UserId foreign key must identify an existing user.
+            if (!UserHelper.TryGetUserId(User, out Guid staffUserId))
+            {
+                return Unauthorized("User ID could not be determined.");
+            }
+
             var venue = new Venue
             {
                 VenueId = Guid.NewGuid(),
@@ -109,6 +117,16 @@ namespace DIBA_Backend.Controllers
             };
 
             _dbContext.Venues.Add(venue);
+
+            // Save the venue and its audit entry in the same database operation.
+            _dbContext.AuditLogs.Add(new AuditLog
+            {
+                AuditLogId = Guid.NewGuid(),
+                Action = "Created Venue",
+                LogDescription = $"Venue '{venue.VenueName}' (ID: {venue.VenueId}) was created.",
+                Timestamp = DateTime.UtcNow,
+                UserId = staffUserId
+            });
 
             await _dbContext.SaveChangesAsync();
 
