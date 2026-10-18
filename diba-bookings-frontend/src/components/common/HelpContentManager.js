@@ -24,6 +24,7 @@ function HelpContentManager() {
     const [faqs, setFaqs] = useState([]);
     const [form, setForm] = useState(emptyForm);
     const [editingId, setEditingId] = useState(null);
+    const [showForm, setShowForm] = useState(false);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [loadError, setLoadError] = useState("");
@@ -34,7 +35,9 @@ function HelpContentManager() {
 
         try {
             const response = await getAllFAQs();
-            setFaqs(Array.isArray(response.data) ? response.data : []);
+            const loadedFAQs = Array.isArray(response.data) ? response.data : [];
+            setFaqs(loadedFAQs);
+            setShowForm((current) => current || loadedFAQs.length === 0);
         } catch (error) {
             const message =
                 error.response?.data?.message ||
@@ -54,10 +57,12 @@ function HelpContentManager() {
     const resetForm = () => {
         setForm(emptyForm);
         setEditingId(null);
+        setShowForm(false);
     };
 
     const editFAQ = (faq) => {
         setEditingId(getFaqId(faq));
+        setShowForm(true);
         setForm({
             question: faq.question || "",
             answer: faq.answer || "",
@@ -138,11 +143,11 @@ function HelpContentManager() {
                     <h2>Help Centre Content</h2>
                 </div>
                 {!editingId && (
-                    <Button onClick={resetForm}>+ Add question</Button>
+                    <Button onClick={() => { resetForm(); setShowForm(true); }}>+ Add question</Button>
                 )}
             </div>
 
-            {(editingId || form.question || form.answer || faqs.length === 0) && (
+            {showForm && (
                 <Form onSubmit={saveFAQ} className="mb-4">
                     <Form.Group className="mb-3">
                         <Form.Label>Question</Form.Label>
