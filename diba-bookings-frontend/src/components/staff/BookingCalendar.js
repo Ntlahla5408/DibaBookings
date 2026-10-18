@@ -53,7 +53,7 @@ function BookingCalendar({ bookings = [], venues = [], onSelectBooking }) {
 
     return (
         <section id="booking-calendar" className="panel mb-4" aria-label="Booking calendar">
-            <div className="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
+            <div className="calendar-panel-heading d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
                 <h2 className="mb-0">Calendar</h2>
                 <div className="d-flex flex-wrap align-items-center gap-2">
                     <Button variant="outline-secondary" onClick={() => moveMonth(-1)} aria-label="Previous month">‹</Button>
@@ -62,7 +62,7 @@ function BookingCalendar({ bookings = [], venues = [], onSelectBooking }) {
                     <Button variant="outline-primary" onClick={showToday}>Today</Button>
                 </div>
             </div>
-            <div className="row g-3 mb-3">
+            <div className="calendar-filter-row mb-3">
                 <div className="col-12 col-sm-6"><Form.Label htmlFor="calendar-status-filter">Booking status</Form.Label>
                     <Form.Select id="calendar-status-filter" value={status} onChange={(e) => setStatus(e.target.value)}>
                         <option value="all">All statuses</option><option value="pending">Pending</option><option value="approved">Approved</option><option value="rejected">Rejected</option><option value="cancelled">Cancelled</option>
