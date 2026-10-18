@@ -790,7 +790,8 @@ return venueList;
                                         <th>Organiser</th>
                                         <th>Venue</th>
                                         <th>Booking date</th>
-                                        <th>Status</th>
+                                        <th>Booking status</th>
+                                        <th>Payment status</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -834,6 +835,17 @@ return venueList;
                                                         text="dark"
                                                     >
                                                         {booking.statusName || "Unknown"}
+                                                    </Badge>
+                                                </td>
+                                                <td>
+                                                    <Badge
+                                                        bg={
+                                                            String(booking.paymentStatus || "").toLowerCase() === "paid"
+                                                                ? "success"
+                                                                : "secondary"
+                                                        }
+                                                    >
+                                                        {booking.paymentStatus || "Not started"}
                                                     </Badge>
                                                 </td>
                                                 <td>
@@ -882,7 +894,7 @@ return venueList;
 
                                     {sortedBookings.length === 0 && (
                                         <tr>
-                                            <td colSpan={6} className="text-center py-4">
+                                            <td colSpan={7} className="text-center py-4">
                                                 No bookings match your search or filters.
                                             </td>
                                         </tr>
