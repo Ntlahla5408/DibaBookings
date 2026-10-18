@@ -200,11 +200,14 @@ function BookingCalendar({
             return;
         }
 
-        const rangeIsAvailable = timeSlotsForRange(selectionStart.start, slot.end)
-            .every((rangeSlot) => !isSlotBooked(rangeSlot.start, rangeSlot.end));
+        const unavailableSlots = timeSlotsForRange(selectionStart.start, slot.end)
+            .filter((rangeSlot) => isSlotBooked(rangeSlot.start, rangeSlot.end));
 
-        if (!rangeIsAvailable) {
-            setSelectionMessage("That range includes a booked time. Choose an earlier end time or a different start.");
+        if (unavailableSlots.length > 0) {
+            const unavailableTimes = unavailableSlots
+                .map((rangeSlot) => formatTime(rangeSlot.start) + "–" + formatTime(rangeSlot.end))
+                .join(", ");
+            setSelectionMessage("Unavailable time" + (unavailableSlots.length > 1 ? "s" : "") + ": " + unavailableTimes + ". Please choose a different range.");
             return;
         }
 
@@ -386,12 +389,13 @@ function BookingCalendar({
                                             </span>
 
                                             <span className="time-slot-status">
-                                                {status ||
-                                                    (selected
+                                                {booked
+                                                    ? `Unavailable${status ? ` · ${status}` : ""}`
+                                                    : selected
                                                         ? "Selected"
                                                         : selectionStart && slot.start > selectionStart.start
                                                             ? "Choose as end"
-                                                            : "Available")}
+                                                            : "Available"}
                                             </span>
                                         </button>
                                     );
