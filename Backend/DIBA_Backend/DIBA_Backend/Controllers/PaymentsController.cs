@@ -311,88 +311,31 @@ namespace DIBA_Backend.Controllers
             });
         }
 
-        // Local presentation demo only. This endpoint is unavailable outside Development.
-        // After the presentation, replace it with verified Yoco webhook/API confirmation.
+        // Presentation demo: opening the payment success page marks the booking's payment as Paid.
         [HttpPost("demo-confirm-success/{bookingId:guid}")]
         [AllowAnonymous]
         public async Task<IActionResult> ConfirmDemoPaymentSuccess(Guid bookingId)
         {
-            if (!environment.IsDevelopment() ||
-                !configuration.GetValue<bool>("DemoPayments:EnableSuccessReturnConfirmation"))
-            {
-                return NotFound();
-            }
-
-            var booking = await dbContext.Bookings
-                .Include(item => item.BookingStatus)
-                .Include(item => item.Payments)
-                .FirstOrDefaultAsync(item => item.BookingId == bookingId);
-
-            if (booking == null)
-            {
-                return NotFound("Booking not found.");
-            }
-
-            var currentBookingStatus = booking.BookingStatus?.StatusName;
-            var alreadyPaid =
-                string.Equals(currentBookingStatus, "Paid", StringComparison.OrdinalIgnoreCase) &&
-                booking.Payments.Any(item =>
-                    string.Equals(item.PaymentStatus, "Paid", StringComparison.OrdinalIgnoreCase));
-
-            if (!alreadyPaid &&
-                !string.Equals(currentBookingStatus, "Approved", StringComparison.OrdinalIgnoreCase))
-            {
-                return BadRequest("Payment can only be recorded for an approved booking.");
-            }
-
-            var payment = booking.Payments
+            var payment = await dbContext.Payments
+                .Where(item => item.BookingId == bookingId)
                 .OrderByDescending(item => item.PaymentDate)
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
 
             if (payment == null)
             {
                 return NotFound("No payment record was found for this booking.");
             }
 
-            if (!string.Equals(payment.PaymentStatus, "Pending", StringComparison.OrdinalIgnoreCase) &&
-                !string.Equals(payment.PaymentStatus, "Paid", StringComparison.OrdinalIgnoreCase))
-            {
-                return BadRequest("This payment is not pending and cannot be confirmed by the demo flow.");
-            }
-
-            var paidStatus = await dbContext.BookingStatuses
-                .FirstOrDefaultAsync(item => item.StatusName == "Paid");
-
-            if (paidStatus == null)
-            {
-                paidStatus = new BookingStatus
-                {
-                    BookingStatusId = Guid.NewGuid(),
-                    StatusName = "Paid",
-                    StatusDescription = "Payment recorded for the approved venue booking."
-                };
-
-                dbContext.BookingStatuses.Add(paidStatus);
-            }
-
-            booking.BookingStatusId = paidStatus.BookingStatusId;
-
-            if (!string.Equals(payment.PaymentStatus, "Paid", StringComparison.OrdinalIgnoreCase))
-            {
-                payment.PaymentStatus = "Paid";
-                payment.PaymentDate = DateTime.UtcNow;
-            }
+            payment.PaymentStatus = "Paid";
+            payment.PaymentDate = DateTime.UtcNow;
 
             await dbContext.SaveChangesAsync();
 
             return Ok(new
             {
                 bookingId,
-                paymentStatus = payment.PaymentStatus,
-                bookingStatus = paidStatus.StatusName,
-                demoMode = true
+                paymentStatus = payment.PaymentStatus
             });
         }
-
     }
 }
