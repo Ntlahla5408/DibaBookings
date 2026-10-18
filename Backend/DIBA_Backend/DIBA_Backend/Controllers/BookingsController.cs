@@ -337,7 +337,8 @@ namespace DIBA_Backend.Controllers
 
                     (
                         booking.BookingStatus.StatusName == "Pending" ||
-                        booking.BookingStatus.StatusName == "Approved"
+                        booking.BookingStatus.StatusName == "Approved" ||
+                        booking.BookingStatus.StatusName == "Paid"
                     ));
 
             return Ok(new
@@ -475,7 +476,8 @@ namespace DIBA_Backend.Controllers
 
                     (
                         booking.BookingStatus.StatusName == "Pending" ||
-                        booking.BookingStatus.StatusName == "Approved"
+                        booking.BookingStatus.StatusName == "Approved" ||
+                        booking.BookingStatus.StatusName == "Paid"
                     ));
 
             if (hasConflict)
@@ -720,7 +722,8 @@ namespace DIBA_Backend.Controllers
 
                     (
                         booking.BookingStatus.StatusName == "Pending" ||
-                        booking.BookingStatus.StatusName == "Approved"
+                        booking.BookingStatus.StatusName == "Approved" ||
+                        booking.BookingStatus.StatusName == "Paid"
                     ));
 
             if (hasConflict)
