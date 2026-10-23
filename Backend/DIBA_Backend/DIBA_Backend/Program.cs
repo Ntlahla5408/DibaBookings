@@ -163,6 +163,16 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
+// Explicit one-off local seed command. Normal application startup never seeds data.
+// Run from the backend project folder with: dotnet run -- --seed-presentation-data
+if (args.Contains("--seed-presentation-data", StringComparer.OrdinalIgnoreCase))
+{
+    await using var scope = app.Services.CreateAsyncScope();
+    var dbContext = scope.ServiceProvider.GetRequiredService<DIBABookingsDbContext>();
+    await PresentationDataSeeder.SeedAsync(dbContext);
+    return;
+}
+
 
 // Database schema changes are applied explicitly during deployment with EF Core migrations.
 // The application does not migrate the database or insert demonstration records at startup.
