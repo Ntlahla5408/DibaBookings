@@ -45,9 +45,13 @@ public static class PresentationDataSeeder
             "organiser.demo@diba.local"
         ];
 
+        string[] samplePolicyTypes = ["VenueRules", "Cancellation", "Privacy", "Terms"];
         bool alreadySeeded =
             await db.Users.AnyAsync(user => demoEmails.Contains(user.Email)) ||
-            await db.Venues.AnyAsync(venue => venue.VenueId == AuditoriumId);
+            await db.Venues.AnyAsync(venue => venue.VenueId == AuditoriumId) ||
+            await db.SupportTickets.AnyAsync(ticket => ticket.TicketNumber == "DEMO-1001") ||
+            await db.PolicyDocuments.AnyAsync(policy =>
+                policy.Version == 1 && samplePolicyTypes.Contains(policy.PolicyType));
 
         if (alreadySeeded)
         {
