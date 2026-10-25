@@ -73,7 +73,32 @@ function BookingCalendar({
                 formatDateForApi(date)
             );
 
-            setBookings(response.data || []);
+            // Support both camelCase and PascalCase JSON responses.
+            // Some deployed API configurations may preserve C# DTO property names.
+            const responseData = response?.data;
+            const availabilityRecords = Array.isArray(responseData)
+                ? responseData
+                : Array.isArray(responseData?.data)
+                    ? responseData.data
+                    : Array.isArray(responseData?.bookings)
+                        ? responseData.bookings
+                        : Array.isArray(responseData?.Bookings)
+                            ? responseData.Bookings
+                            : [];
+
+            setBookings(
+                availabilityRecords.map((booking) => ({
+                    bookingId: booking.bookingId ?? booking.BookingId,
+                    startDateTime: booking.startDateTime ?? booking.StartDateTime,
+                    endDateTime: booking.endDateTime ?? booking.EndDateTime,
+                    statusName: booking.statusName ?? booking.StatusName ?? ""
+                })).filter((booking) =>
+                    booking.startDateTime &&
+                    booking.endDateTime &&
+                    Number.isFinite(new Date(booking.startDateTime).getTime()) &&
+                    Number.isFinite(new Date(booking.endDateTime).getTime())
+                )
+            );
         } catch (error) {
             console.error(
                 "Unable to load venue availability:",
