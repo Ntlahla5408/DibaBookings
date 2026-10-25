@@ -580,10 +580,15 @@ namespace DIBA_Backend.Controllers
                      user.Role.RoleName == "Administrator"))
                 .ToListAsync();
 
+            var organiserName = await _dbContext.Users
+                .Where(user => user.UserId == userId)
+                .Select(user => user.FirstName + " " + user.LastName)
+                .FirstOrDefaultAsync() ?? "Event Organiser";
+
             var staffMessage =
                 $"A new venue booking requires review.\n\n" +
                 $"Booking reference: {bookingReference}\n" +
-                $"Organiser: {await _dbContext.Users.Where(user => user.UserId == userId).Select(user => user.FirstName + " " + user.LastName).FirstOrDefaultAsync() ?? "Event Organiser"}\n" +
+                $"Organiser: {organiserName}\n" +
                 $"Event: {eventEntity.EventName}\n" +
                 $"Venue: {venue.VenueName}\n" +
                 $"Start: {startText}\n" +
