@@ -62,7 +62,7 @@ function AdminRecordsPanel({
                 </div>
             </div>
 
-            {activeSection !== "audit" && (
+            {activeSection && (
                 <Form.Control
                     className="search no-print"
                     placeholder={`Search ${activeSection}...`}
@@ -224,6 +224,8 @@ function AdminRecordsPanel({
             )}
 
             {activeSection === "audit" && (
+                <>
+                <p className="text-muted small">Showing {logs.length} matching audit record{logs.length === 1 ? "" : "s"}</p>
                 <Table responsive hover>
                     <thead>
                         <tr>
@@ -246,6 +248,7 @@ function AdminRecordsPanel({
                         ))}
                     </tbody>
                 </Table>
+                </>
             )}
         </section>
     );
