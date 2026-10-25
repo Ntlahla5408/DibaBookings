@@ -1463,7 +1463,8 @@ namespace DIBA_Backend.Controllers
                     b.BookingStatus != null &&
                     (
                         b.BookingStatus.StatusName == "Pending" ||
-                        b.BookingStatus.StatusName == "Approved"
+                        b.BookingStatus.StatusName == "Approved" ||
+                        b.BookingStatus.StatusName == "Paid"
                     ))
                 .Select(b => new VenueAvailabilityDto
                 {
