@@ -6,6 +6,7 @@ import "../../../styles/print.css";
 
 function BookingDetails({ booking, event, venue, onBack, onEdit, onCancel, saving }) {
     const status = booking.statusName || "Pending";
+    const bookingReference = String(booking.bookingId || "").replace(/-/g, "").toUpperCase();
 
     return (
         <section className="detail-view diba-print-area">
@@ -15,7 +16,7 @@ function BookingDetails({ booking, event, venue, onBack, onEdit, onCancel, savin
                 <div className="detail-panel-heading">
                     <div>
                         <p className="section-kicker">BOOKING REFERENCE</p>
-                        <h2>{shortId(booking.bookingId)}</h2>
+                        <h2>{bookingReference}</h2>
                         <p className="print-report-meta">DIBA Bookings · Booking confirmation details</p>
                     </div>
                     <div className="detail-heading-actions no-print"><button type="button" className="outline-action" onClick={() => window.print()}>Print / Save PDF</button></div>
@@ -43,7 +44,7 @@ function BookingDetails({ booking, event, venue, onBack, onEdit, onCancel, savin
                     <Detail label="Status" value={status} />
                     <Detail label="Submitted" value={formatDate(booking.bookingDate)} />
                     <Detail label="Payment status" value={booking.paymentStatus || "Not started"} />
-                    <Detail label="Booking reference" value={shortId(booking.bookingId)} />
+                    <Detail label="Booking reference" value={bookingReference} />
                     <Detail label="Requirements acknowledged" value={booking.acknowledgementAccepted ? "Yes" : "Not recorded"} />
                     {booking.acknowledgementAcceptedAt && (
                         <Detail label="Acknowledged on" value={formatDate(booking.acknowledgementAcceptedAt)} />
