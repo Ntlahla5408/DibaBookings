@@ -1219,40 +1219,45 @@ namespace DIBA_Backend.Controllers
 
         [HttpGet("venue/{venueId:guid}/availability")]
         public async Task<IActionResult> GetVenueAvailability(
-    Guid venueId,
-    DateTime date)
+            [FromRoute] Guid venueId,
+            [FromQuery] DateTime date)
         {
-            var venue = await _dbContext.Venues
-                .FirstOrDefaultAsync(v => v.VenueId == venueId);
+            var venueExists = await _dbContext.Venues
+                .AsNoTracking()
+                .AnyAsync(venue => venue.VenueId == venueId);
 
-            if (venue == null)
+            if (!venueExists)
             {
                 return NotFound("Venue not found.");
             }
 
+            // Treat the supplied calendar date as a local-day range. A booking
+            // blocks the day whenever any part of its interval overlaps it.
             var dayStart = date.Date;
             var dayEnd = dayStart.AddDays(1);
 
+            // Compare status names case-insensitively and ignore accidental
+            // surrounding whitespace so valid Pending/Approved/Paid bookings
+            // are not missed by the availability calendar.
+            var blockingStatuses = new[] { "pending", "approved", "paid" };
+
             var bookings = await _dbContext.Bookings
-                .Include(b => b.BookingStatus)
-                .Where(b =>
-                    b.VenueId == venueId &&
-                    b.StartDateTime < dayEnd &&
-                    b.EndDateTime > dayStart &&
-                    b.BookingStatus != null &&
-                    (
-                        b.BookingStatus.StatusName == "Pending" ||
-                        b.BookingStatus.StatusName == "Approved" ||
-                        b.BookingStatus.StatusName == "Paid"
-                    ))
-                .Select(b => new VenueAvailabilityDto
+                .AsNoTracking()
+                .Where(booking =>
+                    booking.VenueId == venueId &&
+                    booking.StartDateTime < dayEnd &&
+                    booking.EndDateTime > dayStart &&
+                    booking.BookingStatus != null &&
+                    blockingStatuses.Contains(
+                        booking.BookingStatus.StatusName.Trim().ToLower()))
+                .OrderBy(booking => booking.StartDateTime)
+                .Select(booking => new VenueAvailabilityDto
                 {
-                    BookingId = b.BookingId,
-                    StartDateTime = b.StartDateTime,
-                    EndDateTime = b.EndDateTime,
-                    StatusName = b.BookingStatus!.StatusName
+                    BookingId = booking.BookingId,
+                    StartDateTime = booking.StartDateTime,
+                    EndDateTime = booking.EndDateTime,
+                    StatusName = booking.BookingStatus!.StatusName
                 })
-                .OrderBy(b => b.StartDateTime)
                 .ToListAsync();
 
             return Ok(bookings);
