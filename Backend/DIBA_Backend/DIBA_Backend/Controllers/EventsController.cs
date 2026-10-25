@@ -460,12 +460,12 @@ namespace DIBA_Backend.Controllers
                 var startText = booking.StartDateTime.ToString("dd MMM yyyy, HH:mm");
                 var endText = booking.EndDateTime.ToString("dd MMM yyyy, HH:mm");
                 var organiserMessage =
-                    $"Your booking request has been submitted and is awaiting review.\\n\\n" +
-                    $"Booking reference: {bookingReference}\\n" +
-                    $"Event: {eventEntity.EventName}\\n" +
-                    $"Venue: {venue.VenueName}\\n" +
-                    $"Start: {startText}\\n" +
-                    $"End: {endText}\\n" +
+                    $"Your booking request has been submitted and is awaiting review.\n\n" +
+                    $"Booking reference: {bookingReference}\n" +
+                    $"Event: {eventEntity.EventName}\n" +
+                    $"Venue: {venue.VenueName}\n" +
+                    $"Start: {startText}\n" +
+                    $"End: {endText}\n" +
                     "DIBA Bookings will notify you when staff make a decision.";
 
                 var organiserNotification = new Notification
@@ -513,13 +513,13 @@ namespace DIBA_Backend.Controllers
                     .FirstOrDefaultAsync() ?? "Event Organiser";
 
                 var staffMessage =
-                    $"A new venue booking requires review.\\n\\n" +
-                    $"Booking reference: {bookingReference}\\n" +
-                    $"Organiser: {organiserName}\\n" +
-                    $"Event: {eventEntity.EventName}\\n" +
-                    $"Venue: {venue.VenueName}\\n" +
-                    $"Start: {startText}\\n" +
-                    $"End: {endText}\\n" +
+                    $"A new venue booking requires review.\n\n" +
+                    $"Booking reference: {bookingReference}\n" +
+                    $"Organiser: {organiserName}\n" +
+                    $"Event: {eventEntity.EventName}\n" +
+                    $"Venue: {venue.VenueName}\n" +
+                    $"Start: {startText}\n" +
+                    $"End: {endText}\n" +
                     "Open the DIBA Bookings Staff Dashboard to review this request.";
 
                 var staffNotifications = staffRecipients.Select(staff => new Notification
