@@ -183,7 +183,7 @@ function EventForm({
                                     selectedDate={selectedDate}
                                     minimumDate={minimumBookingDate}
                                     onDateSelect={handleDateSelect}
-                                    venueId={form.venueId}
+                                    venueId={form.venueId || selectedVenue?.venueId}
                                     onTimeSelect={(slot) => {
                                         const toLocalInput = (date) => {
                                             const year = date.getFullYear();
