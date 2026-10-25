@@ -1,6 +1,7 @@
 import { Badge, Button, Form, Table } from "react-bootstrap";
 import { formatDate, formatSouthAfricanDateTime } from "../../utils/dateUtils";
 import { shortId } from "../../utils/dashboardUtils";
+import "../../styles/print.css";
 
 const sectionTitles = {
     users: "Users",
@@ -45,10 +46,11 @@ function AdminRecordsPanel({
         userRoleFilter !== "all";
 
     return (
-        <section className="panel table-panel">
+        <section className="panel table-panel diba-print-area">
             <div className="panel-heading">
                 <div>
                     <h2>{title}</h2>
+                    <p className="print-report-meta">DIBA Bookings · {title}</p>
                 </div>
                 {activeSection === "users" && (
                     <Button onClick={onCreateUser}>+ Create user</Button>
@@ -57,7 +59,7 @@ function AdminRecordsPanel({
 
             {activeSection !== "audit" && (
                 <Form.Control
-                    className="search"
+                    className="search no-print"
                     placeholder={`Search ${activeSection}...`}
                     value={query}
                     onChange={(event) => onQueryChange(event.target.value)}
@@ -73,7 +75,7 @@ function AdminRecordsPanel({
                         <span><strong>{inactiveUsers}</strong> inactive</span>
                     </div>
 
-                    <div className="admin-filter-row">
+                    <div className="admin-filter-row no-print">
                         <Form.Group className="admin-filter-field">
                             <Form.Label>Account status</Form.Label>
                             <Form.Select
