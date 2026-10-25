@@ -132,6 +132,16 @@ function AdminDashboard() {
         [bookings, query]
     );
 
+    const filteredLogs = useMemo(
+        () =>
+            logs.filter((log) =>
+                `${log.action} ${log.logDescription || ""} ${log.userName || ""} ${log.timestamp || ""}`
+                    .toLowerCase()
+                    .includes(query.trim().toLowerCase())
+            ),
+        [logs, query]
+    );
+
     const updateUser = async (user) => {
         try {
             await updateUserStatus(user.userId, !user.isActive);
@@ -241,7 +251,7 @@ function AdminDashboard() {
                         setUserRoleFilter("all");
                     }}
                     bookings={filteredBookings}
-                    logs={logs}
+                    logs={filteredLogs}
                     onCreateUser={() => setShowCreate(true)}
                     onChangeRole={changeRole}
                     onUpdateUser={updateUser}
