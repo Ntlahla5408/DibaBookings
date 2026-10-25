@@ -2,6 +2,7 @@
 using DIBA_Backend.Dto.Booking;
 using DIBA_Backend.Dto.Event;
 using DIBA_Backend.Models.Entities;
+using DIBA_Backend.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -20,10 +21,14 @@ namespace DIBA_Backend.Controllers
     public class EventsController : ControllerBase
     {
         private readonly DIBABookingsDbContext _dbContext;
+        private readonly NotificationEmailService _notificationEmailService;
 
-        public EventsController(DIBABookingsDbContext dbContext)
+        public EventsController(
+            DIBABookingsDbContext dbContext,
+            NotificationEmailService notificationEmailService)
         {
             _dbContext = dbContext;
+            _notificationEmailService = notificationEmailService;
         }
 
         // GET: api/Events
@@ -235,6 +240,14 @@ namespace DIBA_Backend.Controllers
             };
 
             _dbContext.Events.Add(eventEntity);
+            _dbContext.AuditLogs.Add(new AuditLog
+            {
+                AuditLogId = Guid.NewGuid(),
+                Action = "Event Created",
+                LogDescription = $"Event '{eventEntity.EventName}' was created by its organiser.",
+                Timestamp = DateTime.UtcNow,
+                UserId = userId
+            });
 
             await _dbContext.SaveChangesAsync();
 
@@ -443,9 +456,103 @@ namespace DIBA_Backend.Controllers
                 _dbContext.Events.Add(eventEntity);
                 _dbContext.Bookings.Add(booking);
 
+                var bookingReference = booking.BookingId.ToString("N").ToUpperInvariant();
+                var startText = booking.StartDateTime.ToString("dd MMM yyyy, HH:mm");
+                var endText = booking.EndDateTime.ToString("dd MMM yyyy, HH:mm");
+                var organiserMessage =
+                    $"Your booking request has been submitted and is awaiting review.\\n\\n" +
+                    $"Booking reference: {bookingReference}\\n" +
+                    $"Event: {eventEntity.EventName}\\n" +
+                    $"Venue: {venue.VenueName}\\n" +
+                    $"Start: {startText}\\n" +
+                    $"End: {endText}\\n" +
+                    "DIBA Bookings will notify you when staff make a decision.";
+
+                var organiserNotification = new Notification
+                {
+                    NotificationId = Guid.NewGuid(),
+                    NotificationType = "Booking Submitted",
+                    Message = organiserMessage,
+                    DateCreated = DateTime.UtcNow,
+                    IsRead = false,
+                    UserId = userId,
+                    BookingId = booking.BookingId
+                };
+                _dbContext.Notifications.Add(organiserNotification);
+
+                _dbContext.AuditLogs.AddRange(
+                    new AuditLog
+                    {
+                        AuditLogId = Guid.NewGuid(),
+                        Action = "Event Created",
+                        LogDescription = $"Event '{eventEntity.EventName}' was created as part of booking {bookingReference}.",
+                        Timestamp = DateTime.UtcNow,
+                        UserId = userId
+                    },
+                    new AuditLog
+                    {
+                        AuditLogId = Guid.NewGuid(),
+                        Action = "Booking Submitted",
+                        LogDescription = $"Booking {bookingReference} was submitted for event '{eventEntity.EventName}' at venue '{venue.VenueName}'.",
+                        Timestamp = DateTime.UtcNow,
+                        UserId = userId
+                    });
+
+                var staffRecipients = await _dbContext.Users
+                    .Include(user => user.Role)
+                    .Where(user =>
+                        user.IsActive &&
+                        user.Role != null &&
+                        (user.Role.RoleName == "Staff" ||
+                         user.Role.RoleName == "Administrator"))
+                    .ToListAsync();
+
+                var organiserName = await _dbContext.Users
+                    .Where(user => user.UserId == userId)
+                    .Select(user => user.FirstName + " " + user.LastName)
+                    .FirstOrDefaultAsync() ?? "Event Organiser";
+
+                var staffMessage =
+                    $"A new venue booking requires review.\\n\\n" +
+                    $"Booking reference: {bookingReference}\\n" +
+                    $"Organiser: {organiserName}\\n" +
+                    $"Event: {eventEntity.EventName}\\n" +
+                    $"Venue: {venue.VenueName}\\n" +
+                    $"Start: {startText}\\n" +
+                    $"End: {endText}\\n" +
+                    "Open the DIBA Bookings Staff Dashboard to review this request.";
+
+                var staffNotifications = staffRecipients.Select(staff => new Notification
+                {
+                    NotificationId = Guid.NewGuid(),
+                    NotificationType = "New Booking Request",
+                    Message = staffMessage,
+                    DateCreated = DateTime.UtcNow,
+                    IsRead = false,
+                    UserId = staff.UserId,
+                    BookingId = booking.BookingId
+                }).ToList();
+
+                _dbContext.Notifications.AddRange(staffNotifications);
+
                 await _dbContext.SaveChangesAsync();
 
                 await transaction.CommitAsync();
+
+                await _notificationEmailService.TrySendAsync(
+                    userId,
+                    organiserNotification.NotificationId,
+                    $"Booking request received - {bookingReference[..8]}",
+                    organiserMessage);
+
+                foreach (var staffNotification in staffNotifications)
+                {
+                    await _notificationEmailService.TrySendAsync(
+                        staffNotification.UserId,
+                        staffNotification.NotificationId,
+                        $"New booking request - {bookingReference[..8]}",
+                        staffMessage);
+                }
 
                 return Ok(new
                 {
@@ -661,6 +768,15 @@ namespace DIBA_Backend.Controllers
 
             eventEntity.VenueId =
                 updateEventDto.VenueId;
+
+            _dbContext.AuditLogs.Add(new AuditLog
+            {
+                AuditLogId = Guid.NewGuid(),
+                Action = "Event Updated",
+                LogDescription = $"Event '{eventEntity.EventName}' ({eventEntity.EventId}) was updated. Schedule or venue changed: {scheduleOrVenueChanged}.",
+                Timestamp = DateTime.UtcNow,
+                UserId = userId
+            });
 
             // Pending requests follow the updated event schedule and venue,
             // so the event list and booking list cannot show conflicting data.
