@@ -21,6 +21,8 @@ import PolicyDocumentsPanel from "../../components/common/PolicyDocumentsPanel";
 import SupportTicketsPanel from "../../components/common/SupportTicketsPanel";
 import HelpContentManager from "../../components/common/HelpContentManager";
 import ProfilePage from "../../components/common/ProfilePage";
+import StaffNotificationsView from "../../components/staff/StaffNotificationsView";
+import { getNotifications, markNotificationRead } from "../../services/notificationService";
 
 function getErrorMessage(error, fallback) {
     const responseData = error.response?.data;
@@ -250,6 +252,7 @@ function StaffDashboard() {
     const [activeSection, setActiveSection] = useState("dashboard");
     const [bookings, setBookings] = useState([]);
     const [venues, setVenues] = useState([]);
+    const [notifications, setNotifications] = useState([]);
     const [loading, setLoading] = useState(true);
     const [processingBookingId, setProcessingBookingId] = useState(null);
     const [managedVenue, setManagedVenue] = useState(null);
@@ -307,6 +310,57 @@ return venueList;
         // Initial load only.
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    useEffect(() => {
+        let isMounted = true;
+
+        const refreshNotifications = async () => {
+            try {
+                const response = await getNotifications();
+                if (isMounted && Array.isArray(response.data)) {
+                    setNotifications(response.data);
+                }
+            } catch {
+                // Keep the existing inbox if a refresh fails temporarily.
+            }
+        };
+
+        refreshNotifications();
+        const intervalId = window.setInterval(refreshNotifications, 30000);
+        return () => {
+            isMounted = false;
+            window.clearInterval(intervalId);
+        };
+    }, []);
+
+    const handleMarkNotificationRead = async (notification) => {
+        try {
+            await markNotificationRead(notification.notificationId);
+            setNotifications((current) =>
+                current.map((item) =>
+                    item.notificationId === notification.notificationId
+                        ? { ...item, isRead: true }
+                        : item
+                )
+            );
+        } catch {
+            toast.error("Could not mark the notification as read.");
+        }
+    };
+
+    const handleOpenNotificationBooking = (bookingId) => {
+        const booking = bookings.find(
+            (item) => String(item.bookingId) === String(bookingId)
+        );
+
+        if (!booking) {
+            toast.error("This booking could not be found in the current booking list.");
+            return;
+        }
+
+        setActiveSection("dashboard");
+        setSelectedBooking(booking);
+    };
 
     // Refresh booking/payment statuses so staff can see a completed payment
     // without having to sign out or manually reload the dashboard.
@@ -566,12 +620,13 @@ return venueList;
 
     return (
         <DashboardShell
-            title={activeSection === "policies" ? "Policies" : activeSection === "support" ? "Support tickets" : activeSection === "help" ? "Help Centre" : "Dashboard"}
+            title={activeSection === "policies" ? "Policies" : activeSection === "support" ? "Support tickets" : activeSection === "help" ? "Help Centre" : activeSection === "notifications" ? "Notifications" : "Dashboard"}
             onLogout={clearSession}
             profileLabel={firstName}
             onProfileClick={() => setActiveSection("profile")}
             navigationItems={[
                 { label: "Dashboard", active: activeSection === "dashboard", onClick: () => setActiveSection("dashboard") },
+                { label: `Notifications${notifications.some((notification) => !notification.isRead) ? ` (${notifications.filter((notification) => !notification.isRead).length})` : ""}`, active: activeSection === "notifications", onClick: () => setActiveSection("notifications") },
                 { label: "Policies", active: activeSection === "policies", onClick: () => setActiveSection("policies") },
                 { label: "Support tickets", active: activeSection === "support", onClick: () => setActiveSection("support") },
                 { label: "Help Centre", active: activeSection === "help", onClick: () => setActiveSection("help") }
@@ -587,6 +642,12 @@ return venueList;
                 <SupportTicketsPanel staffMode />
             ) : activeSection === "help" ? (
                 <HelpContentManager />
+            ) : activeSection === "notifications" ? (
+                <StaffNotificationsView
+                    notifications={notifications}
+                    onMarkRead={handleMarkNotificationRead}
+                    onOpenBooking={handleOpenNotificationBooking}
+                />
             ) : (
                 <>
                     <section id="staff-overview" className="d-flex flex-wrap gap-3 mb-4" aria-label="Staff quick overview">
