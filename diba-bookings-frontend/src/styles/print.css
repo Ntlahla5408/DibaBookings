@@ -1,0 +1,114 @@
+/* Shared print layouts for DIBA Bookings. The screen UI remains unchanged. */
+.print-report-meta {
+    display: none;
+}
+
+.panel-heading-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+@media print {
+    @page {
+        size: auto;
+        margin: 14mm;
+    }
+
+    html,
+    body {
+        background: #fff !important;
+        color: #111 !important;
+        min-width: 0 !important;
+    }
+
+    body * {
+        visibility: hidden !important;
+    }
+
+    .diba-print-area,
+    .diba-print-area * {
+        visibility: visible !important;
+    }
+
+    .diba-print-area {
+        position: absolute !important;
+        inset: 0 auto auto 0 !important;
+        width: 100% !important;
+        max-width: none !important;
+        min-width: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        overflow: visible !important;
+        background: #fff !important;
+        color: #111 !important;
+    }
+
+    .no-print,
+    .diba-print-area .back-link,
+    .diba-print-area .detail-actions,
+    .diba-print-area .table-action {
+        display: none !important;
+    }
+
+    .print-report-meta {
+        display: block !important;
+        margin: 0 0 12px !important;
+        color: #555 !important;
+        font-size: 9pt !important;
+    }
+
+    .diba-print-area .panel-heading {
+        display: block !important;
+        margin-bottom: 12px !important;
+        padding-bottom: 8px !important;
+        border-bottom: 1px solid #bbb !important;
+    }
+
+    .diba-print-area table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+        font-size: 9pt !important;
+    }
+
+    .diba-print-area th,
+    .diba-print-area td {
+        padding: 6px !important;
+        border: 1px solid #ccc !important;
+        background: #fff !important;
+        color: #111 !important;
+        vertical-align: top !important;
+        overflow-wrap: anywhere !important;
+    }
+
+    .diba-print-area tr {
+        break-inside: avoid;
+    }
+
+    .diba-print-area .table-responsive {
+        overflow: visible !important;
+    }
+
+    .diba-print-area .badge {
+        border: 1px solid #aaa !important;
+        color: #111 !important;
+        background: #fff !important;
+    }
+
+    .diba-print-area .booking-detail-grid {
+        break-inside: avoid;
+    }
+
+    .diba-print-area .booking-detail-section-title {
+        break-after: avoid;
+    }
+
+    .diba-print-area .notice {
+        border: 1px solid #aaa !important;
+        background: #fff !important;
+        color: #111 !important;
+    }
+}
