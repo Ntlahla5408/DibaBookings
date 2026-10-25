@@ -1080,6 +1080,8 @@ namespace DIBA_Backend.Controllers
 
 
             var booking = await _dbContext.Bookings
+                .Include(booking => booking.Event)
+                .Include(booking => booking.Venue)
                 .FirstOrDefaultAsync(
                     booking =>
                         booking.BookingId == id);
@@ -1168,16 +1170,22 @@ namespace DIBA_Backend.Controllers
             _dbContext.AuditLogs.Add(auditLog);
 
 
-            // DIBA notification workflow:
-            // the organiser receives the rejection reason as part of
-            // the notification.
+            var bookingReference = booking.BookingId.ToString("N").ToUpperInvariant();
+            var rejectionMessage =
+                $"Your venue booking has been rejected.\\n\\n" +
+                $"Booking reference: {bookingReference}\\n" +
+                $"Event: {booking.Event?.EventName ?? "Event"}\\n" +
+                $"Venue: {booking.Venue?.VenueName ?? "Venue"}\\n" +
+                $"Start: {booking.StartDateTime:dd MMM yyyy, HH:mm}\\n" +
+                $"End: {booking.EndDateTime:dd MMM yyyy, HH:mm}\\n" +
+                $"Reason: {rejectBookingDto.Reason}";
+
+            // The organiser receives the decision and its reason in-app and by email.
             var notification = new Notification
             {
                 NotificationId = Guid.NewGuid(),
                 NotificationType = "Booking Rejected",
-                Message =
-                    $"Your venue booking has been rejected. " +
-                    $"Reason: {rejectBookingDto.Reason}",
+                Message = rejectionMessage,
                 DateCreated = DateTime.UtcNow,
                 IsRead = false,
                 UserId = booking.UserId,
@@ -1187,7 +1195,11 @@ namespace DIBA_Backend.Controllers
             _dbContext.Notifications.Add(notification);
 
             await _dbContext.SaveChangesAsync();
-            await _notificationEmailService.TrySendAsync(notification.UserId, notification.NotificationId, notification.NotificationType, notification.Message);
+            await _notificationEmailService.TrySendAsync(
+                notification.UserId,
+                notification.NotificationId,
+                $"Booking rejected - {bookingReference[..8]}",
+                notification.Message);
 
             return Ok(new
             {
