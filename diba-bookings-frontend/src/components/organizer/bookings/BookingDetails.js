@@ -2,20 +2,23 @@ import Status from "../../common/StatusBadge";
 import Detail from "./BookingDetailField";
 import { dateText, formatDate, timeText } from "../../../utils/dateUtils";
 import { shortId } from "../../../utils/dashboardUtils";
+import "../../../styles/print.css";
 
 function BookingDetails({ booking, event, venue, onBack, onEdit, onCancel, saving }) {
     const status = booking.statusName || "Pending";
 
     return (
-        <section className="detail-view">
-            <button className="back-link" onClick={onBack}>← Back to workspace</button>
+        <section className="detail-view diba-print-area">
+            <button className="back-link no-print" onClick={onBack}>← Back to workspace</button>
 
             <div className="booking-detail-panel">
                 <div className="detail-panel-heading">
                     <div>
                         <p className="section-kicker">BOOKING REFERENCE</p>
                         <h2>{shortId(booking.bookingId)}</h2>
+                        <p className="print-report-meta">DIBA Bookings · Booking confirmation details</p>
                     </div>
+                    <div className="detail-heading-actions no-print"><button type="button" className="outline-action" onClick={() => window.print()}>Print / Save PDF</button></div>
                     <Status status={status} />
                 </div>
 
@@ -66,7 +69,7 @@ function BookingDetails({ booking, event, venue, onBack, onEdit, onCancel, savin
                     <p>{status === "Pending" ? "• Booking waiting for review" : status === "Rejected" ? "• Booking was rejected" : status === "Cancelled" ? "• Booking was cancelled" : "✓ Booking reviewed"}</p>
                 </div>
 
-                <div className="detail-actions">
+                <div className="detail-actions no-print">
                     {status === "Pending" && (
                         <button className="outline-action" onClick={() => onEdit(booking)}>Edit booking</button>
                     )}
