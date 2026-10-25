@@ -125,7 +125,7 @@ function AdminRecordsPanel({
                         </div>
                     </div>
 
-                    <Table responsive hover>
+                    <Table responsive hover className="print-users-table">
                         <thead>
                             <tr>
                                 <th>Name</th>
@@ -195,7 +195,7 @@ function AdminRecordsPanel({
                                 </EmptyTableRow>
                             ) : bookings.map((booking) => (
                                 <tr key={booking.bookingId}>
-                                    <td>{shortId(booking.bookingId)}</td>
+                                    <td className="booking-reference">{booking.bookingId}</td>
                                     <td>{booking.organiserName || shortId(booking.userId)}</td>
                                     <td>{booking.eventName || shortId(booking.eventId)}</td>
                                     <td>{booking.venueName || shortId(booking.venueId)}</td>
