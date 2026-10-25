@@ -52,9 +52,14 @@ function AdminRecordsPanel({
                     <h2>{title}</h2>
                     <p className="print-report-meta">DIBA Bookings · {title}</p>
                 </div>
-                {activeSection === "users" && (
-                    <Button onClick={onCreateUser}>+ Create user</Button>
-                )}
+                <div className="panel-heading-actions no-print">
+                    <Button variant="outline-secondary" onClick={() => window.print()}>
+                        Print / Save PDF
+                    </Button>
+                    {activeSection === "users" && (
+                        <Button onClick={onCreateUser}>+ Create user</Button>
+                    )}
+                </div>
             </div>
 
             {activeSection !== "audit" && (
