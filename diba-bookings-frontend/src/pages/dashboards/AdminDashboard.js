@@ -9,6 +9,7 @@ import DashboardShell from "../../components/common/DashboardShell";
 import HelpContentManager from "../../components/common/HelpContentManager";
 import LoadingIndicator from "../../components/common/LoadingIndicator";
 import ProfilePage from "../../components/common/ProfilePage";
+import StaffNotificationsView from "../../components/staff/StaffNotificationsView";
 import {
     createUser,
     getAdminOverview,
@@ -19,6 +20,7 @@ import {
     updateUserStatus
 } from "../../services/adminService";
 import { getBookings } from "../../services/bookingService";
+import { getNotifications, markNotificationRead } from "../../services/notificationService";
 import { emptyOverview } from "../../utils/dashboardUtils";
 import { clearSession } from "../../utils/sessionUtils";
 
@@ -27,6 +29,7 @@ function AdminDashboard() {
     const [users, setUsers] = useState([]);
     const [bookings, setBookings] = useState([]);
     const [logs, setLogs] = useState([]);
+    const [notifications, setNotifications] = useState([]);
     const [roles, setRoles] = useState([]);
     const [query, setQuery] = useState("");
     const [userStatusFilter, setUserStatusFilter] = useState("all");
@@ -84,6 +87,48 @@ function AdminDashboard() {
     useEffect(() => {
         loadData();
     }, []);
+
+    useEffect(() => {
+        let isMounted = true;
+
+        const refreshNotifications = async () => {
+            try {
+                const response = await getNotifications();
+                if (isMounted && Array.isArray(response.data)) {
+                    setNotifications(response.data);
+                }
+            } catch {
+                // Keep the last successful notification list if refresh fails.
+            }
+        };
+
+        refreshNotifications();
+        const intervalId = window.setInterval(refreshNotifications, 30000);
+        return () => {
+            isMounted = false;
+            window.clearInterval(intervalId);
+        };
+    }, []);
+
+    const handleMarkNotificationRead = async (notification) => {
+        try {
+            await markNotificationRead(notification.notificationId);
+            setNotifications((current) =>
+                current.map((item) =>
+                    item.notificationId === notification.notificationId
+                        ? { ...item, isRead: true }
+                        : item
+                )
+            );
+        } catch {
+            toast.error("Could not mark the notification as read.");
+        }
+    };
+
+    const handleOpenNotificationBooking = (bookingId) => {
+        setQuery(String(bookingId));
+        setActiveSection("bookings");
+    };
 
     // Keep payment status current in the administrator's booking records.
     useEffect(() => {
@@ -217,6 +262,7 @@ function AdminDashboard() {
                 { label: "Users", onClick: () => setActiveSection("users") },
                 { label: "Bookings", onClick: () => setActiveSection("bookings") },
                 { label: "Audit logs", onClick: () => setActiveSection("audit") },
+                { label: `Notifications${notifications.some((notification) => !notification.isRead) ? ` (${notifications.filter((notification) => !notification.isRead).length})` : ""}`, onClick: () => setActiveSection("notifications") },
                 { label: "Help content", onClick: () => setActiveSection("help") },
             ]}
         >
@@ -233,6 +279,12 @@ function AdminDashboard() {
                 />
             ) : activeSection === "help" ? (
                 <HelpContentManager />
+            ) : activeSection === "notifications" ? (
+                <StaffNotificationsView
+                    notifications={notifications}
+                    onMarkRead={handleMarkNotificationRead}
+                    onOpenBooking={handleOpenNotificationBooking}
+                />
             ) : (
                 <AdminRecordsPanel
                     activeSection={activeSection}
