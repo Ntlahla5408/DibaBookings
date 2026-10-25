@@ -830,7 +830,55 @@ namespace DIBA_Backend.Controllers
             booking.SpecialRequirements =
                 updateBookingDto.SpecialRequirements;
 
+            var bookingReference = booking.BookingId.ToString("N").ToUpperInvariant();
+            var updateMessage =
+                $"A pending booking has been updated and still requires review.\\n\\n" +
+                $"Booking reference: {bookingReference}\\n" +
+                $"Event: {eventEntity.EventName}\\n" +
+                $"Venue: {venue.VenueName}\\n" +
+                $"Start: {booking.StartDateTime:dd MMM yyyy, HH:mm}\\n" +
+                $"End: {booking.EndDateTime:dd MMM yyyy, HH:mm}";
+
+            _dbContext.AuditLogs.Add(new AuditLog
+            {
+                AuditLogId = Guid.NewGuid(),
+                Action = "Booking Updated",
+                LogDescription = $"Organiser updated pending booking {bookingReference} for event '{eventEntity.EventName}' at venue '{venue.VenueName}'.",
+                Timestamp = DateTime.UtcNow,
+                UserId = userId
+            });
+
+            var staffRecipients = await _dbContext.Users
+                .Include(user => user.Role)
+                .Where(user =>
+                    user.IsActive &&
+                    user.Role != null &&
+                    (user.Role.RoleName == "Staff" ||
+                     user.Role.RoleName == "Administrator"))
+                .ToListAsync();
+
+            var staffNotifications = staffRecipients.Select(staff => new Notification
+            {
+                NotificationId = Guid.NewGuid(),
+                NotificationType = "Booking Updated",
+                Message = updateMessage,
+                DateCreated = DateTime.UtcNow,
+                IsRead = false,
+                UserId = staff.UserId,
+                BookingId = booking.BookingId
+            }).ToList();
+
+            _dbContext.Notifications.AddRange(staffNotifications);
             await _dbContext.SaveChangesAsync();
+
+            foreach (var staffNotification in staffNotifications)
+            {
+                await _notificationEmailService.TrySendAsync(
+                    staffNotification.UserId,
+                    staffNotification.NotificationId,
+                    $"Booking updated - {bookingReference[..8]}",
+                    updateMessage);
+            }
 
 
             var response = new BookingResponseDto
@@ -1180,6 +1228,8 @@ namespace DIBA_Backend.Controllers
 
 
             var booking = await _dbContext.Bookings
+                .Include(booking => booking.Event)
+                .Include(booking => booking.Venue)
                 .FirstOrDefaultAsync(
                     booking =>
                         booking.BookingId == id);
@@ -1283,14 +1333,22 @@ namespace DIBA_Backend.Controllers
             _dbContext.AuditLogs.Add(auditLog);
 
 
+            var bookingReference = booking.BookingId.ToString("N").ToUpperInvariant();
+            var cancellationMessage =
+                $"Your venue booking has been cancelled.\\n\\n" +
+                $"Booking reference: {bookingReference}\\n" +
+                $"Event: {booking.Event?.EventName ?? "Event"}\\n" +
+                $"Venue: {booking.Venue?.VenueName ?? "Venue"}\\n" +
+                $"Start: {booking.StartDateTime:dd MMM yyyy, HH:mm}\\n" +
+                $"End: {booking.EndDateTime:dd MMM yyyy, HH:mm}";
+
             // DIBA notification workflow:
-            // the organiser is informed when the booking is cancelled.
+            // the organiser receives a cancellation notice with booking details.
             var notification = new Notification
             {
                 NotificationId = Guid.NewGuid(),
                 NotificationType = "Booking Cancelled",
-                Message =
-                    "Your venue booking has been cancelled.",
+                Message = cancellationMessage,
                 DateCreated = DateTime.UtcNow,
                 IsRead = false,
                 UserId = booking.UserId,
@@ -1299,8 +1357,57 @@ namespace DIBA_Backend.Controllers
 
             _dbContext.Notifications.Add(notification);
 
+            // If the organiser initiated the cancellation, alert active staff
+            // and administrators so the venue schedule can be reviewed.
+            var staffNotifications = new List<Notification>();
+            if (!isStaffOrAdministrator)
+            {
+                var staffRecipients = await _dbContext.Users
+                    .Include(user => user.Role)
+                    .Where(user =>
+                        user.IsActive &&
+                        user.Role != null &&
+                        (user.Role.RoleName == "Staff" ||
+                         user.Role.RoleName == "Administrator"))
+                    .ToListAsync();
+
+                var staffMessage =
+                    $"An organiser cancelled a booking.\\n\\n" +
+                    $"Booking reference: {bookingReference}\\n" +
+                    $"Event: {booking.Event?.EventName ?? "Event"}\\n" +
+                    $"Venue: {booking.Venue?.VenueName ?? "Venue"}\\n" +
+                    $"Start: {booking.StartDateTime:dd MMM yyyy, HH:mm}\\n" +
+                    $"End: {booking.EndDateTime:dd MMM yyyy, HH:mm}";
+
+                staffNotifications = staffRecipients.Select(staff => new Notification
+                {
+                    NotificationId = Guid.NewGuid(),
+                    NotificationType = "Booking Cancelled",
+                    Message = staffMessage,
+                    DateCreated = DateTime.UtcNow,
+                    IsRead = false,
+                    UserId = staff.UserId,
+                    BookingId = booking.BookingId
+                }).ToList();
+
+                _dbContext.Notifications.AddRange(staffNotifications);
+            }
+
             await _dbContext.SaveChangesAsync();
-            await _notificationEmailService.TrySendAsync(notification.UserId, notification.NotificationId, notification.NotificationType, notification.Message);
+            await _notificationEmailService.TrySendAsync(
+                notification.UserId,
+                notification.NotificationId,
+                $"Booking cancelled - {bookingReference[..8]}",
+                notification.Message);
+
+            foreach (var staffNotification in staffNotifications)
+            {
+                await _notificationEmailService.TrySendAsync(
+                    staffNotification.UserId,
+                    staffNotification.NotificationId,
+                    $"Booking cancelled by organiser - {bookingReference[..8]}",
+                    staffNotification.Message);
+            }
 
             return Ok(new
             {
