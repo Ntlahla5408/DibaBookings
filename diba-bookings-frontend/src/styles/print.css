@@ -88,6 +88,11 @@
         break-inside: avoid;
     }
 
+    .diba-print-area .print-users-table th:last-child,
+    .diba-print-area .print-users-table td:last-child {
+        display: none !important;
+    }
+
     .diba-print-area .table-responsive {
         overflow: visible !important;
     }
