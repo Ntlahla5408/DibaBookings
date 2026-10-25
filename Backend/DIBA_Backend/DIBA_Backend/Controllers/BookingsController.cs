@@ -536,6 +536,88 @@ namespace DIBA_Backend.Controllers
 
             await _dbContext.SaveChangesAsync();
 
+            // Record the submission and notify the organiser and active booking staff.
+            // The booking is saved first so notifications always reference an existing booking.
+            var bookingReference = booking.BookingId.ToString("N").ToUpperInvariant();
+            var startText = booking.StartDateTime.ToString("dd MMM yyyy, HH:mm");
+            var endText = booking.EndDateTime.ToString("dd MMM yyyy, HH:mm");
+            var organiserMessage =
+                $"Your booking request has been submitted and is awaiting review.\n\n" +
+                $"Booking reference: {bookingReference}\n" +
+                $"Event: {eventEntity.EventName}\n" +
+                $"Venue: {venue.VenueName}\n" +
+                $"Start: {startText}\n" +
+                $"End: {endText}\n" +
+                "DIBA Bookings will notify you when staff make a decision.";
+
+            var organiserNotification = new Notification
+            {
+                NotificationId = Guid.NewGuid(),
+                NotificationType = "Booking Submitted",
+                Message = organiserMessage,
+                DateCreated = DateTime.UtcNow,
+                IsRead = false,
+                UserId = userId,
+                BookingId = booking.BookingId
+            };
+            _dbContext.Notifications.Add(organiserNotification);
+
+            _dbContext.AuditLogs.Add(new AuditLog
+            {
+                AuditLogId = Guid.NewGuid(),
+                Action = "Booking Submitted",
+                LogDescription = $"Booking {bookingReference} was submitted for event '{eventEntity.EventName}' at venue '{venue.VenueName}'.",
+                Timestamp = DateTime.UtcNow,
+                UserId = userId
+            });
+
+            var staffRecipients = await _dbContext.Users
+                .Include(user => user.Role)
+                .Where(user =>
+                    user.IsActive &&
+                    user.Role != null &&
+                    (user.Role.RoleName == "Staff" ||
+                     user.Role.RoleName == "Administrator"))
+                .ToListAsync();
+
+            var staffMessage =
+                $"A new venue booking requires review.\n\n" +
+                $"Booking reference: {bookingReference}\n" +
+                $"Organiser: {await _dbContext.Users.Where(user => user.UserId == userId).Select(user => user.FirstName + " " + user.LastName).FirstOrDefaultAsync() ?? "Event Organiser"}\n" +
+                $"Event: {eventEntity.EventName}\n" +
+                $"Venue: {venue.VenueName}\n" +
+                $"Start: {startText}\n" +
+                $"End: {endText}\n" +
+                "Open the DIBA Bookings Staff Dashboard to review this request.";
+
+            var staffNotifications = staffRecipients.Select(staff => new Notification
+            {
+                NotificationId = Guid.NewGuid(),
+                NotificationType = "New Booking Request",
+                Message = staffMessage,
+                DateCreated = DateTime.UtcNow,
+                IsRead = false,
+                UserId = staff.UserId,
+                BookingId = booking.BookingId
+            }).ToList();
+
+            _dbContext.Notifications.AddRange(staffNotifications);
+            await _dbContext.SaveChangesAsync();
+
+            await _notificationEmailService.TrySendAsync(
+                userId,
+                organiserNotification.NotificationId,
+                $"Booking request received - {bookingReference[..8]}",
+                organiserMessage);
+
+            foreach (var staffNotification in staffNotifications)
+            {
+                await _notificationEmailService.TrySendAsync(
+                    staffNotification.UserId,
+                    staffNotification.NotificationId,
+                    $"New booking request - {bookingReference[..8]}",
+                    staffMessage);
+            }
 
             // DIBA adaptation:
             // return a DTO rather than directly returning the database entity.
@@ -797,6 +879,8 @@ namespace DIBA_Backend.Controllers
 
 
             var booking = await _dbContext.Bookings
+                .Include(booking => booking.Event)
+                .Include(booking => booking.Venue)
                 .FirstOrDefaultAsync(
                     booking =>
                         booking.BookingId == id);
@@ -875,15 +959,24 @@ namespace DIBA_Backend.Controllers
             _dbContext.AuditLogs.Add(auditLog);
 
 
+            // Send a useful confirmation rather than a generic approval message.
+            var bookingReference = booking.BookingId.ToString("N").ToUpperInvariant();
+            var approvalMessage =
+                $"Your venue booking has been approved.\n\n" +
+                $"Booking reference: {bookingReference}\n" +
+                $"Event: {booking.Event?.EventName ?? "Event"}\n" +
+                $"Venue: {booking.Venue?.VenueName ?? "Venue"}\n" +
+                $"Start: {booking.StartDateTime:dd MMM yyyy, HH:mm}\n" +
+                $"End: {booking.EndDateTime:dd MMM yyyy, HH:mm}\n" +
+                "Please keep this confirmation for your records.";
+
             // DIBA-specific notification workflow.
-            // When a booking is approved, a notification is created for
-            // the Event Organiser who owns the booking.
+            // The organiser receives an in-app notification and email.
             var notification = new Notification
             {
                 NotificationId = Guid.NewGuid(),
                 NotificationType = "Booking Approved",
-                Message =
-                    "Your venue booking has been approved.",
+                Message = approvalMessage,
                 DateCreated = DateTime.UtcNow,
                 IsRead = false,
                 UserId = booking.UserId,
@@ -893,7 +986,11 @@ namespace DIBA_Backend.Controllers
             _dbContext.Notifications.Add(notification);
 
             await _dbContext.SaveChangesAsync();
-            await _notificationEmailService.TrySendAsync(notification.UserId, notification.NotificationId, notification.NotificationType, notification.Message);
+            await _notificationEmailService.TrySendAsync(
+                notification.UserId,
+                notification.NotificationId,
+                $"Booking approved - {bookingReference[..8]}",
+                notification.Message);
 
             return Ok(new
             {
