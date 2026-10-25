@@ -49,8 +49,15 @@ function BookingCalendar({
     };
 
     const loadAvailability = useCallback(async (date) => {
-        if (!venueId || !date) {
+        if (!date) {
             setBookings([]);
+            setAvailabilityError("Select a date to check availability.");
+            return;
+        }
+
+        if (!venueId) {
+            setBookings([]);
+            setAvailabilityError("Select a venue to check availability.");
             return;
         }
 
@@ -409,7 +416,7 @@ function BookingCalendar({
 
                                             <span className="time-slot-status">
                                                 {booked
-                                                    ? `Unavailable${status ? ` · ${status}` : ""}`
+                                                    ? `Not Available${status ? ` · ${status}` : ""}`
                                                     : selected
                                                         ? "Selected"
                                                         : selectionStart && slot.start > selectionStart.start
