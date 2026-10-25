@@ -4,6 +4,7 @@ using DIBA_Backend.Models.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace DIBA_Backend.Controllers
 {
@@ -127,6 +128,12 @@ namespace DIBA_Backend.Controllers
         public async Task<IActionResult> CreateUser(
             CreateManagedUserDto createManagedUserDto)
         {
+            var actorClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (actorClaim == null || !Guid.TryParse(actorClaim.Value, out var actorUserId))
+            {
+                return Unauthorized("Administrator identity could not be determined.");
+            }
+
             // Reference: Olaide Ogunbunmi, "ASP.NET Core Role-Based
             // Authentication API".
             // Similar logic: user-management APIs check whether an account
@@ -176,6 +183,14 @@ namespace DIBA_Backend.Controllers
             };
 
             _dbContext.Users.Add(user);
+            _dbContext.AuditLogs.Add(new AuditLog
+            {
+                AuditLogId = Guid.NewGuid(),
+                Action = "User Created",
+                LogDescription = $"Administrator created an account for {user.FirstName} {user.LastName} ({user.Email}) with role ID {user.RoleId}.",
+                Timestamp = DateTime.UtcNow,
+                UserId = actorUserId
+            });
 
             await _dbContext.SaveChangesAsync();
 
@@ -191,6 +206,12 @@ namespace DIBA_Backend.Controllers
             Guid id,
             [FromQuery] bool active)
         {
+            var actorClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (actorClaim == null || !Guid.TryParse(actorClaim.Value, out var actorUserId))
+            {
+                return Unauthorized("Administrator identity could not be determined.");
+            }
+
             var user = await _dbContext.Users
                 .FindAsync(id);
 
@@ -201,7 +222,16 @@ namespace DIBA_Backend.Controllers
 
             // DIBA adaptation: administrators can activate or deactivate
             // user accounts without deleting the user record.
+            var previousStatus = user.IsActive ? "Active" : "Inactive";
             user.IsActive = active;
+            _dbContext.AuditLogs.Add(new AuditLog
+            {
+                AuditLogId = Guid.NewGuid(),
+                Action = active ? "User Activated" : "User Deactivated",
+                LogDescription = $"Administrator changed {user.FirstName} {user.LastName} ({user.Email}) from {previousStatus} to {(active ? "Active" : "Inactive")}.",
+                Timestamp = DateTime.UtcNow,
+                UserId = actorUserId
+            });
 
             await _dbContext.SaveChangesAsync();
 
@@ -214,6 +244,12 @@ namespace DIBA_Backend.Controllers
             Guid id,
             UpdateUserRoleDto updateUserRoleDto)
         {
+            var actorClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (actorClaim == null || !Guid.TryParse(actorClaim.Value, out var actorUserId))
+            {
+                return Unauthorized("Administrator identity could not be determined.");
+            }
+
             var user = await _dbContext.Users
                 .FindAsync(id);
 
@@ -239,7 +275,16 @@ namespace DIBA_Backend.Controllers
 
             // DIBA-specific role assignment:
             // update the user's RoleId after confirming that the role exists.
+            var previousRoleId = user.RoleId;
             user.RoleId = updateUserRoleDto.RoleId;
+            _dbContext.AuditLogs.Add(new AuditLog
+            {
+                AuditLogId = Guid.NewGuid(),
+                Action = "User Role Changed",
+                LogDescription = $"Administrator changed the role ID for {user.FirstName} {user.LastName} ({user.Email}) from {previousRoleId} to {updateUserRoleDto.RoleId}.",
+                Timestamp = DateTime.UtcNow,
+                UserId = actorUserId
+            });
 
             await _dbContext.SaveChangesAsync();
 
