@@ -1,16 +1,52 @@
-# React + Vite
+# DIBA Bookings frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the React frontend for the DIBA Bookings conference-centre booking system.
 
-Currently, two official plugins are available:
+## Requirements
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Node.js
+- npm
+- The DIBA Bookings ASP.NET Core API running locally or deployed to an accessible environment
 
-## React Compiler
+## Install and run
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+From this directory:
 
-## Expanding the ESLint configuration
+```bash
+npm install
+npm start
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+The project uses Create React App through `react-scripts`. The development server starts the frontend locally.
+
+## API configuration
+
+The API client reads `REACT_APP_API_BASE_URL`. If it is not set, the client defaults to:
+
+```text
+https://localhost:7054/api
+```
+
+To use another API origin, create a local `.env` file in this directory:
+
+```env
+REACT_APP_API_BASE_URL=https://localhost:7054/api
+```
+
+Restart the development server after changing environment variables. Do not commit local environment files or credentials.
+
+## Available scripts
+
+| Command | Purpose |
+| --- | --- |
+| `npm start` | Start the local development server |
+| `npm test -- --watchAll=false` | Run the test suite once |
+| `npm run build` | Create an optimised production build |
+
+## Application areas
+
+The frontend includes authentication and password recovery pages, role-oriented dashboards, booking and venue services, notifications, payment return pages, policy information and a help centre.
+
+The backend remains responsible for enforcing authentication and authorisation. Hiding frontend controls is not a substitute for API-side permission checks.
+
+For full system setup, backend configuration and project status, see the [repository README](../README.md) and [project integration guide](../Documentation/DIBA_PROJECT_AND_INTEGRATION_GUIDE.md).
